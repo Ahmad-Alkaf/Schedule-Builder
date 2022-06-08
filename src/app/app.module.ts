@@ -1,8 +1,9 @@
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 // import {MatAutocompleteModule} from '@angular/material/autocomplete'; 
-// import {MatInputModule} from '@angular/material/input'
+import {MatInputModule} from '@angular/material/input'
 import {MatIconModule} from '@angular/material/icon';
+import {DragDropModule} from '@angular/cdk/drag-drop'; 
 // import{MatListModule} from '@angular/material/list';
 // import {MatRippleModule} from '@angular/material/core'; 
 // import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -17,12 +18,17 @@ import { MainComponent } from './main/main/main.component';
 import {MatTreeModule} from '@angular/material/tree'; 
 import {MatSidenavModule} from '@angular/material/sidenav';
 import { AddSubtreeComponent } from './main/nav-tree/add-subtree/add-subtree.component'; 
+import {MatTableModule} from '@angular/material/table';
+import { TableComponent } from './main/main/table/table.component';
+import { TdComponent } from './main/main/table/td/td.component'; 
 @NgModule({
   declarations: [
     AppComponent,
     NavTreeComponent,
     MainComponent,
-    AddSubtreeComponent
+    AddSubtreeComponent,
+    TableComponent,
+    TdComponent
   ],
   imports: [
     BrowserModule,
@@ -36,13 +42,15 @@ import { AddSubtreeComponent } from './main/nav-tree/add-subtree/add-subtree.com
     MatButtonModule,
     MatSidenavModule,
     MatDialogModule,
-    // MatAutocompleteModule,
-    // MatInputModule,
+    MatInputModule,
     MatIconModule,
+    MatTableModule,
+    DragDropModule,
+    // MatAutocompleteModule,
     // MatDialogModule,
     // MatListModule,
     // MatRippleModule,
-    // BrowserAnimationsModule,
+    BrowserAnimationsModule,
     // MatSnackBarModule
   ],
   providers: [],

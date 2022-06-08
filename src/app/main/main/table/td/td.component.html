@@ -1,0 +1,17 @@
+
+   <div *ngIf="td">
+      <div>
+         {{td.lecture.name}}<br>
+      </div>
+      <div class="d-flex justify-content-evenly">
+         <div>
+            {{td.lecture.teacher}}
+         </div>
+         <div>
+            {{td.lecture.room}}
+         </div>
+         <div>
+            {{td.startTime}} - {{(td.startTime + td.duration)}}
+         </div>
+      </div>
+   </div>

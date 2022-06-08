@@ -2,6 +2,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AddSubtreeComponent } from './add-subtree/add-subtree.component';
 interface ExampleFlatNode {
   expandable: boolean;
   name: string;
@@ -10,12 +11,13 @@ interface ExampleFlatNode {
 interface Node {
   name: string,
   level?: number,
-  children?: Node[] | { name: string, click?: Function }[] | undefined
-  click?: Function
+  children?: Node[] | { name: string, onClick?: Function }[] | undefined
+  onClick?: Function
 }
-interface DialogData{
+export interface DialogRootTreeSubmit {
   title: string;
-  
+  name?: string;
+  certificate?: string;
 }
 /**
 * Food data with nested structure.
@@ -23,16 +25,16 @@ interface DialogData{
 */
 const TREE_DATA: Node[] = [
   {
-    name: 'Teachers',
-    children: [{ name: 'Ahmed Shaikh' }, { name: 'Hassen' }, { name: 'Hamzah' }],
+    name: 'Teacher',
+    children: [{ name: 'Ahmed Shaikh' }, { name: 'Hassen' }, { name: 'Hamzah' }, { name: '+ Add Teacher' }],
   },
   {
-    name: 'Lessons',
-    children: [{ name: 'PM' }, { name: 'HCI' }, { name: 'Server-side' }],
+    name: 'Lesson',
+    children: [{ name: 'PM' }, { name: 'HCI' }, { name: 'Server-side' }, { name: '+ Add Lesson' }],
   },
   {
-    name: 'Rooms',
-    children: [{ name: '301' }, { name: '401' }, { name: '302' }]
+    name: 'Room',
+    children: [{ name: '301' }, { name: '401' }, { name: '302' }, { name: '+ Add Room' }]
   }
 ];
 @Component({
@@ -43,28 +45,61 @@ const TREE_DATA: Node[] = [
 
 export class NavTreeComponent implements OnInit {
   constructor(public dialog: MatDialog) {
-    this.setSourceData(TREE_DATA)
+    this.dataSource.data = TREE_DATA;
   }
   /**VVVV Dialog VVVV */
-  openDialog(data:DialogData): void {
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+  openAddDialog(data: DialogRootTreeSubmit): void {
+    const dialogRef = this.dialog.open(AddSubtreeComponent, {
       width: '250px',
       data: data,
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
+      if (result?.name)
+        this.appendSourceData(result.title,{name:result.name})
+      console.log('The dialog was closed result data=', result);
     });
   }
-}
 
+  addSubtreeHandler(rootTitle: string) {
 
+    console.log('open dialog called');
+    this.openAddDialog({ title: rootTitle })
+
+  }
 
 
   /**^^^^  Dialog ^^^^ */
   /**VVVV  Tree   VVVV */
+  appendSourceData(rootName: string, node: { name: string }) {
+    for (let t of TREE_DATA) {
+      if (t.name == rootName)
+        if (t.children) {
+          t.children[t.children?.length - 1] = node;
+          t.children.push({ name: ('+ Add ' + t.name) })
+          break;
+        }
+    }
+    this.dataSource.data = TREE_DATA;
+  }
+  
+  // setSourceData(treeData: Node[]) {
+  //   let add = '+ Add ';
 
+  //   for (let t of treeData) {
+  //     console.log('pop', t.children?.pop());
+  //     t.children?.push({ name: (add + t.name) });
+  //   }
+  //   // if (treeData[0].children && treeData[1].children && treeData[2].children) {
+  //   //   treeData[0].children[treeData[0].children?.length - 1].onClick = this.addSubtreeHandler;
+  //   //   treeData[1].children[treeData[0].children?.length - 1].onClick = this.addSubtreeHandler;
+  //   //   treeData[2].children[treeData[0].children?.length - 1].onClick = this.addSubtreeHandler;
+  //   //   console.log('click implement on', treeData[0].children[treeData[0].children?.length - 1].name)
+  //   //   console.log('click implement on', treeData[1].children[treeData[0].children?.length - 1].name)
+  //   //   console.log('click implement on', treeData[2].children[treeData[0].children?.length - 1].name)
+  //   // }
+  //   this.dataSource.data = treeData;
+  // }
 
   private _transformer = (node: Node, level: number) => {
     return {
@@ -89,18 +124,9 @@ export class NavTreeComponent implements OnInit {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
 
-  setSourceData(treeData: Node[]) {
-    let add = '+ Add ';
-    for (let t of treeData)
-      if (t.children)
-        t.children.push({ name: (add + t.name) });
-    if (treeData[0].children)
-      treeData[0].children[treeData[0].children?.length - 1].click = (rootTree: string) => {
-
-      }
-    this.dataSource.data = treeData;
-  }
   ngOnInit(): void {
+
   }
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 }
+

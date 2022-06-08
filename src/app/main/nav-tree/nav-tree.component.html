@@ -3,7 +3,7 @@
    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
       <!-- use a disabled button to provide padding for tree leaf -->
       <button mat-icon-button disabled style="width:10px;"></button>
-      <button mat-button (click)="node.click" class="subtree" [class.add]="node.name.includes('+ Add')">{{node.name}}</button>
+      <button mat-button (click)="node.name.includes('+ Add')?addSubtreeHandler(node.name):''" class="subtree" [class.add]="node.name.includes('+ Add')">{{node.name}}</button>
       <!-- <button *ngIf="isLastNode(node)" mat-stroked-button>+ Add</button> -->
 
    </mat-tree-node>

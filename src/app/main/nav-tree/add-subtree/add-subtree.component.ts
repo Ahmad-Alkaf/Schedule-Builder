@@ -1,15 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DialogRootTreeSubmit, NavTreeComponent } from '../nav-tree.component'
 @Component({
   selector: 'app-add-subtree',
   templateUrl: './add-subtree.component.html',
   styleUrls: ['./add-subtree.component.css']
 })
-export class AddSubtreeComponent implements OnInit {
+export class AddSubtreeComponent {
 
-  constructor() { }
+  constructor(public dialogRef: MatDialogRef<NavTreeComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogRootTreeSubmit,) {
+    data.title = data.title.replace('+ Add ', '');
+  }
+  
+  AddHandler() {
+    this.dialogRef.close(this.data);
+  }
 
-  ngOnInit(): void {
+  closeDialog(): void {
+    this.dialogRef.close();
   }
 
 }
