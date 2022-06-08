@@ -1,4 +1,4 @@
-import { CdkDragDrop,moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop,moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { SolveLec, staticLecs, WeekDays } from './utility/index';
 // import solve, {SolveLec, staticLecs} from './index';
@@ -52,11 +52,19 @@ export class TableComponent implements OnInit {
     ];
     // console.log(table.rows);
   }
-  exTds = ['hi','hello','test','one','two']
-  drop(event: CdkDragDrop<string[]>) {//todo change type of event <string[]> to the object
-    moveItemInArray(this.exTds, event.previousIndex, event.currentIndex);
-    console.log(event.previousIndex)
-    console.log(event.currentIndex)
+  // exTds:(string[])[] = [['111','222','333','444','555'],['one','two','three','four','five']]//,['one1','two2','three3','four4','five5'],['one11','two22','three33','four44','five55'],['11','22','33','44','55']]
+  drop(event: CdkDragDrop<(SolveLec|null|'todoDelete')[]>) {//todo change type of event <string[]> to the object
+    console.log(event)
+    if (event.previousContainer === event.container) 
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+     else 
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    // fixRow
   }
 
 }

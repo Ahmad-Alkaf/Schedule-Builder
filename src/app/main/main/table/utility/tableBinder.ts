@@ -1,7 +1,7 @@
 import { WeekDays, SolveLec, WEEK_DAYS, START_TIMES, STEP_TIME } from './index';
 interface row {
    day: WeekDays;
-   tds: (SolveLec | null|'todoDelete')[];
+   tds: (SolveLec|null|'todoDelete')[];
 }
 
 

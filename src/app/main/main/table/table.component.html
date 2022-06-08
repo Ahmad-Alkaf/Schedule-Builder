@@ -10,38 +10,25 @@
             <th colspan="2">12 - 1</th>
          </tr>
       </thead>
-      <tbody>
-         <tr *ngFor="let r of table.rows" >
-            <td>{{r.day}}</td>
-            <td *ngFor="let td of r.tds" [colSpan]="td != null&& td != 'todoDelete'?td.duration*2:1">
-               <app-td *ngIf="td!='todoDelete'" [td]="td"></app-td>
+      <tbody cdkDropListGroup>
+         <tr *ngFor="let r of table.rows" cdkDropListOrientation="horizontal" cdkDropList class="example-list"
+            [cdkDropListData]="r.tds" (cdkDropListDropped)="drop($event)">
+            <td cdkDragDisabled>{{r.day}}</td>
+            <td *ngFor="let t of r.tds" [colSpan]="t != null&& t != 'todoDelete'?t.duration*2:1"
+               [class.example-box]="t" cdkDrag [cdkDragDisabled]="!t">
+               <div  class="example-custom-placeholder" *cdkDragPlaceholder></div>
+               <app-td *ngIf="t!='todoDelete'" [td]="t"></app-td>
             </td>
          </tr>
 
-         <!-- <tr cdkDropList class="example-list" (cdkDropListDropped)="drop($event)" cdkDropListOrientation="horizontal">
-            <td cdkDragDisabled >Saturday</td>
-               <td colspan="2" class="example-box" *ngFor="let ex of exTds" cdkDrag>
-                 <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-                 {{ex}}<br>
-                 {{ex}}
-               </td>          
-         </tr>
-         <tr>
-            <td>Sunday</td>
-            <td colspan="2">asdf</td>
-            <td colspan="4">physics</td>
-            <td>ljfkw</td>
-            <td colspan="3">lcxkjv</td>
-         </tr>
-         <tr>
-            <td>Monday</td>
-            <td></td>
-            <td></td>
-            <td colspan="2">asdf</td>
-            <td colspan="2">physics</td>
-            <td></td>
-            <td></td>
-            <td></td>
+         <!-- <tr cdkDropListOrientation="horizontal" cdkDropList class="example-list" *ngFor="let ex of exTds"
+            [cdkDropListData]="ex" (cdkDropListDropped)="drop($event)">
+            <td cdkDragDisabled>Week Day</td>
+            <td colspan="2" class="example-box" *ngFor="let e of ex" cdkDrag>
+               <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+               {{e}}<br>
+               {{e}}
+            </td>
          </tr> -->
       </tbody>
    </table>
