@@ -1,4 +1,4 @@
-import { CdkDrag, CdkDragDrop, CdkDragEnd, CdkDragEnter, CdkDragExit, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragEnd, CdkDragEnter, CdkDragExit, CdkDropList, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { SolveLec, START_TIME, START_TIMES, staticLecs, WeekDays, WEEK_DAYS } from './utility/index';
 // import solve, {SolveLec, staticLecs} from './index';
@@ -61,7 +61,11 @@ export class TableComponent implements OnInit {
     var td: SolveLec;
 
     if (this.isValidMovement(tds, preTds, tdIndex, tdPreIndex)) {
-      td = this.moveTd(tds, preTds, tdIndex, tdPreIndex);
+      let moving = this.moveTd(tds, preTds, tdIndex, tdPreIndex);
+      if (moving === undefined)
+        return console.error('moveTd return undefined!')
+      else td = moving;
+
       if (preTds !== tds) {//we need to fix the <td> of each row because there are transfer lec between row
         preTds.splice(tdPreIndex, 0, ...Array(td.duration * 2).fill(null));
         tds.splice(tdIndex + 1, td.duration * 2);
@@ -69,12 +73,84 @@ export class TableComponent implements OnInit {
       this.updateTime();
     }
   }
-  isValidMovement(tds: (SolveLec|null)[],preTds:(SolveLec|null)[],tdIndex:number,tdPreIndex:number):boolean {
-    if (!tds.includes(null))
+  isValidMovement = (tds: (SolveLec | null)[], preTds: (SolveLec | null)[], tdIndex: number, tdPreIndex: number): boolean => {
+    const tmp = preTds[tdPreIndex];
+    let lec: SolveLec;
+    // tdIndex = this.fixIndex(tds, tdIndex);
+    // const { fixTds, fixIndex } = this.fixTdsIndex(tds, tdIndex);
+    // console.log('tds', tds)
+    // console.log('fixTds', fixTds)
+    // console.log('index', tdIndex)
+    // console.log('fixIndex', fixIndex)
+    if (tmp === undefined || tmp === null) {
+      console.error('item dragged is undefined', preTds, tdPreIndex, tmp);
       return false;
+    }
+    else lec = tmp;
+
+    if (preTds != tds) {//another row
+      if (!tds.includes(null)) {
+        return false;
+      }
+      for (let i = tdIndex; i < tdIndex + lec.duration * 2; i++)
+        if (tds.length <= i || (tds[i] != null && tds[i] != lec)) {
+          // console.log('invalid i', [...tds], i, tds[i])
+          if (tds[i] != null && tds[i] != lec) {
+            //if there is space for lec but in the wrong position then just shift because we wrote statically. there is limit of 4 lectures which is enough for row that limit by 4 lecs
+            
+            if (tds[i + 1] == null) {
+              tds[i + 1] = tds[i];
+              tds[i] = null
+            } else if (tds[i + 2] == null) {
+              tds[i + 2] = tds[i + 1];
+              tds[i + 1] = tds[i];
+              tds[i] = null;
+            } else if (tds[i + 3] == null) {
+              tds[i + 3] = tds[i + 2];
+              tds[i + 2] = tds[i + 1];
+              tds[i + 1] = tds[i];
+              tds[i] = null;
+            } else if (tds[i + 4] == null) {
+              tds[i + 4] = tds[i + 3];
+              tds[i + 3] = tds[i + 2];
+              tds[i + 2] = tds[i + 1];
+              tds[i + 1] = tds[i];
+              tds[i] = null;
+            } else return false;
+          } else return false;
+        } else {
+          // console.log('valid i', [...tds], 'i', i, 'tds[i]', tds[i], 'dur*2', lec.duration * 2, 'lec', lec)
+        }
+
+    } else {//same row
+
+    }
+
     return true;
   }
-  moveTd = (tds: (SolveLec | null)[], preTds: (SolveLec | null)[], tdIndex: number, tdPreIndex: number): SolveLec => {
+
+
+
+  // fixTdsIndex(tds: (SolveLec | null)[], index: number): { fixTds: (SolveLec | null)[], fixIndex: number } {
+  //   let res: (SolveLec | null)[] = [];
+  //   let resIndex = 0;
+  //   tds.forEach((v, i) => {
+  //     if (v === null) {
+  //       res.push(v);
+  //       i < index ? resIndex++ : '';
+  //     }
+  //     else for (let j = 0; j < v.duration * 2; j++) {
+  //       res.push(v);
+  //       i < index ? resIndex++ : '';
+  //     }
+  //   });
+  //   if (res.length !== START_TIMES.length)
+  //     console.error('fixTds dose not work probably! length is not correct', res.length);
+  //   else if (resIndex >= res.length)
+  //     console.error('fixIndex do not work probably! it is pass the array size=', resIndex, 'arr.size', res.length, 'index', index, 'tds', tds);
+  //   return { fixTds: res, fixIndex: resIndex };
+  // }
+  moveTd = (tds: (SolveLec | null)[], preTds: (SolveLec | null)[], tdIndex: number, tdPreIndex: number): SolveLec | undefined => {
     if (preTds === tds)
       moveItemInArray(tds, tdPreIndex, tdIndex);
     else
@@ -85,60 +161,36 @@ export class TableComponent implements OnInit {
         tdIndex,
       );
     this.updateTime();
-    return tds[tdIndex] || { id: '-1', day: WEEK_DAYS[0], duration: 0, startTime: 0, lecture: { name: 'oiadfdv&*^', weekDuration: 0, teacher: '', room: '' } };
+    return tds[tdIndex] || undefined;
   }
 
-  draggingIndex: number = -1;
-  predicateItems = (index: number, cdk: CdkDrag<SolveLec>): boolean => {
-    this.draggingIndex = index;
+  predicateItems = (index: number, cdk: CdkDrag<SolveLec>, drop: CdkDropList): boolean => {
     let tds: (SolveLec | null)[] = cdk.dropContainer.data;
     let lec: SolveLec = cdk.data;
     let plTds: (SolveLec | null)[] = this.getPlaceholderRow().tds;
-
-    let demo: (SolveLec | null)[] = [];
-    for (let v of plTds) {
-      if (v == null)
-        demo.push(v);
-      else for (let i = 0; i < v.duration * 2; i++)
-        demo.push(v);
-    };
-
+    // if (tds === plTds)
+    //   console.log('tds plTds')
+    console.log('predicate items', index, [...drop.data])
     return true;
   }
 
-  predicateRow = (cdkDrag: CdkDrag<SolveLec>): boolean => {
-    let tds: (SolveLec | null)[] = cdkDrag.dropContainer.data;
-    let lec: SolveLec = cdkDrag.data;
-    let plRow = this.getPlaceholderRow();
-    let plTds = plRow.tds;
-
-    return true;
+  predicateRow(drag: CdkDrag, drop: CdkDropList) {
+    //this fun called rows.length -1 times because it checks all row without the row that already contains td
+    let lec = drag.data;
+    let tds = drop.data;
+    // console.log('drop',drop)
+    let ava = false;
+    for (let i = 0; i < tds.length; i++)
+      if (tds[i] === null) {
+        ava = true;
+        for (let j = i; j < i + lec.duration * 2; j++)
+          if (tds.length <= j || tds[j] != null)
+            ava = false;
+        if (ava == true)
+          return true;
+      }
+    return ava;
   }
-  avaSpaceInRow(tds: (SolveLec | null)[], lec: SolveLec): boolean {
-    for (let i = 0; i < tds.length; i++) {
-      let ava = true;
-      if (tds[i] == null)
-        for (let j = i; j < lec.duration * 2; j++)
-          if (tds.length <= j || tds[j] != null) { ava = false; break; }
-
-      if (ava == true)
-        return true;
-    }
-
-    return false;
-  }
-  enteredRow = (e: CdkDragEnter<any>) => {
-    let tds: (SolveLec | null)[] = e.container.data;
-    let lec: SolveLec = e.item.data;
-    let index = e.currentIndex;
-  }
-
-  exitRow(e: CdkDragExit<any>) {
-    let tds: (SolveLec | null)[] = e.item.dropContainer.data;
-    let lec: SolveLec = e.item.data;
-
-  }
-
 
   getPlaceholderRow(): { day: WeekDays, tds: (SolveLec | null)[] } {
     let placeholderDay: string = $('tr .cdk-drag-placeholder').parent().find('td:first').text();
