@@ -1,5 +1,5 @@
 import { CdkDrag, CdkDragDrop, CdkDragEnd, CdkDragEnter, CdkDragExit, CdkDropList, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { SolveLec, START_TIME, START_TIMES, staticLecs, WeekDays, WEEK_DAYS } from './utility/index';
 // import solve, {SolveLec, staticLecs} from './index';
 import { table } from './utility/tableBinder'
@@ -11,9 +11,9 @@ import * as $ from 'jquery';
 })
 export class TableComponent implements OnInit {
   table = table;
-  tableAttHeader: string[] = ['day', '8', '9', '10', '11', '12'];
+  // tableAttHeader: string[] = ['day', '8', '9', '10', '11', '12'];
   constructor() { }
-
+  
   ngOnInit(): void {
     table.lecs = [{
       startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
@@ -51,7 +51,16 @@ export class TableComponent implements OnInit {
     }
     ];
   }
-
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: any) { 
+    var e = window.event ? window.event : event;
+    // console.log('ctrl',e.ctrlKey)
+    if (e.keyCode == 90 && e.ctrlKey)
+      this.undo();
+  }
+  undo() {
+    console.log('undo')
+  }
   drop = (event: CdkDragDrop<(SolveLec | null)[]>) => {//todo change type of event <string[]> to the object
     // console.log(event);
     let preTds: (SolveLec | null)[] = event.previousContainer.data;
@@ -98,19 +107,19 @@ export class TableComponent implements OnInit {
           if (tds[i] != null && tds[i] != lec) {
             //if there is space for lec but in the wrong position then just shift because we wrote statically. there is limit of 4 lectures which is enough for row that limit by 4 lecs
             
-            if (tds[i + 1] == null) {
+            if (tds[i + 1] === null) {
               tds[i + 1] = tds[i];
               tds[i] = null
-            } else if (tds[i + 2] == null) {
+            } else if (tds[i + 2] === null) {
               tds[i + 2] = tds[i + 1];
               tds[i + 1] = tds[i];
               tds[i] = null;
-            } else if (tds[i + 3] == null) {
+            } else if (tds[i + 3] === null) {
               tds[i + 3] = tds[i + 2];
               tds[i + 2] = tds[i + 1];
               tds[i + 1] = tds[i];
               tds[i] = null;
-            } else if (tds[i + 4] == null) {
+            } else if (tds[i + 4] === null) {
               tds[i + 4] = tds[i + 3];
               tds[i + 3] = tds[i + 2];
               tds[i + 2] = tds[i + 1];
