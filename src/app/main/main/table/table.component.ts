@@ -1,8 +1,8 @@
 import { CdkDrag, CdkDragDrop, CdkDragEnd, CdkDragEnter, CdkDragExit, CdkDropList, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { SolveLec, START_TIME, START_TIMES, staticLecs, WeekDays, WEEK_DAYS } from './utility/index';
 // import solve, {SolveLec, staticLecs} from './index';
-import { table } from './utility/tableBinder'
+import { Row, table } from './utility/tableBinder'
 import * as $ from 'jquery';
 @Component({
   selector: 'app-table',
@@ -11,11 +11,12 @@ import * as $ from 'jquery';
 })
 export class TableComponent implements OnInit {
   table = table;
-  // tableAttHeader: string[] = ['day', '8', '9', '10', '11', '12'];
   constructor() { }
   
-  ngOnInit(): void {
-    table.lecs = [{
+  flow: { curIndex: number, data: (Row[])[] } = { curIndex: -1, data: [] }
+  
+  ngOnInit (): void  {
+    this.table.lecs = [{
       startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
       lecture: { name: 'Math', teacher: 'Ahmed', weekDuration: 6, room: '301' }
     }, {
@@ -50,18 +51,37 @@ export class TableComponent implements OnInit {
       lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
     }
     ];
+    this.pushToTableHistory()
   }
+
   @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: any) { 
+  handleKeyboardEvent = (event: any) => {
     var e = window.event ? window.event : event;
-    // console.log('ctrl',e.ctrlKey)
     if (e.keyCode == 90 && e.ctrlKey)
       this.undo();
   }
-  undo() {
-    console.log('undo')
+
+  pushToTableHistory = () => {
+    // console.log(this.table)
+    // console.log('cloned',JSON.parse(JSON.stringify(this.table.rows)))
+    this.flow.data[this.flow.curIndex+1] = JSON.parse(JSON.stringify(this.table.rows));
+    this.flow.curIndex = ++this.flow.curIndex;
+    console.log('pushed index',this.flow.curIndex)
+    // this.table.rows = this.flow.data[this.flow.curIndex];
   }
-  drop = (event: CdkDragDrop<(SolveLec | null)[]>) => {//todo change type of event <string[]> to the object
+
+  undo = () => {
+    // console.log('before', this.flow.data[this.flow.curIndex]);
+    // console.log('after', this.flow.data[this.flow.curIndex - 1]);
+    if (this.flow.data[this.flow.curIndex - 1]) {
+      // this.flow.data.splice(this.flow.data.length-1, 1);
+      this.table.rows = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
+      console.log('retain index',this.flow.curIndex)
+    }
+    else console.log('can not undo. data', this.flow.data, 'curIndex', this.flow.curIndex);
+  }
+
+  drop = (event: CdkDragDrop<(SolveLec | null)[]>) => {
     // console.log(event);
     let preTds: (SolveLec | null)[] = event.previousContainer.data;
     let tds: (SolveLec | null)[] = event.container.data;
@@ -81,16 +101,12 @@ export class TableComponent implements OnInit {
       }
       this.updateTime();
     }
+    this.pushToTableHistory()
   }
+
   isValidMovement = (tds: (SolveLec | null)[], preTds: (SolveLec | null)[], tdIndex: number, tdPreIndex: number): boolean => {
     const tmp = preTds[tdPreIndex];
     let lec: SolveLec;
-    // tdIndex = this.fixIndex(tds, tdIndex);
-    // const { fixTds, fixIndex } = this.fixTdsIndex(tds, tdIndex);
-    // console.log('tds', tds)
-    // console.log('fixTds', fixTds)
-    // console.log('index', tdIndex)
-    // console.log('fixIndex', fixIndex)
     if (tmp === undefined || tmp === null) {
       console.error('item dragged is undefined', preTds, tdPreIndex, tmp);
       return false;
@@ -106,7 +122,7 @@ export class TableComponent implements OnInit {
           // console.log('invalid i', [...tds], i, tds[i])
           if (tds[i] != null && tds[i] != lec) {
             //if there is space for lec but in the wrong position then just shift because we wrote statically. there is limit of 4 lectures which is enough for row that limit by 4 lecs
-            
+
             if (tds[i + 1] === null) {
               tds[i + 1] = tds[i];
               tds[i] = null
@@ -139,26 +155,6 @@ export class TableComponent implements OnInit {
   }
 
 
-
-  // fixTdsIndex(tds: (SolveLec | null)[], index: number): { fixTds: (SolveLec | null)[], fixIndex: number } {
-  //   let res: (SolveLec | null)[] = [];
-  //   let resIndex = 0;
-  //   tds.forEach((v, i) => {
-  //     if (v === null) {
-  //       res.push(v);
-  //       i < index ? resIndex++ : '';
-  //     }
-  //     else for (let j = 0; j < v.duration * 2; j++) {
-  //       res.push(v);
-  //       i < index ? resIndex++ : '';
-  //     }
-  //   });
-  //   if (res.length !== START_TIMES.length)
-  //     console.error('fixTds dose not work probably! length is not correct', res.length);
-  //   else if (resIndex >= res.length)
-  //     console.error('fixIndex do not work probably! it is pass the array size=', resIndex, 'arr.size', res.length, 'index', index, 'tds', tds);
-  //   return { fixTds: res, fixIndex: resIndex };
-  // }
   moveTd = (tds: (SolveLec | null)[], preTds: (SolveLec | null)[], tdIndex: number, tdPreIndex: number): SolveLec | undefined => {
     if (preTds === tds)
       moveItemInArray(tds, tdPreIndex, tdIndex);
@@ -176,14 +172,11 @@ export class TableComponent implements OnInit {
   predicateItems = (index: number, cdk: CdkDrag<SolveLec>, drop: CdkDropList): boolean => {
     let tds: (SolveLec | null)[] = cdk.dropContainer.data;
     let lec: SolveLec = cdk.data;
-    let plTds: (SolveLec | null)[] = this.getPlaceholderRow().tds;
-    // if (tds === plTds)
-    //   console.log('tds plTds')
-    console.log('predicate items', index, [...drop.data])
+    // let plTds: (SolveLec | null)[] = this.getPlaceholderRow().tds;
     return true;
   }
 
-  predicateRow(drag: CdkDrag, drop: CdkDropList) {
+  predicateRow = (drag: CdkDrag, drop: CdkDropList) => {
     //this fun called rows.length -1 times because it checks all row without the row that already contains td
     let lec = drag.data;
     let tds = drop.data;
@@ -201,9 +194,9 @@ export class TableComponent implements OnInit {
     return ava;
   }
 
-  getPlaceholderRow(): { day: WeekDays, tds: (SolveLec | null)[] } {
+  getPlaceholderRow = (): { day: WeekDays, tds: (SolveLec | null)[] } => {
     let placeholderDay: string = $('tr .cdk-drag-placeholder').parent().find('td:first').text();
-    for (let row of table.rows) {
+    for (let row of this.table.rows) {
       if (row.day == placeholderDay)
         return row;
     }
@@ -211,25 +204,13 @@ export class TableComponent implements OnInit {
     return { day: 'Saturday', tds: [null] }
   }
 
-  // getPlaceholderIndex(): any{
-  //   // let placeholderDay: string = $('tr td.cdk-drag-placeholder')
-  //   let placeholder = $('tr td.cdk-drag-placeholder');
-  //   let tr = placeholder.parent().children();
-  //   for (let i = 1; i < tr.length; i++)
-  //     if(tr[i] == placeholder[0])
-  //       console.log(i-1)
-  //   for (let row of table.rows) {
-  //     if (row.day == $('tr div.cdk-drag-placeholder').parent().find('td:first').text())
-  //       return row.tds;
-  //   }
-  // }
   /**
    * Notice: lec should includes in tds. i.e don't use me inside predicate functions
    * @param tds 
    * @param lec 
    * @returns index that count lecture by double its duration
    */
-  getIndex(tds: (SolveLec | null)[], lec: SolveLec): number {
+  getIndex = (tds: (SolveLec | null)[], lec: SolveLec): number => {
     let i = 0;
     for (let td of tds) {
       if (td == lec)
@@ -243,7 +224,7 @@ export class TableComponent implements OnInit {
   }
 
   updateTime = () => {
-    for (let row of table.rows)
+    for (let row of this.table.rows)
       for (let td of row.tds) {
         if (td) {
           let index = this.getIndex(row.tds, td);
@@ -252,22 +233,4 @@ export class TableComponent implements OnInit {
         }
       }
   }
-  // updateRows = (): void => {
-  //   for (let row of table.rows) {
-  //     let totalIndexes: number = 0;
-  //     for (let i = 0; i < row.tds.length; i++) {
-  //       let td = row.tds[i];
-  //       totalIndexes += td != null ? td.duration * 2 : 1;
-  //       if (8 + totalIndexes / 2 < (td.startTime)) {
-  //         row.tds.splice(row.tds.indexOf(td), 0, null);
-  //         console.log(row);
-  //         return this.updateRows();
-  //       } else if (8 + totalIndexes / 2 < td.startTime) {
-  //         row.tds.splice(row.tds.indexOf(td), 1);
-  //         return this.updateRows();
-  //       }
-  //     }
-
-  //   }
-  // }
 }
