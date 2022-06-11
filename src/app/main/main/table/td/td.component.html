@@ -1,8 +1,11 @@
 
+
    <div *ngIf="td" class="text-nowrap">
-      <div>
-         {{td.lecture.name}}<br>
+      <span class="d-none">{{td.id}}</span>
+      <div class="d-block text-center">
+         {{td.lecture.name}}
       </div>
+      
       <div class="d-flex justify-content-evenly">
          <div>
             {{td.lecture.teacher}}

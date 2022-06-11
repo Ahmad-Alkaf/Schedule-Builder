@@ -1,10 +1,10 @@
 import { WeekDays, SolveLec, WEEK_DAYS, START_TIMES, STEP_TIME } from './index';
 interface row {
    day: WeekDays;
-   tds: (SolveLec|null|'todoDelete')[];
+   tds: (SolveLec|null)[];
 }
 
-
+var todoDelete = {id:Math.random().toString(36).substring(2), day: WEEK_DAYS[0], duration: 0, startTime: 0, lecture: { name: 'oidv&*^', weekDuration: 0, teacher: '', room: '' } };
 export const table: { rows: row[], lecs: SolveLec[]; } = {
    rows: [],
 
@@ -18,9 +18,9 @@ export const table: { rows: row[], lecs: SolveLec[]; } = {
                r.tds[START_TIMES.indexOf(l.startTime)] = l;
                //delete empty td to make lecture longer then STEP_TIME take more than one column i.e long width
                for (let i = l.startTime + STEP_TIME; i < l.startTime + l.duration; i += STEP_TIME)
-                  r.tds[START_TIMES.indexOf(i)] = 'todoDelete';
+                  r.tds[START_TIMES.indexOf(i)] = todoDelete;
             }
       for (let r of this.rows)
-         r.tds = r.tds.filter((v) => v != 'todoDelete')
+         r.tds = r.tds.filter((v) => v != todoDelete)
       }
 }

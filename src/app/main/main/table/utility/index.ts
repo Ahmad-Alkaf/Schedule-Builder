@@ -1,6 +1,6 @@
 export type WeekDays = 'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday';
 // export type LecAllowableDur = 1 | 1.5 | 2 | 2.5 | 3;
-const START_TIME: number = 8;
+export const START_TIME: number = 8;
 const END_TIME: number = 1;
 export const STEP_TIME: number = 0.5;//this is not reliable to change
 const LECTURE_HOURS: number[] = [1, 1.5, 2, 2.5, 3];
@@ -19,6 +19,7 @@ export interface StaticLec {
 }
 
 export interface SolveLec {
+   id: string;
    lecture: StaticLec;
    day: WeekDays;
    duration: number;
@@ -43,7 +44,7 @@ export function generateSchedule(staticLecs: StaticLec[], lectures: SolveLec[]):
                   for (let st of START_TIMES)//8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12
                      for (let lecHour of LECTURE_HOURS) //1 | 1.5 | 2 | 2.5 | 3
                      {
-                        var n: SolveLec = { lecture: s, duration: lecHour, day, startTime: st };
+                        var n: SolveLec = { id:Math.random().toString(36).substring(2),lecture: s, duration: lecHour, day, startTime: st };
                         if (isPossible(lectures, n)) {
                            lectures.push(n);
                            solve(staticLecs, lectures);
