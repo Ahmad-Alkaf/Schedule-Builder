@@ -59,6 +59,8 @@ export class TableComponent implements OnInit {
     var e = window.event ? window.event : event;
     if (e.keyCode == 90 && e.ctrlKey)
       this.undo();
+    else if (e.keyCode == 89 && e.ctrlKey)
+      this.redo();
   }
 
   pushToTableHistory = () => {
@@ -66,6 +68,7 @@ export class TableComponent implements OnInit {
     // console.log('cloned',JSON.parse(JSON.stringify(this.table.rows)))
     this.flow.data[this.flow.curIndex+1] = JSON.parse(JSON.stringify(this.table.rows));
     this.flow.curIndex = ++this.flow.curIndex;
+    this.flow.data.splice(this.flow.curIndex, this.flow.data.length -1- this.flow.curIndex);
     console.log('pushed index',this.flow.curIndex)
     // this.table.rows = this.flow.data[this.flow.curIndex];
   }
@@ -78,7 +81,14 @@ export class TableComponent implements OnInit {
       this.table.rows = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
       console.log('retain index',this.flow.curIndex)
     }
-    else console.log('can not undo. data', this.flow.data, 'curIndex', this.flow.curIndex);
+    else console.log('can not undo. you are up to date');
+  }
+  
+  redo = () => {
+    if (this.flow.data[this.flow.curIndex + 1]) 
+      this.table.rows = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
+    else console.log('can not redo. you are up to data')
+    
   }
 
   drop = (event: CdkDragDrop<(SolveLec | null)[]>) => {
