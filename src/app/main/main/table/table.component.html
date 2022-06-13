@@ -12,14 +12,13 @@
       </thead>
       <tbody cdkDropListGroup>
          <tr *ngFor="let r of table.rows" cdkDropListOrientation="horizontal" cdkDropList class="example-list"
-            [cdkDropListData]="r.tds" (cdkDropListDropped)="drop($event)" [cdkDropListSortPredicate]="predicateItems"
-            [cdkDropListEnterPredicate]="predicateRow">
-            <td cdkDragDisabled>{{r.day}}</td>
+            [cdkDropListData]="r.tds" (cdkDropListDropped)="drop($event)" [cdkDropListEnterPredicate]="predicateRow">
+            <td cdkDragDisabled><b>{{r.day}}</b></td>
             <td *ngFor="let t of r.tds" [colSpan]="t != null?t.duration*2:1" [class.example-box]="t" [cdkDragData]="t"
-               cdkDrag [cdkDragDisabled]="!t">
+               cdkDrag [cdkDragDisabled]="!t"  (cdkDragStarted)="cdkStarted($event)" [ngClass]="{'lecture':t,'off':!t}">
 
-               <div *cdkDragPlaceholder></div>
-               <app-td [td]="t" class="position-relative"></app-td>
+               <div *cdkDragPlaceholder ></div>
+               <app-td [td]="t"></app-td>
                <div *ngIf="t" class="example-handle" cdkDragHandle>
                   <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
                      <path

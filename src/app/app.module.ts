@@ -21,6 +21,7 @@ import { AddSubtreeComponent } from './main/nav-tree/add-subtree/add-subtree.com
 import {MatTableModule} from '@angular/material/table';
 import { TableComponent } from './main/main/table/table.component';
 import { TdComponent } from './main/main/table/td/td.component'; 
+import { SoundService } from './sound.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +54,7 @@ import { TdComponent } from './main/main/table/td/td.component';
     BrowserAnimationsModule,
     // MatSnackBarModule
   ],
-  providers: [],
+  providers: [SoundService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

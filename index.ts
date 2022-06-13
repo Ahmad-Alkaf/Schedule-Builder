@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const path = require('path');
 const app = express();
 app.use(bodyParser.json());
-app.use(express.static(__dirname + '/dist/empty_project'))
+app.use(express.static(__dirname + '/dist/schedule_maker'))
 app.get('/*', (req: any, res: any) => {
    console.log('/*', path.join(__dirname))
    res.sendFile(path.join(__dirname));

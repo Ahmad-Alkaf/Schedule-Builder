@@ -75,7 +75,7 @@ var opens = require('open');
 var fs = require("fs");
 var app = express();
 app.use(bodyParser.json());
-app.use(express.static(__dirname + '/dist/empty_project'));
+app.use(express.static(__dirname + '/dist/schedule_maker'));
 app.get('/api/v1/openFile', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         console.log('open filePath=', req.query.filePath);

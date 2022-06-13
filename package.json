@@ -1,10 +1,13 @@
 {
-  "name": "empty_project",
+  "name": "schedule_maker",
   "version": "0.0.0",
+  "main":"./app.js",
   "scripts": {
     "ng": "ng",
     "start": "nodemon server.js",
     "build": "ng build",
+    "start-electron": "ng build --base-href ./ && electron-forge start",
+    "build-electron": "ng build --base-href ./ && electron-forge make",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -30,9 +33,12 @@
     "nodemon": "^2.0.15",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "electron-forge": "^5.2.4",
+    "electron-squirrel-startup": "^1.0.0"
   },
   "devDependencies": {
+    "electron-prebuilt-compile": "8.2.0",
     "@angular-devkit/build-angular": "~13.3.3",
     "@angular/cli": "~13.3.3",
     "@angular/compiler-cli": "~13.3.0",
