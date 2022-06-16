@@ -5,8 +5,9 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { AddSubtreeComponent } from '../../../dialog/add-subtree/add-subtree.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { BehaviorSubject } from 'rxjs';
+import { DataService, Lesson, Room, Teacher } from 'src/app/data.service';
 interface Node {
-  children?: Node[];
+  children?: (Lesson|Room|Teacher)[];
   name: string;
 }
 
@@ -21,42 +22,8 @@ export interface DialogRootTreeSubmit {
   name?: string;
   certificate?: string;
 }
-/**
-* Food data with nested structure.
-* Each node has a name and an optional list of children.
-*/
-// const TREE_DATA: Node[] = [
-//   {
-//     name: 'Teacher',
-//     children: [{ name: 'Ahmed Shaikh' }, { name: 'Hassen' }, { name: 'Hamzah' }, { name: '+ Add Teacher' }],
-//   },
-//   {
-//     name: 'Lesson',
-//     children: [{ name: 'PM' }, { name: 'HCI' }, { name: 'Server-side' }, { name: '+ Add Lesson' }],
-//   },
-//   {
-//     name: 'Room',
-//     children: [{ name: '301' }, { name: '401' }, { name: '302' }, { name: '+ Add Room' }]
-//   }
-// ];
-const TREE_DATA = {
-  Teacher: {
-    'Ahmed Shaikh':null, 
-    'Hassen':null, 
-    'Hamzah':null,
- 
-  },
-  Lesson: {
-    'PM': null,
-    'HCI': null,
-    'Server-side': null
-  },
-  Room: {
-    '301': null,
-    '401':null,
-    '302':null
-  }
-};
+
+
 
 /**
  * Checklist database, it can build a tree structured Json object.
@@ -72,16 +39,6 @@ class ChecklistDatabase {
   }
 
   constructor() {
-    this.initialize();
-  }
-
-  initialize() {
-    // Build the tree nodes from Json object. The result is a list of `Node` with nested
-    //     file node as children.
-    const data = this.buildFileTree(TREE_DATA, 0);
-
-    // Notify the change.
-    this.dataChange.next(data);
   }
 
   /**
@@ -107,6 +64,7 @@ class ChecklistDatabase {
 
   /** Add an item to to-do list */
   insertItem(parent: Node, name: string) {
+  
     if (parent.children) {
       parent.children.push({ name } as Node);
       this.dataChange.next(this.data);
@@ -149,7 +107,7 @@ export class NavTreeComponent {
   /** The selection for checklist */
   checklistSelection = new SelectionModel<FlatNode>(true /* multiple */);
 
-  constructor(public dialog: MatDialog, private _database: ChecklistDatabase) {
+  constructor(public dialog: MatDialog, private _database: ChecklistDatabase,private dataService:DataService) {
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
       this.getLevel,
@@ -159,15 +117,38 @@ export class NavTreeComponent {
     this.treeControl = new FlatTreeControl<FlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-    // this.dataSource.data = TREE_DATA;
-    // console.log('source', this.dataSource);
     _database.dataChange.subscribe(data => {
+      for (let n of data)
+        if (n.name == 'Teacher')
+          this.dataService.teachers = n.children || [];
+        else if (n.name == 'Room')
+          this.dataService.rooms = n.children || [];
+        else if (n.name == 'Lesson')
+          this.dataService.lessons = n.children || [];
+      console.log('sub dataService',dataService);
       this.dataSource.data = data;
     });
+    console.log(Object.keys(dataService.lessons))
+    // _database.set({'Lesson':data.lessons,'Room':data.rooms,'Teacher':data.teachers})
+    this.setTreeData(dataService.teachers, dataService.lessons, dataService.rooms);
+    setInterval(()=>console.log(this.getTreeData()),3000)
   }
 
   /**VVVV  Tree   VVVV */
-
+  setTreeData(teachers:Teacher[],lessons:Lesson[],rooms:Room[]) {
+    let tree: { Teacher: any, Lesson: any, Room: any } = { Teacher: {}, Lesson: {}, Room: {} };
+    for (let t of teachers)
+      tree.Teacher[t.name] = null;
+    for (let l of lessons)
+      tree.Lesson[l.name] = null;
+    for (let r of rooms)
+      tree.Room[r.name] = null;
+    this._database.dataChange.next(this._database.buildFileTree(tree,0))
+  }
+  
+  getTreeData() {
+    return this._database.data;
+  }
 
 
   getLevel = (node: FlatNode) => node.level;
