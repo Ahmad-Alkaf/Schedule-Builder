@@ -1,10 +1,11 @@
 import { CdkDrag, CdkDragDrop, CdkDragEnd, CdkDragEnter, CdkDragExit, CdkDragStart, CdkDropList, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, HostListener, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { SolveLec, START_TIME, START_TIMES, staticLecs, WeekDays, WEEK_DAYS } from './utility/index';
+import { SolveLec, START_TIME, START_TIMES, WeekDays, WEEK_DAYS } from './utility/index';
 // import solve, {SolveLec, staticLecs} from './index';
 import { Row, table } from './utility/tableBinder'
 import * as $ from 'jquery';
 import { SoundService } from 'src/app/sound.service';
+import { GenerateTableService } from './utility/generate-table.service';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -12,7 +13,7 @@ import { SoundService } from 'src/app/sound.service';
 })
 export class TableComponent implements OnInit {
   table = table;
-  constructor(private sound: SoundService) { }
+  constructor(private sound: SoundService, public gt:GenerateTableService) { }
 
   flow: { curIndex: number, data: (Row[])[] } = { curIndex: -1, data: [] }
 
@@ -65,20 +66,14 @@ export class TableComponent implements OnInit {
   }
 
   pushToTableHistory = () => {
-    // console.log(this.table)
-    // console.log('cloned',JSON.parse(JSON.stringify(this.table.rows)))
     this.flow.data[this.flow.curIndex + 1] = JSON.parse(JSON.stringify(this.table.rows));
     this.flow.curIndex = ++this.flow.curIndex;
     this.flow.data.splice(this.flow.curIndex, this.flow.data.length - 1 - this.flow.curIndex);
     console.log('pushed index', this.flow.curIndex)
-    // this.table.rows = this.flow.data[this.flow.curIndex];
   }
 
   undo = () => {
-    // console.log('before', this.flow.data[this.flow.curIndex]);
-    // console.log('after', this.flow.data[this.flow.curIndex - 1]);
     if (this.flow.data[this.flow.curIndex - 1]) {
-      // this.flow.data.splice(this.flow.data.length-1, 1);
       this.table.rows = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
       console.log('retain index', this.flow.curIndex)
     }
@@ -89,26 +84,8 @@ export class TableComponent implements OnInit {
     if (this.flow.data[this.flow.curIndex + 1])
       this.table.rows = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
     else this.sound.play(this.sound.notification)
-
-
   }
 
-  cdkMoved = (event: any) => {
-    // if (event.event.target instanceof HTMLTableCellElement) {
-    //   event.event.target.style = "transform: translate3d(0px,0px,0px)";
-    //   console.log(event.event.target.classList)
-    // }
-    // console.log($('div.cdk-drag-placeholder').one('change', function () {
-    //   this.innerHTML = 'heelo'
-    // }))
-  }
-  cdkStarted = (event: any) => {
-    let td: SolveLec = event.source.data;
-    let tds = event.source.dropContainer;
-    // tds.addItem(new CdkDrag<SolveLec | null>(null, tds, document, event.source._ngZone,event.source._viewContainerRef,))
-
-    console.log(event.source.config)
-  }
   drop = (event: CdkDragDrop<(SolveLec | null)[]>) => {
     // console.log(event);
     let preTds: (SolveLec | null)[] = event.previousContainer.data;
@@ -129,7 +106,7 @@ export class TableComponent implements OnInit {
       }
       this.updateTime();
       this.pushToTableHistory()
-    }else this.sound.play(this.sound.error)
+    } else this.sound.play(this.sound.error)
   }
 
   isValidMovement = (tds: (SolveLec | null)[], preTds: (SolveLec | null)[], tdIndex: number, tdPreIndex: number): boolean => {
@@ -147,36 +124,12 @@ export class TableComponent implements OnInit {
       }
       for (let i = tdIndex; i < tdIndex + lec.duration * 2; i++)
         if (tds.length <= i || (tds[i] != null && tds[i] != lec)) {
-          // console.log('invalid i', [...tds], i, tds[i])
-          // if (tds[i] != null && tds[i] != lec&&tds != preTds) {
-          //   //if there is space for lec but in the wrong position then just shift because we wrote statically. there is limit of 4 lectures which is enough for row that limit by 4 lecs
-            
-          //   if (tds[i + 1] === null) {
-          //     tds[i + 1] = tds[i];
-          //     tds[i] = null
-          //   } else if (tds[i + 2] === null) {
-          //     tds[i + 2] = tds[i + 1];
-          //     tds[i + 1] = tds[i];
-          //     tds[i] = null;
-          //   } else if (tds[i + 3] === null) {
-          //     tds[i + 3] = tds[i + 2];
-          //     tds[i + 2] = tds[i + 1];
-          //     tds[i + 1] = tds[i];
-          //     tds[i] = null;
-          //   } else if (tds[i + 4] === null) {
-          //     tds[i + 4] = tds[i + 3];
-          //     tds[i + 3] = tds[i + 2];
-          //     tds[i + 2] = tds[i + 1];
-          //     tds[i + 1] = tds[i];
-          //     tds[i] = null;
-          //   } else return false;
-          // } else return false;
           return false;
         }
 
-    } else {}//same row
+    } else { }//same row
 
-    
+
 
     return true;
   }
@@ -214,15 +167,7 @@ export class TableComponent implements OnInit {
     return ava;
   }
 
-  getPlaceholderRow = (): { day: WeekDays, tds: (SolveLec | null)[] } => {
-    let placeholderDay: string = $('tr .cdk-drag-placeholder').parent().find('td:first').text();
-    for (let row of this.table.rows) {
-      if (row.day == placeholderDay)
-        return row;
-    }
-    console.error('lecture was not in any row!!!')
-    return { day: 'Saturday', tds: [null] }
-  }
+
 
   /**
    * Notice: lec should includes in tds. i.e don't use me inside predicate functions

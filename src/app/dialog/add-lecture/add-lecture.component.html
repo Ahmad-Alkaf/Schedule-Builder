@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Add New Lecture</h1>
+<div mat-dialog-content>
+   <mat-form-field appearance="fill">
+      <mat-label>Favorite animal</mat-label>
+      <mat-select [formControl]="lectureControl" required>
+        <mat-option>--</mat-option>
+        <!-- <mat-option *ngFor="let teacher of data.teachers" [value]="teacher">
+          {{teacher.name}}
+        </mat-option> -->
+      </mat-select>
+      <mat-error *ngIf="lectureControl.hasError('required')">Please choose an animal</mat-error>
+      <!-- <mat-hint>{{lectureControl.value?.sound}}</mat-hint> -->
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+   <!-- <button mat-button (click)="closeDialog()" color="accent">Cancel</button>
+   <button mat-button (click)="AddHandler()" cdkFocusInitial color="primary">Add</button> -->
+</div>

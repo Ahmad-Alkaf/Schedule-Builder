@@ -14,7 +14,7 @@
             {{td.lecture.room}}
          </div>
          <div>
-            {{td.startTime}} - {{(td.startTime + td.duration)}}
+            {{td.startTime}} - {{((td.startTime + td.duration)>=13?(td.startTime + td.duration-12):(td.startTime + td.duration))}}
          </div>
       </div>
    </div>

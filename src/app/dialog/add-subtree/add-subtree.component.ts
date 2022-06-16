@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogRootTreeSubmit, NavTreeComponent } from '../nav-tree.component'
+import { DialogRootTreeSubmit, NavTreeComponent } from '../../main/main/nav-tree/nav-tree.component'
 @Component({
   selector: 'app-add-subtree',
   templateUrl: './add-subtree.component.html',

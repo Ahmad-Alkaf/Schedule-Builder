@@ -13,6 +13,9 @@ tr td:first-child {
 th:not(:first-child) {
   width: 18%!important;
 }
+th{
+  border:1px solid #ccc;
+}
 
 td {
   height: 3vw;
@@ -20,6 +23,7 @@ td {
   vertical-align: middle;
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   position: relative;
+  border:1px solid #ccc;
 
 }
 
@@ -27,9 +31,10 @@ td {
 }
 .off{
 }
-
+.invalidTable{
+  border:2px solid var(--bs-danger);
+}
 .lecture,.off{
-  border:1px solid #ccc;
   
 }
 
@@ -37,7 +42,7 @@ td {
   position: absolute;
   top: 5px;
   left: 5px;
-  color: #111;
+  /* color: #111; */
   cursor: move;
   width: 18px;
   height: 18px;  
@@ -57,24 +62,9 @@ td {
   transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.example-box:last-child {
-  border: none;
-}
+
 
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.example-custom-placeholder {
-  height: 4vw;
-  /* box-sizing: border-box; */
-  border: 3px dotted #999;
-  background-color: #ccc;
-  /* margin-left: 0; */
-  /* left: 0; */
-  /* max-width:18vw; */
-  /* width:9vw; */
-  /* margin-right:auto; */
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
@@ -92,21 +82,13 @@ div.cdk-drag-preview {
 
 }
 
-.cdk-drag-preview {
-  /* background-color: blue; */
-}
 
 .cdk-drag-handle {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .cdk-drag-placeholder {
-  /* background-color: yellow; */
-  /* opacity: 0; */
-  /* width:0;will bug the animation when user swap lec to the right */
-  /* opacity: 0; */
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-
 }
 .cdk-drag{
   /* background-color: aquamarine; */

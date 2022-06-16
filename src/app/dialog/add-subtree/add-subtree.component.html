@@ -1,12 +1,11 @@
 <h1 mat-dialog-title>Add New {{data.title}}</h1>
 <div mat-dialog-content>
-   <p>Please Enter {{data.title}} Name</p>
    <mat-form-field appearance="outline">
       <mat-label>{{data.title}} Name</mat-label>
       <input matInput [(ngModel)]="data.name">
    </mat-form-field>
 </div>
 <div mat-dialog-actions>
-   <button mat-button (click)="closeDialog()">Cancel</button>
-   <button mat-button (click)="AddHandler()" cdkFocusInitial>Add</button>
+   <button mat-button (click)="closeDialog()" color="accent">Cancel</button>
+   <button mat-button (click)="AddHandler()" cdkFocusInitial color="primary">Add</button>
 </div>
