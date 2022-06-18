@@ -1,20 +1,32 @@
-
-
-   <div *ngIf="td" class="text-nowrap">
-      <span class="d-none">{{td.id}}</span>
-      <div class="d-block text-center">
-         {{td.lecture.name}}
-      </div>
-      
-      <div class="d-flex justify-content-evenly">
-         <div>
-            {{td.lecture.teacher}}
-         </div>
-         <div>
-            {{td.lecture.room}}
-         </div>
-         <div>
-            {{td.startTime}} - {{((td.startTime + td.duration)>=13?(td.startTime + td.duration-12):(td.startTime + td.duration))}}
-         </div>
-      </div>
+<div *ngIf="!!td" class="text-nowrap">
+   <span class="d-none">{{td.id}}</span>
+   <div class="d-block text-center">
+      {{td.lecture.name}}
    </div>
+
+   <div class="d-flex justify-content-evenly">
+      <div>
+         {{td.lecture.teacher}}
+      </div>
+      <div>
+         {{td.lecture.room}}
+      </div>
+      <div *ngIf="td.startTime >= final.START_TIME; else duration">
+         {{td.startTime}} - {{((td.startTime + td.duration)>=13?(td.startTime + td.duration-12):(td.startTime +
+         td.duration))}}
+      </div>
+      <ng-template #duration>
+         {{td.duration}} Hour{{td.duration>=2?'s':''}}
+      </ng-template>
+   </div>
+   <div class="options">
+      <button color="primary" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options">
+         <mat-icon>more_vert</mat-icon>
+       </button>
+       <mat-menu #menu="matMenu">
+         <app-lecture-options [td]="td"></app-lecture-options>
+       </mat-menu>
+       
+   </div>
+</div>
+

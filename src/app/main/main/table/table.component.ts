@@ -1,59 +1,29 @@
-import { CdkDrag, CdkDragDrop, CdkDragEnd, CdkDragEnter, CdkDragExit, CdkDragStart, CdkDropList, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
-import { Component, EventEmitter, HostListener, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { SolveLec, START_TIME, START_TIMES, WeekDays, WEEK_DAYS } from './utility/index';
-// import solve, {SolveLec, staticLecs} from './index';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
+import { Component, HostListener,OnInit } from '@angular/core';
+import { Final, SolveLec } from './utility/interface';
 import { Row, table } from './utility/tableBinder'
-import * as $ from 'jquery';
 import { SoundService } from 'src/app/sound.service';
 import { GenerateTableService } from './utility/generate-table.service';
+import { DataService } from 'src/app/data.service';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  styleUrls: ['./table.component.css'],
+  providers:[Final]
 })
 export class TableComponent implements OnInit {
   table = table;
-  constructor(private sound: SoundService, public gt:GenerateTableService) { }
+  constructor(private sound: SoundService, public gt: GenerateTableService, private dataService: DataService, private final: Final,iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    iconRegistry.addSvgIconLiteral('moveable', sanitizer.bypassSecurityTrustHtml(this.final.SVG_moveable));
+   }
 
   flow: { curIndex: number, data: (Row[])[] } = { curIndex: -1, data: [] }
 
   ngOnInit(): void {
-    this.table.lecs = [{
-      startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Math', teacher: 'Ahmed', weekDuration: 6, room: '301' }
-    }, {
-      startTime: 10, duration: 1, day: 'Saturday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Chemistry', teacher: 'Ali', weekDuration: 6, room: 'Lab 4' }
-    }, {
-      startTime: 12, duration: 1, day: 'Thursday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'PM', teacher: 'Hamza', weekDuration: 1, room: '401' }
-    }, {
-      startTime: 11, duration: 1.5, day: 'Wednesday', id: Math.random().toString(36).substring(2),
-      lecture: { name: "HCI", teacher: 'Ahmed', weekDuration: 1.5, room: '500' }
-    },
-    {
-      startTime: 9, duration: 2, day: 'Wednesday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Server-Side', teacher: 'Hassen', weekDuration: 2, room: '403' }
-    },
-    {
-      startTime: 8, duration: 2, day: 'Sunday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'English', teacher: 'Abduallah', weekDuration: 3, room: '301' },
-    },
-    {
-      startTime: 11, duration: 2, day: 'Sunday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Database', teacher: 'Mohammed', weekDuration: 2, room: 'Lab 3' }
-    }, {
-      startTime: 8, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-    }, {
-      startTime: 10, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-    }, {
-      startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
-    }
-    ];
-    this.pushToTableHistory()
+    this.table.lecs = this.dataService.tableLectures;
+    this.pushToTableHistory();
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -193,7 +163,7 @@ export class TableComponent implements OnInit {
       for (let td of row.tds) {
         if (td) {
           let index = this.getIndex(row.tds, td);
-          td.startTime = START_TIME + index / 2;
+          td.startTime = this.final.START_TIME + index / 2;
           td.day = row.day;
         }
       }

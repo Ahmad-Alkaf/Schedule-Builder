@@ -1,11 +1,12 @@
 import { Injectable, OnInit } from '@angular/core';
-import { LECTURE_HOURS, MAX_LECTURE_HOUR, SolveLec, START_TIME, START_TIMES, StaticLec, WEEK_DAYS } from './index';
+import { Final, SolveLec, StaticLec, WEEK_DAYS } from './interface';
 
+const final = new Final();
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
+  
 })
 export class GenerateTableService implements OnInit{
-
   constructor() { }
   ngOnInit(): void {
     const staticLecs: StaticLec[] = [
@@ -33,8 +34,8 @@ export class GenerateTableService implements OnInit{
         for (let s of staticLecs)
           if (this.needTouch(s, lectures)) {
             for (let day of WEEK_DAYS)//'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
-              for (let st of START_TIMES)//8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12
-                for (let lecHour of LECTURE_HOURS) //1 | 1.5 | 2 | 2.5 | 3
+              for (let st of final.START_TIMES)//8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12
+                for (let lecHour of final.LECTURE_HOURS) //1 | 1.5 | 2 | 2.5 | 3
                 {
                   var n: SolveLec = { id: Math.random().toString(36).substring(2), lecture: s, duration: lecHour, day, startTime: st };
                   if (this.isPossible(lectures, n)) {
@@ -72,7 +73,7 @@ export class GenerateTableService implements OnInit{
         if (lec.startTime <= n.startTime &&
           lec.startTime + lec.duration > n.startTime)
           return false;
-        if (n.startTime == START_TIME || lec.startTime + lec.duration == n.startTime)
+        if (n.startTime == final.START_TIME || lec.startTime + lec.duration == n.startTime)
           isLecsAlign = true;
       }
     if (isLecsAlign == false)
@@ -86,7 +87,7 @@ export class GenerateTableService implements OnInit{
         if (lec.day == day && lec.lecture.name == n.lecture.name && lec.lecture.teacher == n.lecture.teacher) {
           total += lec.duration;
         }
-      if (total + n.duration > MAX_LECTURE_HOUR)
+      if (total + n.duration > final.MAX_LECTURE_HOUR)
         return false;
     }
 

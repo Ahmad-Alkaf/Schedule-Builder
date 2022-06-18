@@ -1,6 +1,6 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule } from '@angular/material/button';
 // import {MatAutocompleteModule} from '@angular/material/autocomplete'; 
+import { MatButtonModule } from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input'
 import {MatIconModule} from '@angular/material/icon';
 import {DragDropModule} from '@angular/cdk/drag-drop'; 
@@ -9,7 +9,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatTableModule} from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog'; 
 import { MatDividerModule } from '@angular/material/divider'; 
-import {MatSelectModule} from '@angular/material/select'; 
+import { MatSelectModule } from '@angular/material/select'; 
+import {MatMenuModule} from '@angular/material/menu'; 
 // import{MatListModule} from '@angular/material/list';
 // import {MatRippleModule} from '@angular/material/core'; 
 // import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -25,6 +26,8 @@ import { TableComponent } from './main/main/table/table.component';
 import { TdComponent } from './main/main/table/td/td.component'; 
 import { SoundService } from './sound.service';
 import { AddLectureComponent } from './dialog/add-lecture/add-lecture.component';
+import { CreateLectureComponent } from './main/main/created-lecture/created-lecture.component';
+import { LectureOptionsComponent } from './dialog/lecture-options/lecture-options.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +36,9 @@ import { AddLectureComponent } from './dialog/add-lecture/add-lecture.component'
     AddSubtreeComponent,
     TableComponent,
     TdComponent,
-    AddLectureComponent
+    AddLectureComponent,
+    CreateLectureComponent,
+    LectureOptionsComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +57,7 @@ import { AddLectureComponent } from './dialog/add-lecture/add-lecture.component'
     MatTableModule,
     MatDividerModule,
     MatSelectModule,
+    MatMenuModule,
     DragDropModule,
     ReactiveFormsModule,
     // MatAutocompleteModule,

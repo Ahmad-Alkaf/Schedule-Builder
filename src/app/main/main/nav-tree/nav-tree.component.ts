@@ -2,10 +2,10 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, Injectable, OnInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AddSubtreeComponent } from '../../../dialog/add-subtree/add-subtree.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { BehaviorSubject } from 'rxjs';
-import { DataService, Lesson, Room, Teacher } from 'src/app/data.service';
+import { DataService } from 'src/app/data.service';
+import { Lesson, Room, Teacher } from '../table/utility/interface';
 interface Node {
   children?: (Lesson|Room|Teacher)[];
   name: string;
@@ -128,10 +128,9 @@ export class NavTreeComponent {
       console.log('sub dataService',dataService);
       this.dataSource.data = data;
     });
-    console.log(Object.keys(dataService.lessons))
+    // console.log(Object.keys(dataService.lessons))
     // _database.set({'Lesson':data.lessons,'Room':data.rooms,'Teacher':data.teachers})
     this.setTreeData(dataService.teachers, dataService.lessons, dataService.rooms);
-    setInterval(()=>console.log(this.getTreeData()),3000)
   }
 
   /**VVVV  Tree   VVVV */

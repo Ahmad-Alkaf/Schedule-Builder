@@ -1,0 +1,29 @@
+
+
+.lecture-container {
+
+}
+
+div.cdk-drag-preview {
+   min-width: 23vw;
+   /* background-color: red; */
+ }
+.td{
+   position: relative;
+   height: 14vh;
+   text-align: center;
+   vertical-align: middle;
+   border:1px solid #ccc;
+   padding:0.5rem;
+}
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
