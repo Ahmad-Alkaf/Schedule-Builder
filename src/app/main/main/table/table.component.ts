@@ -1,7 +1,7 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
-import { Component, HostListener,OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Final, SolveLec } from './utility/interface';
-import { Row, table } from './utility/tableBinder'
+import { TableBinder } from './utility/tableBinder'
 import { SoundService } from 'src/app/sound.service';
 import { GenerateTableService } from './utility/generate-table.service';
 import { DataService } from 'src/app/data.service';
@@ -11,50 +11,34 @@ import { DomSanitizer } from '@angular/platform-browser';
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
-  providers:[Final]
+  providers: [Final, TableBinder]
 })
 export class TableComponent implements OnInit {
-  table = table;
-  constructor(private sound: SoundService, public gt: GenerateTableService, private dataService: DataService, private final: Final,iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+  // table = table;
+  constructor(private sound: SoundService, public gt: GenerateTableService, public dataService: DataService, public tableBinder: TableBinder, private final: Final, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
     iconRegistry.addSvgIconLiteral('moveable', sanitizer.bypassSecurityTrustHtml(this.final.SVG_moveable));
-   }
-
-  flow: { curIndex: number, data: (Row[])[] } = { curIndex: -1, data: [] }
-
+  }
+  public rows = this.tableBinder.lecsToRows(this.dataService.tableLectures);  
+  
   ngOnInit(): void {
-    this.table.lecs = this.dataService.tableLectures;
-    this.pushToTableHistory();
+    this.dataService.tableLecturesEvent.on('tableLecturesChanged', () => {
+      this.rows = this.tableBinder.lecsToRows(this.dataService.tableLectures)
+    });
+    this.dataService.saveState()
   }
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent = (event: any) => {
     var e = window.event ? window.event : event;
     if (e.keyCode == 90 && e.ctrlKey)
-      this.undo();
+      this.dataService.undo();
     else if (e.keyCode == 89 && e.ctrlKey)
-      this.redo();
+      this.dataService.redo();
   }
 
-  pushToTableHistory = () => {
-    this.flow.data[this.flow.curIndex + 1] = JSON.parse(JSON.stringify(this.table.rows));
-    this.flow.curIndex = ++this.flow.curIndex;
-    this.flow.data.splice(this.flow.curIndex, this.flow.data.length - 1 - this.flow.curIndex);
-    console.log('pushed index', this.flow.curIndex)
-  }
 
-  undo = () => {
-    if (this.flow.data[this.flow.curIndex - 1]) {
-      this.table.rows = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
-      console.log('retain index', this.flow.curIndex)
-    }
-    else this.sound.play(this.sound.notification);
-  }
 
-  redo = () => {
-    if (this.flow.data[this.flow.curIndex + 1])
-      this.table.rows = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
-    else this.sound.play(this.sound.notification)
-  }
+
 
   drop = (event: CdkDragDrop<(SolveLec | null)[]>) => {
     // console.log(event);
@@ -75,7 +59,7 @@ export class TableComponent implements OnInit {
         tds.splice(tdIndex + 1, td.duration * 2);
       }
       this.updateTime();
-      this.pushToTableHistory()
+      this.dataService.saveState()
     } else this.sound.play(this.sound.error)
   }
 
@@ -122,6 +106,7 @@ export class TableComponent implements OnInit {
   predicateRow = (drag: CdkDrag, drop: CdkDropList) => {
     //this fun called rows.length -1 times because it checks all row without the row that already contains td
     let lec = drag.data;
+    // console.log(lec);
     let tds = drop.data;
     // console.log('drop',drop)
     let ava = false;
@@ -134,6 +119,7 @@ export class TableComponent implements OnInit {
         if (ava == true)
           return true;
       }
+    console.log('predicateRow', ava)
     return ava;
   }
 
@@ -159,7 +145,7 @@ export class TableComponent implements OnInit {
   }
 
   updateTime = () => {
-    for (let row of this.table.rows)
+    for (let row of this.rows)
       for (let td of row.tds) {
         if (td) {
           let index = this.getIndex(row.tds, td);

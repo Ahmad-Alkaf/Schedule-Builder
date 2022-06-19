@@ -125,7 +125,7 @@ export class NavTreeComponent {
           this.dataService.rooms = n.children || [];
         else if (n.name == 'Lesson')
           this.dataService.lessons = n.children || [];
-      console.log('sub dataService',dataService);
+      // console.log('sub dataService',dataService);
       this.dataSource.data = data;
     });
     // console.log(Object.keys(dataService.lessons))
@@ -268,6 +268,7 @@ export class NavTreeComponent {
   saveNode(node: FlatNode, itemValue: string) {
     const nestedNode = this.flatNodeMap.get(node);
     this._database.updateItem(nestedNode!, itemValue);
+    this.dataService.saveState();
   }
 }
 

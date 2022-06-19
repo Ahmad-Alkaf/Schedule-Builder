@@ -35,6 +35,7 @@ export class AddLectureComponent implements OnInit {
         startTime: -1, duration, day: 'Friday', id: Math.random().toString(36).substring(2),
         lecture: { name, teacher, room, weekDuration: -1 },
       });
+      this.dataService.saveState();
       console.log('newLecContainer', this.dataService.newLecContainer);
       this.dialogRef.close(null);
 

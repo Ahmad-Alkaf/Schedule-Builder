@@ -15,7 +15,7 @@
       <span>Cut</span>
    </button>
    <button mat-menu-item [disabled]="td == null" (click)="copy()">
-      <mat-icon color="primary">copy</mat-icon>
+      <mat-icon svgIcon="copy" color="primary"></mat-icon>
       <span>Copy</span>
    </button>
    <button mat-menu-item  [disabled]="!(td == null && isPasteAvailable())" (click)="paste()">

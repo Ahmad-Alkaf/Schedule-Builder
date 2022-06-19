@@ -1,24 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Lesson, Room, SolveLec, Teacher } from './main/main/table/utility/interface';
-
+// import {EventEmitter}  from 'events';
+import { Lesson, MyEventEmitter, Room, SolveLec, Teacher } from './main/main/table/utility/interface';
+import { SoundService } from './sound.service';
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-//!undo and redo are not consistent because dataService is not updated when they change table values
-  teachers: Teacher[] = [{ name: 'Ahmed Shaikh' },
+  //!undo and redo are not consistent because dataService is not updated when they change table values
+  public teachers: Teacher[] = [{ name: 'Ahmed Shaikh' },
   { name: 'Hassen' },
-    { name: 'Hamzah' }];
-  
+  { name: 'Hamzah' }];
+
   lessons: Lesson[] = [{ name: 'PM' },
   { name: 'HCI' },
-    { name: 'Server-side' }];
-  
+  { name: 'Server-side' }];
+
   rooms: Room[] = [{ name: '301' },
   { name: '401' },
-    { name: '302' }];
-  
-  tableLectures: SolveLec[] = [{
+  { name: '302' }];
+
+  public tableLecturesEvent = new MyEventEmitter();
+  public tableLectures: SolveLec[] = [{
     startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
     lecture: { name: 'Math', teacher: 'Ahmed', weekDuration: 6, room: '301' }
   }, {
@@ -53,14 +55,64 @@ export class DataService {
     lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
   }
   ];
-  newLecContainer: SolveLec[] = [ {
+
+  public newLecContainer: SolveLec[] = [{
     startTime: -1, duration: 3, day: 'Friday', id: Math.random().toString(36).substring(2),
     lecture: { name: 'C++', teacher: 'Omer', weekDuration: -1, room: '233' }
-  },{
+  }, {
     startTime: -1, duration: 3, day: 'Friday', id: Math.random().toString(36).substring(2),
     lecture: { name: 'Java', teacher: 'Salem Hassen', weekDuration: -1, room: '233' }
   }];
-  constructor() { 
+
+  private flow: { curIndex: number, data: ({teachers:Teacher[],lessons:Lesson[],rooms:Room[],tableLectures:SolveLec[],newLecContainer:SolveLec[]})[] } = { curIndex: -1, data: [] }
+
+  
+
+  constructor(private sound:SoundService) {
     // setInterval(() => console.log(this.tableLectures[0]), 3000);
+  }
+  //VVVV dataService Functions VVVV
+  /**
+   * will save dataService variables into (flow) array to be return when undo or redo
+   */
+  public saveState = () => {
+    this.flow.data[this.flow.curIndex + 1] = JSON.parse(JSON.stringify({
+      teachers: this.teachers,
+      lessons: this.lessons,
+      rooms: this.rooms,
+      tableLectures: this.tableLectures,
+      newLecContainer:this.newLecContainer
+    }));
+    this.flow.curIndex = ++this.flow.curIndex;
+    this.flow.data.splice(this.flow.curIndex, this.flow.data.length - 1 - this.flow.curIndex);
+    console.log('pushed index', this.flow.curIndex)
+  }
+  
+  public undo = () => {
+    if (this.flow.data[this.flow.curIndex - 1]) {
+      const {teachers,lessons,rooms,tableLectures,newLecContainer} = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
+      this.teachers = teachers;
+      this.lessons = lessons;
+      this.rooms = rooms;
+      this.tableLectures = tableLectures;
+      this.newLecContainer = newLecContainer;
+      this.tableLecturesEvent.emit('tableLecturesChanged');
+      console.log('retain index', this.flow.curIndex)
+    }
+    else this.sound.play(this.sound.notification);
+  }
+
+  public redo = () => {
+    if (this.flow.data[this.flow.curIndex + 1]) {
+      const { teachers, lessons, rooms, tableLectures, newLecContainer } = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
+      this.teachers = teachers;
+      this.lessons = lessons;
+      this.rooms = rooms;
+      this.tableLectures = tableLectures;
+      this.newLecContainer = newLecContainer;
+      this.tableLecturesEvent.emit('tableLecturesChanged');
+      
+      console.log('retain index', this.flow.curIndex);
+    } else this.sound.play(this.sound.notification);
   }
 }
