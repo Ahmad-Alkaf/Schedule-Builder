@@ -43,7 +43,7 @@ export class Final {
    constructor() { }
    readonly LECTURE_HOURS: number[] = [1, 1.5, 2, 2.5, 3];
    readonly START_TIME: number = 8;
-   readonly START_TIMES: number[] = [8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5]//todo by start_time and end_time implement this
+   readonly START_TIMES: number[] = [8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5]//todo by start_time and end_time implement this
    readonly MAX_LECTURE_HOUR: number = this.LECTURE_HOURS.reduce((a: number, b: number) => a > b ? a : b);
    readonly SVG_moveable: string = `<svg width="24px" fill="currentColor" viewBox="0 0 24 24">
    <path

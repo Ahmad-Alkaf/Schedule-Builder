@@ -48,6 +48,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .cdk-drag-placeholder {
   opacity: 0;
+  height: 64px !important;
+  padding:0 !important;
+  margin:0 !important;
 }
 
 .cdk-drag-animating {
@@ -60,9 +63,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .td{
   position: relative;
-  min-height: 65px;
+  height: 65px !important;
   text-align: center;
   vertical-align: middle;
   border:1px solid #ccc;
-  padding:0.5rem;
+  padding: 0vh !important;
+  margin:0px !important
 }

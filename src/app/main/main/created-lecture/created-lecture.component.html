@@ -1,7 +1,7 @@
 <div>
 
    <div class="lecture-container" cdkDropList class="example-list" [cdkDropListData]="dataService.newLecContainer"
-      (cdkDropListDropped)="drop($event)" cdkDropListConnectedTo="[row0]" id="createdLectures">
+      (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="['row0','row1','row2','row3','row4','row5']" id="createdLectures">
 
       <div class="td" *ngFor="let t of dataService.newLecContainer" [cdkDragData]="t" cdkDrag>
 
