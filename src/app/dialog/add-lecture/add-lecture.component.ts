@@ -17,9 +17,9 @@ export class AddLectureComponent implements OnInit {
     public dataService: DataService, public tableService: GenerateTableService, public final: Final) { }
 
   form = new FormGroup({
-    teacher: new FormControl(null, Validators.required),
+    teacher: new FormControl(null),
     name: new FormControl(null, Validators.required),
-    room: new FormControl(null, Validators.required),
+    room: new FormControl(null),
     duration: new FormControl(null, Validators.required)
   })
   ngOnInit(): void {

@@ -70,3 +70,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   padding: 0vh !important;
   margin:0px !important
 }
+
+.td:focus{
+  outline: 1.8px dotted #555!important;
+  border:none;
+}

@@ -28,6 +28,7 @@ import { SoundService } from './sound.service';
 import { AddLectureComponent } from './dialog/add-lecture/add-lecture.component';
 import { CreateLectureComponent } from './main/main/created-lecture/created-lecture.component';
 import { LectureOptionsComponent } from './dialog/lecture-options/lecture-options.component';
+// import {CdkMenuModule} from '@angular/cdk/menu'; 
 @NgModule({
   declarations: [
     AppComponent,

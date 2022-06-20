@@ -10,6 +10,7 @@ import { SolveLec,Final } from '../utility/interface';
 })
 export class TdComponent implements OnInit {
   @Input() td: SolveLec|null = null;
+  @Input() isTable: boolean = false;
   constructor(public tableService:GenerateTableService,public final:Final) { }
 
   ngOnInit(): void {

@@ -55,30 +55,82 @@ export class Final {
 }
 
 type EventName = 'tableLecturesChanged';
-export class MyEventEmitter {
-   listeners:any = {};  // key-value pair
- 
+export class MyEventEmitter {//copy of EventEmitter class in NodeJS
+   listeners: any = {};  // key-value pair
+
    on(eventName: EventName, fn: Function) {
-       this.listeners[eventName] = this.listeners[eventName] || [];
+      this.listeners[eventName] = this.listeners[eventName] || [];
       this.listeners[eventName].push(fn);
       return this;
-     
-    }
+   }
+
+   once(eventName: EventName, fn: Function) {
+      this.listeners[eventName] = this.listeners[eventName] || [];
+      const onceWrapper = () => {
+         fn();
+         this.off(eventName, onceWrapper);
+      }
+      this.listeners[eventName].push(onceWrapper);
+      return this;
+   }
+
+   off(eventName:EventName, fn:Function) {
+      let lis = this.listeners[eventName];
+      if (!lis) return this;
+      for (let i = lis.length; i > 0; i--) {
+         if (lis[i] === fn) {
+            lis.splice(i, 1);
+            break;
+         }
+      }
+      return this;
+   }
+
+
+   emit(eventName: EventName, ...args: any) {
+      console.log('emit called')
+      let fns = this.listeners[eventName];
+      if (!fns) return false;
+      fns.forEach((f:Function) => {
+         f(...args);
+      });
+      return true;
+   }
+
+   listenerCount(eventName:EventName) {
+      let fns = this.listeners[eventName] || [];
+      return fns.length;
+   }
+
+   rawListeners(eventName:EventName) {
+      return this.listeners[eventName];
+   }
+
+
+
+
+   // on(eventName: EventName, fn: Function) {
+   //    this.listeners[eventName] = this.listeners[eventName] || [];
+   //    this.listeners[eventName].push(fn);
+   //    return this;
+
+   // }
 
    removeListener(eventName: EventName) {
       for (let key in this.listeners)
          if (key == eventName)
             this.listeners[eventName] = undefined;
-    }
+   }
 
 
-   emit(eventName: EventName, ...args: any) {
-      if (this.listeners[eventName])
-         for (let l of this.listeners[eventName])
-            l(...args);
-      else throw new Error(`Event ${eventName} has no listener!`);
-      return this;
-    }
+   // emit(eventName: EventName, ...args: any) {
+   //    if (this.listeners[eventName])
+   //       for (let l of this.listeners[eventName])
+   //          l(...args);
+   //    else throw new Error(`Event ${eventName} has no listener!`);
+   //    return this;
+   // }
+
 }
 
 

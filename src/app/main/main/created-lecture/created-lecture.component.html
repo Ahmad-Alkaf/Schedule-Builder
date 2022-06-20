@@ -1,20 +1,23 @@
 <div>
 
-   <div class="lecture-container" cdkDropList class="example-list" [cdkDropListData]="dataService.newLecContainer"
+   <div class="lecture-container rounded-2" cdkDropList [cdkDropListData]="dataService.newLecContainer"
       (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="['row0','row1','row2','row3','row4','row5']" id="createdLectures">
 
-      <div class="td" *ngFor="let t of dataService.newLecContainer" [cdkDragData]="t" cdkDrag>
+      <div tabindex="0" class="td" *ngFor="let t of dataService.newLecContainer" [cdkDragData]="t" cdkDrag>
 
          <div *cdkDragPlaceholder style="min-height: 65px;"></div>
-         <app-td [td]="t"></app-td>
+         <app-td [isTable]="false" [td]="t"></app-td>
          <div class="lecture-handle" cdkDragHandle>
             <mat-icon svgIcon="moveable" aria-label="moveable icon"></mat-icon>
          </div>
          <!-- <div *cdkDragPreview matchSize="true"><app-td [td]="t"></app-td></div> -->
       </div>
+      <div class="text-center opacity-25" style="padding:10px;" *ngIf="dataService.newLecContainer.length == 0">
+         Empty Container
+      </div>
    </div>
 
 
-   <button (click)="openAddNewLectureDialog()" mat-button color="primary" class="w-100 d-block my-3">Create New
+   <button (click)="openAddNewLectureDialog()" mat-stroked-button color="primary" class="w-100 d-block my-3">Create New
       Lecture</button>
 </div>

@@ -60,7 +60,7 @@ export class DataService {
     startTime: -1, duration: 3, day: 'Friday', id: Math.random().toString(36).substring(2),
     lecture: { name: 'C++', teacher: 'Omer', weekDuration: -1, room: '233' }
   }, {
-    startTime: -1, duration: 3, day: 'Friday', id: Math.random().toString(36).substring(2),
+    startTime: -1, duration: 1, day: 'Friday', id: Math.random().toString(36).substring(2),
     lecture: { name: 'Java', teacher: 'Salem Hassen', weekDuration: -1, room: '233' }
   }];
 

@@ -5,10 +5,10 @@
    </div>
 
    <div class="d-flex justify-content-evenly">
-      <div>
+      <div *ngIf="td.lecture.teacher">
          {{td.lecture.teacher}}
       </div>
-      <div>
+      <div *ngIf="td.lecture.room">
          {{td.lecture.room}}
       </div>
       <div *ngIf="td.startTime >= final.START_TIME; else duration">
@@ -24,7 +24,7 @@
          <mat-icon>more_vert</mat-icon>
        </button>
        <mat-menu #menu="matMenu">
-         <app-lecture-options [td]="td"></app-lecture-options>
+         <app-lecture-options [isTable]="isTable" [td]="td"></app-lecture-options>
        </mat-menu>
        
    </div>

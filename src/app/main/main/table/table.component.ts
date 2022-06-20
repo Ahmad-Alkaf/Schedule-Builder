@@ -18,11 +18,12 @@ export class TableComponent implements OnInit {
   constructor(private sound: SoundService, public gt: GenerateTableService, public dataService: DataService, public tableBinder: TableBinder, private final: Final, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
     iconRegistry.addSvgIconLiteral('moveable', sanitizer.bypassSecurityTrustHtml(this.final.SVG_moveable));
   }
-  public rows = this.tableBinder.lecsToRows(this.dataService.tableLectures);  
-  
+  public rows = this.tableBinder.lecsToRows(this.dataService.tableLectures);
+
   ngOnInit(): void {
     this.dataService.tableLecturesEvent.on('tableLecturesChanged', () => {
       this.rows = this.tableBinder.lecsToRows(this.dataService.tableLectures)
+      console.log('rows', this.rows);
     });
     this.dataService.saveState()
   }
@@ -41,26 +42,54 @@ export class TableComponent implements OnInit {
 
 
   drop = (event: CdkDragDrop<(SolveLec | null)[]>) => {
-    // console.log(event);
+    console.log('drop in table');
     let preTds: (SolveLec | null)[] = event.previousContainer.data;
     let tds: (SolveLec | null)[] = event.container.data;
     let tdIndex: number = event.currentIndex;
     let tdPreIndex: number = event.previousIndex;
     var td: SolveLec;
 
-    if (this.isValidMovement(tds, preTds, tdIndex, tdPreIndex)) {
-      let moving = this.moveTd(tds, preTds, tdIndex, tdPreIndex);
-      if (moving === undefined)
-        return console.error('moveTd return undefined!')
-      else td = moving;
+    console.log('tds', ...tds)
+    console.log('preTds', ...preTds)
 
-      if (preTds !== tds) {//we need to fix the <td> of each row because there are transfer lec between row
-        preTds.splice(tdPreIndex, 0, ...Array(td.duration * 2).fill(null));
-        tds.splice(tdIndex + 1, td.duration * 2);
-      }
-      this.updateTime();
-      this.dataService.saveState()
-    } else this.sound.play(this.sound.error)
+    if (this.dataService.newLecContainer == preTds) {//from container to table
+      let td = preTds[tdPreIndex];
+      if (td) {
+        if (this.validContainerToTable(preTds, tds, tdIndex, tdPreIndex, td)) {
+          tds.splice(tdIndex, td.duration * 2, td);
+          this.updateTime();
+          this.dataService.tableLectures.push(td);
+          this.dataService.newLecContainer.splice(this.dataService.newLecContainer.indexOf(td), 1);
+          this.dataService.saveState();
+      this.dataService.tableLecturesEvent.emit('tableLecturesChanged');
+        } else {
+          console.log('invalid container to table'); //todo error sound
+          this.sound.play(this.sound.error);
+        }
+
+      } else throw new Error('unexpected value of td=' + td)
+      
+    } else
+      if (this.isValidMovement(tds, preTds, tdIndex, tdPreIndex)) {
+        let moving = this.moveTd(tds, preTds, tdIndex, tdPreIndex);
+        if (moving === undefined)
+          return console.error('moveTd return undefined!')
+        else td = moving;
+
+        if (preTds !== tds) {//we need to fix the <td> of each row because there are transfer lec between row
+          preTds.splice(tdPreIndex, 0, ...Array(td.duration * 2).fill(null));
+          tds.splice(tdIndex + 1, td.duration * 2);
+        }
+        this.updateTime();
+        this.dataService.saveState()
+      } else this.sound.play(this.sound.error)
+  }
+  
+  validContainerToTable(preTds: (SolveLec | null)[], tds: (SolveLec | null)[], tdIndex: number, tdPreIndex: number, td: SolveLec):boolean {
+    for (let i = tdIndex; i < tdIndex + td.duration * 2; i++)
+      if (tds.length <= i || (tds[i] != null && tds[i] != td))
+        return false;
+    return true;
   }
 
   isValidMovement = (tds: (SolveLec | null)[], preTds: (SolveLec | null)[], tdIndex: number, tdPreIndex: number): boolean => {
@@ -116,10 +145,13 @@ export class TableComponent implements OnInit {
         for (let j = i; j < i + lec.duration * 2; j++)
           if (tds.length <= j || tds[j] != null)
             ava = false;
-        if (ava == true)
+        if (ava == true) {
+          // console.log('predicateRow', ava)
           return true;
+        }
       }
-    console.log('predicateRow', ava)
+    // console.log('predicateRow', ava)
+
     return ava;
   }
 
@@ -155,3 +187,5 @@ export class TableComponent implements OnInit {
       }
   }
 }
+ 
+

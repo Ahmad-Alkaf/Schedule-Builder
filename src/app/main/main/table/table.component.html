@@ -18,10 +18,10 @@
             cdkDropListConnectedTo="createdLectures"
             [cdkDropListEnterPredicate]="predicateRow">
             <td cdkDragDisabled><b>{{r.day}}</b></td>
-            <td *ngFor="let t of r.tds" [colSpan]="t != null?t.duration*2:1" [cdkDragData]="t"
+            <td tabindex="0" *ngFor="let t of r.tds" [colSpan]="t != null?t.duration*2:1" [cdkDragData]="t"
                cdkDrag [cdkDragDisabled]="!t" class="td" [ngClass]="{'lecture':t,'off':!t}">
                <div *cdkDragPlaceholder ></div>
-               <app-td [td]="t"></app-td>
+               <app-td [isTable]="true" [td]="t"></app-td>
                <div *ngIf="t" class="lecture-handle" cdkDragHandle>
                   <mat-icon svgIcon="moveable" aria-label="moveable icon"></mat-icon>
                </div>

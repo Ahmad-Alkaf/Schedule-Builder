@@ -1,9 +1,9 @@
 <div *ngIf="td != null">
-   <button mat-menu-item>
+   <button mat-menu-item (click)="edit()">
       <mat-icon color="primary">edit</mat-icon>
       <span>Edit</span>
    </button>
-   <button mat-menu-item>
+   <button mat-menu-item (click)="delete()">
       <mat-icon color="primary">delete</mat-icon>
       <span>Delete</span>
    </button>
