@@ -28,7 +28,7 @@ export class CreateLectureComponent {
   drop(event: CdkDragDrop<(SolveLec)[]>) {//todo emit('tableLecturesChanged'); saveState()
     let preTds: (SolveLec | null)[] = event.previousContainer.data;
     // let tds: (SolveLec | null)[] = event.container.data;
-    // let tdIndex: number = event.currentIndex;
+    let tdIndex: number = event.currentIndex;
     let tdPreIndex: number = event.previousIndex;
     let td:SolveLec|null = preTds[tdPreIndex];
 
@@ -37,7 +37,8 @@ export class CreateLectureComponent {
     } else {
       if (preTds != this.dataService.newLecContainer) {
         if (td) {
-          this.dataService.newLecContainer.push(td);
+          // td.startTime = -1;
+          this.dataService.newLecContainer.splice(tdIndex,0,td);
           this.dataService.tableLectures.splice(this.dataService.tableLectures.indexOf(td), 1);
         }else throw new Error('unexpected value of td='+td)
           

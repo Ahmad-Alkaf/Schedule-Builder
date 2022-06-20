@@ -11,7 +11,7 @@
       <div *ngIf="td.lecture.room">
          {{td.lecture.room}}
       </div>
-      <div *ngIf="td.startTime >= final.START_TIME; else duration">
+      <div *ngIf="isTable; else duration">
          {{td.startTime}} - {{((td.startTime + td.duration)>=13?(td.startTime + td.duration-12):(td.startTime +
          td.duration))}}
       </div>

@@ -75,7 +75,7 @@ export class DataService {
   /**
    * will save dataService variables into (flow) array to be return when undo or redo
    */
-  public saveState = () => {
+  public saveState = () => {//todo if after undo we saveState then 
     this.flow.data[this.flow.curIndex + 1] = JSON.parse(JSON.stringify({
       teachers: this.teachers,
       lessons: this.lessons,
