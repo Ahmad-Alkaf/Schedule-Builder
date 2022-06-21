@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 // import {EventEmitter}  from 'events';
-import { Lesson, MyEventEmitter, Room, SolveLec, Teacher } from './main/main/table/utility/interface';
+import { Final, Lesson, MyEventEmitter, Room, Row, SolveLec, Teacher, WeekDays } from './main/main/table/utility/static';
+import { TableBinder } from './main/main/table/utility/tableBinder';
 import { SoundService } from './sound.service';
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
+
   //!undo and redo are not consistent because dataService is not updated when they change table values
   public teachers: Teacher[] = [{ name: 'Ahmed Shaikh' },
   { name: 'Hassen' },
@@ -64,11 +66,12 @@ export class DataService {
     lecture: { name: 'Java', teacher: 'Salem Hassen', weekDuration: -1, room: '233' }
   }];
 
-  private flow: { curIndex: number, data: ({teachers:Teacher[],lessons:Lesson[],rooms:Room[],tableLectures:SolveLec[],newLecContainer:SolveLec[]})[] } = { curIndex: -1, data: [] }
+  private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Lesson[], rooms: Room[], tableLectures: SolveLec[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
 
-  
+  private clipboard: SolveLec | undefined = undefined
+  public focused: SolveLec | { index: number, day: WeekDays } = { index: -1, day: 'Friday' };
 
-  constructor(private sound:SoundService) {
+  constructor(private sound: SoundService, private tableBinder: TableBinder, private final: Final) {
     // setInterval(() => console.log(this.tableLectures[0]), 3000);
   }
   //VVVV dataService Functions VVVV
@@ -81,16 +84,16 @@ export class DataService {
       lessons: this.lessons,
       rooms: this.rooms,
       tableLectures: this.tableLectures,
-      newLecContainer:this.newLecContainer
+      newLecContainer: this.newLecContainer
     }));
     this.flow.curIndex = ++this.flow.curIndex;
     this.flow.data.splice(this.flow.curIndex, this.flow.data.length - 1 - this.flow.curIndex);
     console.log('pushed index', this.flow.curIndex)
   }
-  
+
   public undo = () => {
     if (this.flow.data[this.flow.curIndex - 1]) {
-      const {teachers,lessons,rooms,tableLectures,newLecContainer} = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
+      const { teachers, lessons, rooms, tableLectures, newLecContainer } = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
       this.teachers = teachers;
       this.lessons = lessons;
       this.rooms = rooms;
@@ -99,7 +102,7 @@ export class DataService {
       this.tableLecturesEvent.emit('tableLecturesChanged');
       console.log('retain index', this.flow.curIndex)
     }
-    else this.sound.play(this.sound.notification);
+    else this.sound.play('notification');
   }
 
   public redo = () => {
@@ -111,8 +114,92 @@ export class DataService {
       this.tableLectures = tableLectures;
       this.newLecContainer = newLecContainer;
       this.tableLecturesEvent.emit('tableLecturesChanged');
-      
+
       console.log('retain index', this.flow.curIndex);
-    } else this.sound.play(this.sound.notification);
+    } else this.sound.play('notification');
+  }
+
+
+  editFocus() {
+
+  }
+
+  edit(lecture: SolveLec): void {
+    // this.tableLecturesEvent.emit('tableLecturesChange');
+    //this.dataService.saveState();
+  }
+
+  deleteFocus() {
+    if ('index' in this.focused)
+      this.sound.play('notification')
+    else this.delete(this.focused)
+  }
+  delete(lecture: SolveLec): void {
+    console.log('delete called')
+    if (this.tableLectures.includes(lecture)) {
+      this.tableLectures.splice(this.tableLectures.indexOf(lecture), 1);
+      this.tableLecturesEvent.emit('tableLecturesChanged');
+    } else if (this.newLecContainer.includes(lecture)) {
+      this.newLecContainer.splice(this.newLecContainer.indexOf(lecture), 1);
+    } else throw new Error('what a lecture that not in tableLectures or newLecContainer')
+    this.saveState();
+  }
+
+  copyFocus() {
+    if ('index' in this.focused)
+      this.sound.play('notification');
+    else
+      this.clipboard = this.focused;//todo snackbar: copied
+  }
+
+  copy(lecture: SolveLec) {
+    this.clipboard = lecture;//todo snackbar: copied
+  }
+
+  cutFocus() {
+    if ('index' in this.focused) //typeof {{ index: number, day: WeekDays }
+      this.sound.play('notification');
+    else
+      this.cut(this.focused);//todo snackbar: cutted
+  }
+
+  cut(lecture: SolveLec) {
+    this.clipboard = lecture;
+    this.delete(lecture);
+  }
+
+  pasteFocus() {
+    if ('index' in this.focused)
+      this.paste(this.focused);
+    else this.sound.play('notification');
+  }
+
+  paste(pos: { index: number, day: WeekDays }) {
+    if (!this.clipboard)
+      return this.sound.play('notification')
+    let lecture:SolveLec = Object.create(this.clipboard);
+    console.log('pos', pos);
+    if (lecture) {
+      let row: Row = this.tableBinder.lecsToRows(this.tableLectures).filter(v => v.day == pos.day)[0];
+      lecture.day = row.day;
+      let st = this.final.START_TIME
+      for (let i = 0; i < row.tds.length;i++) {
+        if (pos.index == i) {
+          
+          lecture.startTime = st;
+          
+          break;
+        }
+        st +=this.final.STEP_TIME
+      }
+      if (lecture.startTime != st)
+        throw new Error('lecture is i do not know what happen come here');
+      this.tableLectures.push(lecture);
+      this.tableLecturesEvent.emit('tableLecturesChanged')
+      console.log('looped')
+
+
+    } else this.sound.play('notification')
+    //todo snackbar: clipboard empty
   }
 }

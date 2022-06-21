@@ -1,6 +1,6 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Final, SolveLec } from './utility/interface';
+import { Final, SolveLec, WeekDays } from './utility/static';
 import { TableBinder } from './utility/tableBinder'
 import { SoundService } from 'src/app/sound.service';
 import { GenerateTableService } from './utility/generate-table.service';
@@ -11,12 +11,10 @@ import { DomSanitizer } from '@angular/platform-browser';
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
-  providers: [Final, TableBinder]
 })
 export class TableComponent implements OnInit {
   // table = table;
-  constructor(private sound: SoundService, public gt: GenerateTableService, public dataService: DataService, public tableBinder: TableBinder, private final: Final, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
-    iconRegistry.addSvgIconLiteral('moveable', sanitizer.bypassSecurityTrustHtml(this.final.SVG_moveable));
+  constructor(private sound: SoundService, public gt: GenerateTableService, public dataService: DataService, public tableBinder: TableBinder, private final: Final) {
   }
   public rows = this.tableBinder.lecsToRows(this.dataService.tableLectures);
 
@@ -28,13 +26,11 @@ export class TableComponent implements OnInit {
     this.dataService.saveState()
   }
 
-  @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent = (event: any) => {
-    var e = window.event ? window.event : event;
-    if (e.keyCode == 90 && e.ctrlKey)
-      this.dataService.undo();
-    else if (e.keyCode == 89 && e.ctrlKey)
-      this.dataService.redo();
+  focused(td: SolveLec | { index: number; day: WeekDays; }): void{
+    console.log('focused')
+    if (td != null)
+      this.dataService.focused = td;
+    else this.dataService.focused = td
   }
 
 
@@ -42,15 +38,15 @@ export class TableComponent implements OnInit {
 
 
   drop = (event: CdkDragDrop<(SolveLec | null)[]>) => {
-    console.log('drop in table');
+    // console.log('drop in table');
     let preTds: (SolveLec | null)[] = event.previousContainer.data;
     let tds: (SolveLec | null)[] = event.container.data;
     let tdIndex: number = event.currentIndex;
     let tdPreIndex: number = event.previousIndex;
     var td: SolveLec;
 
-    console.log('tds', ...tds)
-    console.log('preTds', ...preTds)
+    // console.log('tds', ...tds)
+    // console.log('preTds', ...preTds)
 
     if (this.dataService.newLecContainer == preTds) {//from container to table
       let td = preTds[tdPreIndex];
@@ -64,7 +60,7 @@ export class TableComponent implements OnInit {
       this.dataService.tableLecturesEvent.emit('tableLecturesChanged');
         } else {
           console.log('invalid container to table'); //todo error sound
-          this.sound.play(this.sound.error);
+          this.sound.play('error');
         }
 
       } else throw new Error('unexpected value of td=' + td)
@@ -82,10 +78,10 @@ export class TableComponent implements OnInit {
         }
         this.updateTime();
         this.dataService.saveState()
-      } else this.sound.play(this.sound.error)
+      } else this.sound.play('error')
   }
   
-  validContainerToTable(preTds: (SolveLec | null)[], tds: (SolveLec | null)[], tdIndex: number, tdPreIndex: number, td: SolveLec):boolean {
+  validContainerToTable=(preTds: (SolveLec | null)[], tds: (SolveLec | null)[], tdIndex: number, tdPreIndex: number, td: SolveLec):boolean =>{
     for (let i = tdIndex; i < tdIndex + td.duration * 2; i++)
       if (tds.length <= i || (tds[i] != null && tds[i] != td))
         return false;

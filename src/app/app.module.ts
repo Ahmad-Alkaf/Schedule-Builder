@@ -28,6 +28,10 @@ import { SoundService } from './sound.service';
 import { AddLectureComponent } from './dialog/add-lecture/add-lecture.component';
 import { CreateLectureComponent } from './main/main/created-lecture/created-lecture.component';
 import { LectureOptionsComponent } from './dialog/lecture-options/lecture-options.component';
+import { DataService } from './data.service';
+import { KeyboardService } from './keyboard.service';
+import { Final } from './main/main/table/utility/static';
+import { TableBinder } from './main/main/table/utility/tableBinder';
 // import {CdkMenuModule} from '@angular/cdk/menu'; 
 @NgModule({
   declarations: [
@@ -68,7 +72,7 @@ import { LectureOptionsComponent } from './dialog/lecture-options/lecture-option
     BrowserAnimationsModule,
     // MatSnackBarModule
   ],
-  providers: [SoundService],
+  providers: [SoundService,DataService,KeyboardService,Final, TableBinder],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

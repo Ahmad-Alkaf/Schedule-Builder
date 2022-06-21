@@ -4,12 +4,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DataService } from 'src/app/data.service';
 import { NavTreeComponent } from 'src/app/main/main/nav-tree/nav-tree.component';
 import { GenerateTableService } from 'src/app/main/main/table/utility/generate-table.service';
-import { Final } from 'src/app/main/main/table/utility/interface';
+import { Final } from 'src/app/main/main/table/utility/static';
 @Component({
   selector: 'app-add-lecture',
   templateUrl: './add-lecture.component.html',
   styleUrls: ['./add-lecture.component.css'],
-  providers: [Final]
 })
 export class AddLectureComponent implements OnInit {
   lecture: { name: string, teacher: string, room: string, duration: number } = { name: '', teacher: '', room: '', duration: -1 }

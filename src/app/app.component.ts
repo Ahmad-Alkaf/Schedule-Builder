@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { KeyboardService } from './keyboard.service';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +8,8 @@ import { Component } from '@angular/core';
   animations: []
 })
 export class AppComponent {
-  constructor() {
+  //keyboard service won't listen if it was not called so...
+  constructor(private keyboardService:KeyboardService) {
     
   }
 }

@@ -11,7 +11,7 @@
       <div *ngIf="td.lecture.room">
          {{td.lecture.room}}
       </div>
-      <div *ngIf="isTable; else duration">
+      <div *ngIf="dataService.tableLectures.includes(td); else duration">
          {{td.startTime}} - {{((td.startTime + td.duration)>=13?(td.startTime + td.duration-12):(td.startTime +
          td.duration))}}
       </div>
@@ -24,7 +24,7 @@
          <mat-icon>more_vert</mat-icon>
        </button>
        <mat-menu #menu="matMenu">
-         <app-lecture-options [isTable]="isTable" [td]="td"></app-lecture-options>
+         <app-lecture-options  [td]="td"></app-lecture-options>
        </mat-menu>
        
    </div>

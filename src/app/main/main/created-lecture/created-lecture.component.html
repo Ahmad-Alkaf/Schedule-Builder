@@ -6,9 +6,9 @@
       <div tabindex="0" class="td" *ngFor="let t of dataService.newLecContainer" [cdkDragData]="t" cdkDrag>
 
          <div *cdkDragPlaceholder style="min-height: 65px;"></div>
-         <app-td [isTable]="false" [td]="t"></app-td>
+         <app-td [td]="t"></app-td>
          <div class="lecture-handle" cdkDragHandle>
-            <mat-icon svgIcon="moveable" aria-label="moveable icon"></mat-icon>
+            <mat-icon aria-label="moveable handler">open_with</mat-icon>
          </div>
          <!-- <div *cdkDragPreview matchSize="true"><app-td [td]="t"></app-td></div> -->
       </div>

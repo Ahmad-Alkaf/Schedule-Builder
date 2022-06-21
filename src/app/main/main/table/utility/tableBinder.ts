@@ -1,5 +1,5 @@
-import { WeekDays, SolveLec, WEEK_DAYS, STEP_TIME, Row } from './interface';
-import { Final } from './interface';
+import { WeekDays, SolveLec, WEEK_DAYS, Row } from './static';
+import { Final } from './static';
 const final = new Final();
 
 
@@ -18,7 +18,7 @@ export class TableBinder {
             if (l.day == r.day) {
                r.tds[final.START_TIMES.indexOf(l.startTime)] = l;
                //delete empty td to make lecture longer then STEP_TIME take more than one column i.e long width
-               for (let i = l.startTime + STEP_TIME; i < l.startTime + l.duration; i += STEP_TIME)
+               for (let i = l.startTime + final.STEP_TIME; i < l.startTime + l.duration; i += final.STEP_TIME)
                   r.tds[final.START_TIMES.indexOf(i)] = todoDelete;
             }
       for (let r of rows)

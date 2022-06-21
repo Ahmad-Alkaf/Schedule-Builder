@@ -5,7 +5,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { SelectionModel } from '@angular/cdk/collections';
 import { BehaviorSubject } from 'rxjs';
 import { DataService } from 'src/app/data.service';
-import { Lesson, Room, Teacher } from '../table/utility/interface';
+import { Lesson, Room, Teacher } from '../table/utility/static';
 interface Node {
   children?: (Lesson|Room|Teacher)[];
   name: string;

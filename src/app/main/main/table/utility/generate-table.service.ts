@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Final, SolveLec, StaticLec, WEEK_DAYS } from './interface';
+import { Final, SolveLec, StaticLec, WEEK_DAYS } from './static';
 
 const final = new Final();
 @Injectable({
