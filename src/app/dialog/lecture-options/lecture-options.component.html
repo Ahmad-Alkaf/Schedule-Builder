@@ -7,19 +7,19 @@
       <mat-icon color="primary">delete</mat-icon>
       <span>Delete</span>
    </button>
+   <mat-divider class="m-1"></mat-divider>
 </div>
-<mat-divider class="m-1"></mat-divider>
-<div>
+<div><!--Note color='gray' is gray because gray there is no such color so default is gray. you can insure this by change gray to 'walaa' the result is same-->
    <button mat-menu-item [disabled]="td == null" (click)="cut()">
-      <mat-icon color="primary">cut</mat-icon>
+      <mat-icon [color]="td == null?'gray':'primary'">content_cut</mat-icon>
       <span>Cut</span>
    </button>
    <button mat-menu-item [disabled]="td == null" (click)="copy()">
-      <mat-icon svgIcon="copy" color="primary"></mat-icon>
+      <mat-icon [color]="td == null?'gray':'primary'">content_copy</mat-icon>
       <span>Copy</span>
    </button>
    <button mat-menu-item  [disabled]="!(td == null && isPasteAvailable())" (click)="paste()">
-      <mat-icon color="primary">paste</mat-icon>
+      <mat-icon [color]="!(td == null && isPasteAvailable())?'gray':'primary'">content_paste</mat-icon>
       <span>Paste</span>
    </button>
 </div>
