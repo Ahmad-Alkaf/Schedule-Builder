@@ -32,6 +32,7 @@ import { DataService } from './data.service';
 import { KeyboardService } from './keyboard.service';
 import { Final } from './main/main/table/utility/static';
 import { TableBinder } from './main/main/table/utility/tableBinder';
+import { EditLectureComponent } from './dialog/edit-lecture/edit-lecture.component';
 // import {CdkMenuModule} from '@angular/cdk/menu'; 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { TableBinder } from './main/main/table/utility/tableBinder';
     TdComponent,
     AddLectureComponent,
     CreateLectureComponent,
-    LectureOptionsComponent
+    LectureOptionsComponent,
+    EditLectureComponent
   ],
   imports: [
     BrowserModule,

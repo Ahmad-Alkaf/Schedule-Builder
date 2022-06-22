@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { EditLectureComponent } from './dialog/edit-lecture/edit-lecture.component';
 // import {EventEmitter}  from 'events';
 import { Final, Lesson, MyEventEmitter, Room, Row, SolveLec, Teacher, WeekDays } from './main/main/table/utility/static';
 import { TableBinder } from './main/main/table/utility/tableBinder';
@@ -71,7 +73,8 @@ export class DataService {
   private clipboard: SolveLec | undefined = undefined
   public focused: SolveLec | { index: number, day: WeekDays } = { index: -1, day: 'Friday' };
 
-  constructor(private sound: SoundService, private tableBinder: TableBinder, private final: Final) {
+  constructor(private sound: SoundService, private tableBinder: TableBinder, private final: Final,
+              private dialog:MatDialog) {
     // setInterval(() => console.log(this.tableLectures[0]), 3000);
   }
   //VVVV dataService Functions VVVV
@@ -120,21 +123,32 @@ export class DataService {
   }
 
 
-  editFocus() {
-
+  public editFocus() {
+    
   }
 
-  edit(lecture: SolveLec): void {
-    // this.tableLecturesEvent.emit('tableLecturesChange');
-    //this.dataService.saveState();
+  public edit(lecture: SolveLec): void {
+    const ref = this.dialog.open(EditLectureComponent, {
+      width: '800px',
+      data: JSON.parse(JSON.stringify(lecture))
+    });
+    ref.afterClosed().subscribe(result => {
+      if (this.tableLectures.includes(lecture)) {
+        this.tableLectures.splice(this.tableLectures.indexOf(lecture),1,result)
+        this.tableLecturesEvent.emit('tableLecturesChanged');
+      } else {
+        this.newLecContainer.splice(this.newLecContainer.indexOf(lecture), 1, result);
+      }
+      this.saveState()
+    });
   }
 
-  deleteFocus() {
+  public deleteFocus() {
     if ('index' in this.focused)
       this.sound.play('notification')
     else this.delete(this.focused)
   }
-  delete(lecture: SolveLec): void {
+  public delete(lecture: SolveLec): void {
     console.log('delete called')
     if (this.tableLectures.includes(lecture)) {
       this.tableLectures.splice(this.tableLectures.indexOf(lecture), 1);
@@ -145,36 +159,36 @@ export class DataService {
     this.saveState();
   }
 
-  copyFocus() {
+  public copyFocus() {
     if ('index' in this.focused)
       this.sound.play('notification');
     else
       this.clipboard = this.focused;//todo snackbar: copied
   }
 
-  copy(lecture: SolveLec) {
+  public copy(lecture: SolveLec) {
     this.clipboard = lecture;//todo snackbar: copied
   }
 
-  cutFocus() {
+  public cutFocus() {
     if ('index' in this.focused) //typeof {{ index: number, day: WeekDays }
       this.sound.play('notification');
     else
       this.cut(this.focused);//todo snackbar: cutted
   }
 
-  cut(lecture: SolveLec) {
+  public cut(lecture: SolveLec) {
     this.clipboard = lecture;
     this.delete(lecture);
   }
 
-  pasteFocus() {
+  public pasteFocus() {
     if ('index' in this.focused)
       this.paste(this.focused);
     else this.sound.play('notification');
   }
 
-  paste(pos: { index: number, day: WeekDays }) {
+  public paste(pos: { index: number, day: WeekDays }) {
     if (!this.clipboard)
       return this.sound.play('notification')
     let lecture:SolveLec = Object.create(this.clipboard);
@@ -195,11 +209,23 @@ export class DataService {
       if (lecture.startTime != st)
         throw new Error('lecture is i do not know what happen come here');
       this.tableLectures.push(lecture);
-      this.tableLecturesEvent.emit('tableLecturesChanged')
+      this.tableLecturesEvent.emit('tableLecturesChanged');
+      this.saveState();
       console.log('looped')
 
 
     } else this.sound.play('notification')
     //todo snackbar: clipboard empty
   }
+  
+  
+  /********************************* PRIVATE METHODS *****************************************************/
+   /**
+    * 
+    * @pram index for position in row
+    * @returns boolean whether a lecture can be place in that day, index with its duration
+    */
+    private isAvailableSpace(day:WeekDays,index:number, duration:number) {
+      
+    }
 }

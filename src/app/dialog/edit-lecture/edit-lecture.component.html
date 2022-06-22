@@ -1,50 +1,50 @@
-<h1 mat-dialog-title>Create New Lecture</h1>
-<form [formGroup]="form" class="row my-4 justify-content-around">
+<h1 mat-dialog-title>Edit Lecture</h1>
+<div class="row my-4 justify-content-around">
   
   <mat-form-field appearance="outline">
     <mat-label>Select Subject</mat-label>
-    <mat-select formControlName="name" required>
+    <mat-select required [(ngModel)]="data.lecture.name">
       <mat-option *ngFor="let lesson of dataService.lessons" [value]="lesson.name">
         {{lesson.name}}
       </mat-option>
     </mat-select>
-    <mat-error *ngIf="form.controls['name'].invalid">Please choose a lesson</mat-error>
+    <!-- <mat-error *ngIf="form.controls['name'].invalid">Please choose a lesson</mat-error> -->
   </mat-form-field>
   
   <mat-form-field appearance="outline">
     <mat-label>Lecture Duration</mat-label>
-    <mat-select formControlName="duration" required>
+    <mat-select  required [(ngModel)]="data.duration">
       <mat-option *ngFor="let h of final.LECTURE_HOURS" [value]="h">
         {{h}}
       </mat-option>
     </mat-select>
-    <mat-error *ngIf="form.controls['duration'].invalid">Please choose lecture duration</mat-error>
+    <!-- <mat-error *ngIf="form.controls['duration'].invalid">Please choose lecture duration</mat-error> -->
   </mat-form-field>
   
   <mat-form-field appearance="outline">
     <mat-label>Select Teacher</mat-label>
-    <mat-select formControlName="teacher">
+    <mat-select [(ngModel)]="data.lecture.teacher">
       <mat-option *ngFor="let teacher of dataService.teachers" [value]="teacher.name">
         {{teacher.name}}
       </mat-option>
     </mat-select>
-    <mat-error *ngIf="form.controls['teacher'].invalid">Please choose a teacher</mat-error>
+    <!-- <mat-error *ngIf="form.controls['teacher'].invalid">Please choose a teacher</mat-error> -->
     <!-- <mat-hint>{{form.value?.sound}}</mat-hint> -->
   </mat-form-field>
 
 
   <mat-form-field appearance="outline">
     <mat-label>Select Room</mat-label>
-    <mat-select formControlName="room">
+    <mat-select [(ngModel)]="data.lecture.room">
       <mat-option *ngFor="let room of dataService.rooms" [value]="room.name">
         {{room.name}}
       </mat-option>
     </mat-select>
-    <mat-error *ngIf="form.controls['room'].invalid">Please choose a room</mat-error>
+    <!-- <mat-error *ngIf="form.controls['room'].invalid">Please choose a room</mat-error> -->
   </mat-form-field>
 
   <div mat-dialog-actions class="d-flex justify-content-center">
-    <button mat-stroked-button (click)="closeDialog()" color="accent" class="w-25">Cancel</button>
-    <button mat-stroked-button (click)="AddHandler()" color="primary" class="w-25">Create</button>
+    <button mat-stroked-button (click)="dialogRef.close()" color="accent" class="w-25">Cancel</button>
+    <button mat-stroked-button (click)="editHandler()" color="primary" class="w-25">Save</button>
   </div>
-</form>
+</div>

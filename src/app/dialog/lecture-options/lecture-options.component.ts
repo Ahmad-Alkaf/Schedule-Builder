@@ -16,7 +16,6 @@ export class LectureOptionsComponent {
 
   constructor(public final: Final, public dataService: DataService,private sound:SoundService) {
   }
-  //!if you change tableLectures don't forget to emit
   edit(): void {
     this.td ? this.dataService.edit(this.td) : this.sound.play('notification');
   }
@@ -35,9 +34,7 @@ export class LectureOptionsComponent {
     this.td ? this.dataService.cut(this.td) : this.sound.play('notification');
   }
   
-  paste() {
-    this.paste()
-  }
+  
   
   isPasteAvailable(): boolean {
     return false;
