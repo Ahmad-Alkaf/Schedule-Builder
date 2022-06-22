@@ -15,14 +15,16 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class TableComponent implements OnInit {
   // table = table;
   constructor(private sound: SoundService, public gt: GenerateTableService, public dataService: DataService, public tableBinder: TableBinder, private final: Final) {
+    this.dataService.tableLecturesEvent.on('tableLecturesChanged', () => {
+      this.rows = this.tableBinder.lecsToRows(this.dataService.tableLectures)
+      this.updateTime()
+      console.log('emit listener rows', this.rows);
+    });
   }
   public rows = this.tableBinder.lecsToRows(this.dataService.tableLectures);
 
   ngOnInit(): void {
-    this.dataService.tableLecturesEvent.on('tableLecturesChanged', () => {
-      this.rows = this.tableBinder.lecsToRows(this.dataService.tableLectures)
-      console.log('rows', this.rows);
-    });
+    
     this.dataService.saveState()
   }
 

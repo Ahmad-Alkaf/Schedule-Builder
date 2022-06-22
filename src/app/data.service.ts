@@ -71,10 +71,10 @@ export class DataService {
   private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Lesson[], rooms: Room[], tableLectures: SolveLec[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
 
   private clipboard: SolveLec | undefined = undefined
-  public focused: SolveLec | { index: number, day: WeekDays } = { index: -1, day: 'Friday' };
+  public focused: SolveLec | { index: number, day: WeekDays }|undefined = undefined;
 
   constructor(private sound: SoundService, private tableBinder: TableBinder, private final: Final,
-              private dialog:MatDialog) {
+    private dialog: MatDialog) {
     // setInterval(() => console.log(this.tableLectures[0]), 3000);
   }
   //VVVV dataService Functions VVVV
@@ -101,8 +101,8 @@ export class DataService {
       this.lessons = lessons;
       this.rooms = rooms;
       this.tableLectures = tableLectures;
-      this.newLecContainer = newLecContainer;
       this.tableLecturesEvent.emit('tableLecturesChanged');
+      this.newLecContainer = newLecContainer;
       console.log('retain index', this.flow.curIndex)
     }
     else this.sound.play('notification');
@@ -115,8 +115,8 @@ export class DataService {
       this.lessons = lessons;
       this.rooms = rooms;
       this.tableLectures = tableLectures;
-      this.newLecContainer = newLecContainer;
       this.tableLecturesEvent.emit('tableLecturesChanged');
+      this.newLecContainer = newLecContainer;
 
       console.log('retain index', this.flow.curIndex);
     } else this.sound.play('notification');
@@ -124,7 +124,9 @@ export class DataService {
 
 
   public editFocus() {
-    
+    if (!this.focused||'index' in this.focused)
+    this.sound.play('notification')
+  else this.edit(this.focused)
   }
 
   public edit(lecture: SolveLec): void {
@@ -134,7 +136,7 @@ export class DataService {
     });
     ref.afterClosed().subscribe(result => {
       if (this.tableLectures.includes(lecture)) {
-        this.tableLectures.splice(this.tableLectures.indexOf(lecture),1,result)
+        this.tableLectures.splice(this.tableLectures.indexOf(lecture), 1, result)
         this.tableLecturesEvent.emit('tableLecturesChanged');
       } else {
         this.newLecContainer.splice(this.newLecContainer.indexOf(lecture), 1, result);
@@ -144,7 +146,7 @@ export class DataService {
   }
 
   public deleteFocus() {
-    if ('index' in this.focused)
+    if (!this.focused||'index' in this.focused)
       this.sound.play('notification')
     else this.delete(this.focused)
   }
@@ -160,72 +162,91 @@ export class DataService {
   }
 
   public copyFocus() {
-    if ('index' in this.focused)
+    if (!this.focused || 'index' in this.focused)
       this.sound.play('notification');
     else
-      this.clipboard = this.focused;//todo snackbar: copied
+      this.copy(this.focused)
   }
 
   public copy(lecture: SolveLec) {
-    this.clipboard = lecture;//todo snackbar: copied
+    console.log('copy',lecture)
+    this.clipboard = JSON.parse(JSON.stringify(lecture));//todo snackbar: copied
   }
 
   public cutFocus() {
-    if ('index' in this.focused) //typeof {{ index: number, day: WeekDays }
+    if (!this.focused || 'index' in this.focused) //typeof {{ index: number, day: WeekDays }
       this.sound.play('notification');
     else
       this.cut(this.focused);//todo snackbar: cutted
   }
 
   public cut(lecture: SolveLec) {
-    this.clipboard = lecture;
+    console.log('cut',lecture)
+    this.clipboard = JSON.parse(JSON.stringify(lecture));
     this.delete(lecture);
   }
 
   public pasteFocus() {
-    if ('index' in this.focused)
+    if (this.focused && 'index' in this.focused)
       this.paste(this.focused);
     else this.sound.play('notification');
   }
 
   public paste(pos: { index: number, day: WeekDays }) {
+    console.log('paste')
+    console.log('row',this.tableBinder.lecsToRows(this.tableLectures))
     if (!this.clipboard)
       return this.sound.play('notification')
-    let lecture:SolveLec = Object.create(this.clipboard);
-    console.log('pos', pos);
-    if (lecture) {
-      let row: Row = this.tableBinder.lecsToRows(this.tableLectures).filter(v => v.day == pos.day)[0];
-      lecture.day = row.day;
-      let st = this.final.START_TIME
-      for (let i = 0; i < row.tds.length;i++) {
-        if (pos.index == i) {
-          
-          lecture.startTime = st;
-          
-          break;
-        }
-        st +=this.final.STEP_TIME
-      }
-      if (lecture.startTime != st)
-        throw new Error('lecture is i do not know what happen come here');
+    let lecture: SolveLec = JSON.parse(JSON.stringify(this.clipboard));
+    console.log('pos', { ...pos, startTime: this.getStartTime(pos.day, pos.index) });
+    console.log('clipboard',this.clipboard)
+    if (lecture && this.isAvailableSpace(pos.day,pos.index,lecture.duration)) {
+      lecture.day = pos.day;
+      lecture.startTime = this.getStartTime(pos.day, pos.index);
+      
+      if (lecture.startTime == -1)
+        console.error('paste index is in critical position. come here');
       this.tableLectures.push(lecture);
       this.tableLecturesEvent.emit('tableLecturesChanged');
       this.saveState();
-      console.log('looped')
-
-
-    } else this.sound.play('notification')
+    } else this.sound.play('notification');
     //todo snackbar: clipboard empty
   }
-  
-  
+
+
   /********************************* PRIVATE METHODS *****************************************************/
-   /**
-    * 
-    * @pram index for position in row
-    * @returns boolean whether a lecture can be place in that day, index with its duration
-    */
-    private isAvailableSpace(day:WeekDays,index:number, duration:number) {
-      
+  /**
+   * 
+   * @pram index for position in row
+   * @returns boolean whether a lecture can be place in that day, index with its duration
+   */
+  private isAvailableSpace(day: WeekDays, index: number, duration: number): boolean {
+    const row: Row = this.tableBinder.lecsToRows(this.tableLectures).filter(v => v.day == day)[0];
+    for (let i = index; i < index + duration * 2; i++){
+      if (row.tds.length <= i || row.tds[i] != null)
+        return false;
     }
+    return true;
+  }
+  /**
+   * 
+   * @param index of row.tds where row.day = @param day
+   * @returns startTime of that index. -1 if not found
+   */
+  private getStartTime(day: WeekDays, index: number): number {
+    const row: Row = this.tableBinder.lecsToRows(this.tableLectures).filter(v => v.day == day)[0];
+    let st = this.final.START_TIME;
+    for (let i = 0; i < row.tds.length; i++) {
+      if (index == i)
+        return st;
+      let td =  row.tds[i];
+      if (td && 'duration' in td)
+        st += td.duration;
+      else
+        st += this.final.STEP_TIME
+    }
+    return -1;
+  }
+
+
 }

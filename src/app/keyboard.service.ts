@@ -22,8 +22,8 @@ export class KeyboardService {
         this.dataService.cutFocus()
       else if (e.keyCode == 46)
         this.dataService.deleteFocus()
-      else
-        console.log('KeyCoded', e.keyCode);
+      // else
+      //   console.log('KeyCoded', e.keyCode);
 
 
 
