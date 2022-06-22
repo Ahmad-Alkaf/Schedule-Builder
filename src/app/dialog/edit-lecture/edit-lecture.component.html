@@ -4,7 +4,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Select Subject</mat-label>
     <mat-select required [(ngModel)]="data.lecture.name">
-      <mat-option *ngFor="let lesson of dataService.lessons" [value]="lesson.name">
+      <mat-option *ngFor="let lesson of dataService.lessons" [value]="lesson.name.toString()">
         {{lesson.name}}
       </mat-option>
     </mat-select>
@@ -14,7 +14,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Lecture Duration</mat-label>
     <mat-select  required [(ngModel)]="data.duration">
-      <mat-option *ngFor="let h of final.LECTURE_HOURS" [value]="h">
+      <mat-option *ngFor="let h of validHours" [value]="h">
         {{h}}
       </mat-option>
     </mat-select>
@@ -24,7 +24,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Select Teacher</mat-label>
     <mat-select [(ngModel)]="data.lecture.teacher">
-      <mat-option *ngFor="let teacher of dataService.teachers" [value]="teacher.name">
+      <mat-option *ngFor="let teacher of dataService.teachers" [value]="teacher.name.toString()">
         {{teacher.name}}
       </mat-option>
     </mat-select>
@@ -36,7 +36,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Select Room</mat-label>
     <mat-select [(ngModel)]="data.lecture.room">
-      <mat-option *ngFor="let room of dataService.rooms" [value]="room.name">
+      <mat-option *ngFor="let room of dataService.rooms" [value]="room.name.toString()">
         {{room.name}}
       </mat-option>
     </mat-select>
@@ -45,6 +45,6 @@
 
   <div mat-dialog-actions class="d-flex justify-content-center">
     <button mat-stroked-button (click)="dialogRef.close()" color="accent" class="w-25">Cancel</button>
-    <button mat-stroked-button (click)="editHandler()" color="primary" class="w-25">Save</button>
+    <button mat-stroked-button (click)="dialogRef.close(this.data)" color="primary" class="w-25">Save</button>
   </div>
 </div>

@@ -21,11 +21,6 @@ export class GenerateTableService implements OnInit{
     // this.generateSchedule(staticLecs, []);
   }
 
-  tableValidation = (lectures: SolveLec[]): { isValid: boolean, msg?: string } => {
-    // console.log('isValid called')
-    return { isValid: false };
-  }
-
 
 
   generateSchedule = (staticLecs: StaticLec[], lectures: SolveLec[]):any => {

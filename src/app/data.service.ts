@@ -71,7 +71,7 @@ export class DataService {
   private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Lesson[], rooms: Room[], tableLectures: SolveLec[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
 
   private clipboard: SolveLec | undefined = undefined
-  public focused: SolveLec | { index: number, day: WeekDays }|undefined = undefined;
+  public focused: SolveLec | { index: number, day: WeekDays } | undefined = undefined;
 
   constructor(private sound: SoundService, private tableBinder: TableBinder, private final: Final,
     private dialog: MatDialog) {
@@ -123,10 +123,10 @@ export class DataService {
   }
 
 
-  public editFocus() {
-    if (!this.focused||'index' in this.focused)
-    this.sound.play('notification')
-  else this.edit(this.focused)
+  public editFocus(): void {
+    if (!this.focused || 'index' in this.focused)
+      this.sound.play('notification')
+    else this.edit(this.focused)
   }
 
   public edit(lecture: SolveLec): void {
@@ -135,6 +135,7 @@ export class DataService {
       data: JSON.parse(JSON.stringify(lecture))
     });
     ref.afterClosed().subscribe(result => {
+      if (!result) return;
       if (this.tableLectures.includes(lecture)) {
         this.tableLectures.splice(this.tableLectures.indexOf(lecture), 1, result)
         this.tableLecturesEvent.emit('tableLecturesChanged');
@@ -146,7 +147,7 @@ export class DataService {
   }
 
   public deleteFocus() {
-    if (!this.focused||'index' in this.focused)
+    if (!this.focused || 'index' in this.focused)
       this.sound.play('notification')
     else this.delete(this.focused)
   }
@@ -169,7 +170,7 @@ export class DataService {
   }
 
   public copy(lecture: SolveLec) {
-    console.log('copy',lecture)
+    console.log('copy', lecture)
     this.clipboard = JSON.parse(JSON.stringify(lecture));//todo snackbar: copied
   }
 
@@ -181,7 +182,7 @@ export class DataService {
   }
 
   public cut(lecture: SolveLec) {
-    console.log('cut',lecture)
+    console.log('cut', lecture)
     this.clipboard = JSON.parse(JSON.stringify(lecture));
     this.delete(lecture);
   }
@@ -194,16 +195,16 @@ export class DataService {
 
   public paste(pos: { index: number, day: WeekDays }) {
     console.log('paste')
-    console.log('row',this.tableBinder.lecsToRows(this.tableLectures))
+    console.log('row', this.tableBinder.lecsToRows(this.tableLectures))
     if (!this.clipboard)
       return this.sound.play('notification')
     let lecture: SolveLec = JSON.parse(JSON.stringify(this.clipboard));
     console.log('pos', { ...pos, startTime: this.getStartTime(pos.day, pos.index) });
-    console.log('clipboard',this.clipboard)
-    if (lecture && this.isAvailableSpace(pos.day,pos.index,lecture.duration)) {
+    console.log('clipboard', this.clipboard)
+    if (lecture && this.isAvailableSpace(pos.day, pos.index, lecture.duration)) {
       lecture.day = pos.day;
       lecture.startTime = this.getStartTime(pos.day, pos.index);
-      
+
       if (lecture.startTime == -1)
         console.error('paste index is in critical position. come here');
       this.tableLectures.push(lecture);
@@ -213,24 +214,45 @@ export class DataService {
     //todo snackbar: clipboard empty
   }
 
+  
 
+  /**
+   * NOTE: if there is no lecture then at pram startTime this function will return -1.
+   * @param startTime of lecture in row.tds where row.day = @param day
+   * @returns index of that lecture in row.tds. -1 if not found
+   */
+  public getIndex(day: WeekDays, startTime: number): number {
+    const row: Row = this.tableBinder.lecsToRows(this.tableLectures).filter(v => v.day == day)[0];
+    for (let i = 0; i < row.tds.length; i++) {
+      let td = row.tds[i];
+      if (td)
+        if (td.startTime == startTime)
+          return i;
+        else if (td.startTime > startTime)
+          break;
+    }
+    return -1;
+  }
+  
   /********************************* PRIVATE METHODS *****************************************************/
+
   /**
    * 
    * @pram index for position in row
    * @returns boolean whether a lecture can be place in that day, index with its duration
    */
-  private isAvailableSpace(day: WeekDays, index: number, duration: number): boolean {
+   private isAvailableSpace(day: WeekDays, index: number, duration: number): boolean {
     const row: Row = this.tableBinder.lecsToRows(this.tableLectures).filter(v => v.day == day)[0];
-    for (let i = index; i < index + duration * 2; i++){
+    for (let i = index; i < index + duration * 2; i++) {
       if (row.tds.length <= i || row.tds[i] != null)
         return false;
     }
     return true;
   }
+
   /**
    * 
-   * @param index of row.tds where row.day = @param day
+   * @param index of lecture in row.tds where row.day = @param day
    * @returns startTime of that index. -1 if not found
    */
   private getStartTime(day: WeekDays, index: number): number {
@@ -239,7 +261,7 @@ export class DataService {
     for (let i = 0; i < row.tds.length; i++) {
       if (index == i)
         return st;
-      let td =  row.tds[i];
+      let td = row.tds[i];
       if (td && 'duration' in td)
         st += td.duration;
       else
@@ -247,6 +269,5 @@ export class DataService {
     }
     return -1;
   }
-
 
 }
