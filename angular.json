@@ -110,5 +110,8 @@
       }
     }
   },
-  "defaultProject": "schedule_maker"
+  "defaultProject": "schedule_maker",
+  "cli": {
+    "analytics": false
+  }
 }
