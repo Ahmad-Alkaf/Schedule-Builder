@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EditLectureComponent } from '../dialog/edit-lecture/edit-lecture.component';
 // import {EventEmitter}  from 'events';
-import { Final, Lesson, MyEventEmitter, Room, Row, SolveLec, Teacher, WeekDays } from '../main/main/table/utility/static';
+import { Final, Subject, MyEventEmitter, Room, Row, SolveLec, Teacher, WeekDays } from '../main/main/table/utility/static';
 import { TableBinder } from '../main/main/table/utility/tableBinder';
 import { SoundService } from './sound.service';
 @Injectable({
@@ -11,13 +11,19 @@ import { SoundService } from './sound.service';
 export class DataService {
 
   //!undo and redo are not consistent because dataService is not updated when they change table values
-  public teachers: Teacher[] = [{ name: 'Ahmed Shaikh' }];
+  public teachers: Teacher[] = [{ name: 'Ahmed Shaikh' },
+  { name: 'Hassen' },
+  { name: 'Hamzah' }];
 
-  lessons: Lesson[] = [];
+  subjects: Subject[] = [{ name: 'PM' },
+  { name: 'HCI' },
+  { name: 'Server-side' }];
 
-  rooms: Room[] = [];
+  rooms: Room[] = [{ name: '301' },
+  { name: '401' },
+  { name: '302' }];
 
-  public tableLecturesEvent = new MyEventEmitter();
+  public sync = new MyEventEmitter();
   public tableLectures: SolveLec[] = [{
     startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
     lecture: { name: 'Math', teacher: 'Ahmed', weekDuration: 6, room: '301' }
@@ -62,7 +68,7 @@ export class DataService {
     lecture: { name: 'Java', teacher: 'Salem Hassen', weekDuration: -1, room: '233' }
   }];
 
-  private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Lesson[], rooms: Room[], tableLectures: SolveLec[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
+  private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Subject[], rooms: Room[], tableLectures: SolveLec[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
 
   private clipboard: SolveLec | undefined = undefined
   public focused: SolveLec | { index: number, day: WeekDays } | undefined = undefined;
@@ -78,7 +84,7 @@ export class DataService {
   public saveState = () => {//todo if after undo we saveState then 
     this.flow.data[this.flow.curIndex + 1] = JSON.parse(JSON.stringify({
       teachers: this.teachers,
-      lessons: this.lessons,
+      lessons: this.subjects,
       rooms: this.rooms,
       tableLectures: this.tableLectures,
       newLecContainer: this.newLecContainer
@@ -92,10 +98,10 @@ export class DataService {
     if (this.flow.data[this.flow.curIndex - 1]) {
       const { teachers, lessons, rooms, tableLectures, newLecContainer } = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
       this.teachers = teachers;
-      this.lessons = lessons;
+      this.subjects = lessons;
       this.rooms = rooms;
       this.tableLectures = tableLectures;
-      this.tableLecturesEvent.emit('tableLecturesChanged');
+      this.sync.emit('tableLecturesChanged');
       this.newLecContainer = newLecContainer;
       console.log('retain index', this.flow.curIndex)
     }
@@ -106,10 +112,10 @@ export class DataService {
     if (this.flow.data[this.flow.curIndex + 1]) {
       const { teachers, lessons, rooms, tableLectures, newLecContainer } = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
       this.teachers = teachers;
-      this.lessons = lessons;
+      this.subjects = lessons;
       this.rooms = rooms;
       this.tableLectures = tableLectures;
-      this.tableLecturesEvent.emit('tableLecturesChanged');
+      this.sync.emit('tableLecturesChanged');
       this.newLecContainer = newLecContainer;
 
       console.log('retain index', this.flow.curIndex);
@@ -132,7 +138,7 @@ export class DataService {
       if (!result) return;
       if (this.tableLectures.includes(lecture)) {
         this.tableLectures.splice(this.tableLectures.indexOf(lecture), 1, result)
-        this.tableLecturesEvent.emit('tableLecturesChanged');
+        this.sync.emit('tableLecturesChanged');
       } else {
         this.newLecContainer.splice(this.newLecContainer.indexOf(lecture), 1, result);
       }
@@ -149,7 +155,7 @@ export class DataService {
     console.log('delete called')
     if (this.tableLectures.includes(lecture)) {
       this.tableLectures.splice(this.tableLectures.indexOf(lecture), 1);
-      this.tableLecturesEvent.emit('tableLecturesChanged');
+      this.sync.emit('tableLecturesChanged');
     } else if (this.newLecContainer.includes(lecture)) {
       this.newLecContainer.splice(this.newLecContainer.indexOf(lecture), 1);
     } else throw new Error('what a lecture that not in tableLectures or newLecContainer')
@@ -202,7 +208,7 @@ export class DataService {
       if (lecture.startTime == -1)
         console.error('paste index is in critical position. come here');
       this.tableLectures.push(lecture);
-      this.tableLecturesEvent.emit('tableLecturesChanged');
+      this.sync.emit('tableLecturesChanged');
       this.saveState();
     } else this.sound.play('notification');
     //todo snackbar: clipboard empty

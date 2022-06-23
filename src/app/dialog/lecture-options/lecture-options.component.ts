@@ -1,6 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Component, Input } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import { Final, SolveLec } from 'src/app/main/main/table/utility/static';
 import { SoundService } from 'src/app/services/sound.service';

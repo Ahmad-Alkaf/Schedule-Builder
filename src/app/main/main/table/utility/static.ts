@@ -28,7 +28,7 @@ export interface SolveLec {
 export interface Teacher {
    name: string;
 };
-export interface Lesson {
+export interface Subject {
    name: string;
 };
 export interface Room {
@@ -49,7 +49,7 @@ export class Final {
   
 }
 
-type EventName = 'tableLecturesChanged';
+type EventName = 'tableLecturesChanged' | 'treeTeachersSubjectsRooms';
 export class MyEventEmitter {//copy of EventEmitter class in NodeJS
    listeners: any = {};  // key-value pair
 

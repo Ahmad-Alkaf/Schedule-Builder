@@ -1,10 +1,4 @@
-.add {
-  /* background-color: aqua; */
-  /* color:blueviolet; */
-}
-
-.subtree {
-  text-align: center;
-  width: 100%;
-  margin-right: 10px;
+.tree-node {
+  display: flex;
+  align-items: center;
 }

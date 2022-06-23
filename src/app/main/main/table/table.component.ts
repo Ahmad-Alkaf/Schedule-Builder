@@ -14,7 +14,7 @@ import { DataService } from 'src/app/services/data.service';
 export class TableComponent implements OnInit {
   // table = table;
   constructor(private sound: SoundService, public gt: GenerateTableService, public dataService: DataService, public tableBinder: TableBinder, private final: Final) {
-    this.dataService.tableLecturesEvent.on('tableLecturesChanged', () => {
+    this.dataService.sync.on('tableLecturesChanged', () => {
       this.rows = this.tableBinder.lecsToRows(this.dataService.tableLectures)
       this.updateTime()
       console.log('emit listener rows', this.rows);
@@ -58,7 +58,7 @@ export class TableComponent implements OnInit {
           this.dataService.tableLectures.push(td);
           this.dataService.newLecContainer.splice(this.dataService.newLecContainer.indexOf(td), 1);
           this.dataService.saveState();
-      this.dataService.tableLecturesEvent.emit('tableLecturesChanged');
+      this.dataService.sync.emit('tableLecturesChanged');
         } else {
           console.log('invalid container to table'); //todo error sound
           this.sound.play('error');

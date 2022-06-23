@@ -40,7 +40,7 @@ export class CreateLectureComponent {
           this.dataService.tableLectures.splice(this.dataService.tableLectures.indexOf(td), 1);
         } else throw new Error('unexpected value of td=' + td)
 
-        this.dataService.tableLecturesEvent.emit('tableLecturesChanged');
+        this.dataService.sync.emit('tableLecturesChanged');
       } else throw new Error('Unexpected dropped in created-lecture component!');//else if tds in table it'll call table drop
     }
     this.dataService.saveState()

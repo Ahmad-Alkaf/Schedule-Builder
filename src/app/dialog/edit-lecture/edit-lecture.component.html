@@ -4,7 +4,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Select Subject</mat-label>
     <mat-select required [(ngModel)]="data.lecture.name">
-      <mat-option *ngFor="let lesson of dataService.lessons" [value]="lesson.name.toString()">
+      <mat-option *ngFor="let lesson of dataService.subjects" [value]="lesson.name.toString()">
         {{lesson.name}}
       </mat-option>
     </mat-select>

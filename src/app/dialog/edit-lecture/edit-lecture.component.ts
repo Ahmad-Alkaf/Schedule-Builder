@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DataService } from 'src/app/services/data.service';
 import { NavTreeComponent } from 'src/app/main/main/nav-tree/nav-tree.component';
-import { GenerateTableService } from 'src/app/main/main/table/utility/generate-table.service';
 import { Final, Row, SolveLec } from 'src/app/main/main/table/utility/static';
 import { TableBinder } from 'src/app/main/main/table/utility/tableBinder';
 
