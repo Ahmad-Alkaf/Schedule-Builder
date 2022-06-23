@@ -1,12 +1,11 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Final, SolveLec, WeekDays } from './utility/static';
 import { TableBinder } from './utility/tableBinder'
 import { SoundService } from 'src/app/sound.service';
 import { GenerateTableService } from './utility/generate-table.service';
 import { DataService } from 'src/app/data.service';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
