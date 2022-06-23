@@ -2,9 +2,9 @@ import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem, 
 import { Component, OnInit } from '@angular/core';
 import { Final, SolveLec, WeekDays } from './utility/static';
 import { TableBinder } from './utility/tableBinder'
-import { SoundService } from 'src/app/sound.service';
+import { SoundService } from 'src/app/services/sound.service';
 import { GenerateTableService } from './utility/generate-table.service';
-import { DataService } from 'src/app/data.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-table',

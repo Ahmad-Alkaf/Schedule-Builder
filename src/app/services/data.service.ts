@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { EditLectureComponent } from './dialog/edit-lecture/edit-lecture.component';
+import { EditLectureComponent } from '../dialog/edit-lecture/edit-lecture.component';
 // import {EventEmitter}  from 'events';
-import { Final, Lesson, MyEventEmitter, Room, Row, SolveLec, Teacher, WeekDays } from './main/main/table/utility/static';
-import { TableBinder } from './main/main/table/utility/tableBinder';
+import { Final, Lesson, MyEventEmitter, Room, Row, SolveLec, Teacher, WeekDays } from '../main/main/table/utility/static';
+import { TableBinder } from '../main/main/table/utility/tableBinder';
 import { SoundService } from './sound.service';
 @Injectable({
   providedIn: 'root'

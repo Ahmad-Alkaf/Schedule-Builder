@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { KeyboardService } from './keyboard.service';
+import { KeyboardService } from './services/keyboard.service';
 
 @Component({
   selector: 'app-root',

@@ -11,6 +11,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider'; 
 import { MatSelectModule } from '@angular/material/select'; 
 import {MatMenuModule} from '@angular/material/menu'; 
+import {MatTabsModule} from '@angular/material/tabs'; 
 // import{MatListModule} from '@angular/material/list';
 // import {MatRippleModule} from '@angular/material/core'; 
 // import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -24,15 +25,16 @@ import { MainComponent } from './main/main/main.component';
 import { AddSubtreeComponent } from './dialog/add-subtree/add-subtree.component'; 
 import { TableComponent } from './main/main/table/table.component';
 import { TdComponent } from './main/main/table/td/td.component'; 
-import { SoundService } from './sound.service';
+import { SoundService } from './services/sound.service';
 import { AddLectureComponent } from './dialog/add-lecture/add-lecture.component';
 import { CreateLectureComponent } from './main/main/created-lecture/created-lecture.component';
 import { LectureOptionsComponent } from './dialog/lecture-options/lecture-options.component';
-import { DataService } from './data.service';
-import { KeyboardService } from './keyboard.service';
+import { DataService } from './services/data.service';
+import { KeyboardService } from './services/keyboard.service';
 import { Final } from './main/main/table/utility/static';
 import { TableBinder } from './main/main/table/utility/tableBinder';
 import { EditLectureComponent } from './dialog/edit-lecture/edit-lecture.component';
+import { TableTabsComponent } from './main/main/table/table-tabs/table-tabs.component';
 // import {CdkMenuModule} from '@angular/cdk/menu'; 
 @NgModule({
   declarations: [
@@ -45,7 +47,8 @@ import { EditLectureComponent } from './dialog/edit-lecture/edit-lecture.compone
     AddLectureComponent,
     CreateLectureComponent,
     LectureOptionsComponent,
-    EditLectureComponent
+    EditLectureComponent,
+    TableTabsComponent
   ],
   imports: [
     BrowserModule,
@@ -65,6 +68,7 @@ import { EditLectureComponent } from './dialog/edit-lecture/edit-lecture.compone
     MatDividerModule,
     MatSelectModule,
     MatMenuModule,
+    MatTabsModule,
     DragDropModule,
     ReactiveFormsModule,
     // MatAutocompleteModule,

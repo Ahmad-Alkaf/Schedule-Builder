@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DataService } from 'src/app/data.service';
+import { DataService } from 'src/app/services/data.service';
 import { GenerateTableService } from '../utility/generate-table.service';
 import { SolveLec,Final } from '../utility/static';
 @Component({
