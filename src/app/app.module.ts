@@ -10,7 +10,8 @@ import {MatTableModule} from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog'; 
 import { MatDividerModule } from '@angular/material/divider'; 
 import { MatSelectModule } from '@angular/material/select'; 
-import {MatMenuModule} from '@angular/material/menu'; 
+import { MatMenuModule } from '@angular/material/menu'; 
+import {MatTabsModule} from '@angular/material/tabs'; 
 // import{MatListModule} from '@angular/material/list';
 // import {MatRippleModule} from '@angular/material/core'; 
 // import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -65,6 +66,7 @@ import { EditLectureComponent } from './dialog/edit-lecture/edit-lecture.compone
     MatDividerModule,
     MatSelectModule,
     MatMenuModule,
+    MatTabsModule,
     DragDropModule,
     ReactiveFormsModule,
     // MatAutocompleteModule,
