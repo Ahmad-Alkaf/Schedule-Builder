@@ -12,6 +12,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select'; 
 import {MatMenuModule} from '@angular/material/menu'; 
 import {MatTabsModule} from '@angular/material/tabs'; 
+import {MatToolbarModule} from '@angular/material/toolbar'; 
 // import{MatListModule} from '@angular/material/list';
 // import {MatRippleModule} from '@angular/material/core'; 
 // import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -35,6 +36,7 @@ import { Final } from './main/main/table/utility/static';
 import { TableBinder } from './main/main/table/utility/tableBinder';
 import { EditLectureComponent } from './dialog/edit-lecture/edit-lecture.component';
 import { TableTabsComponent } from './main/main/table/table-tabs/table-tabs.component';
+import { HeaderComponent } from './main/header/header.component';
 // import {CdkMenuModule} from '@angular/cdk/menu'; 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import { TableTabsComponent } from './main/main/table/table-tabs/table-tabs.comp
     CreateLectureComponent,
     LectureOptionsComponent,
     EditLectureComponent,
-    TableTabsComponent
+    TableTabsComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -69,12 +72,13 @@ import { TableTabsComponent } from './main/main/table/table-tabs/table-tabs.comp
     MatSelectModule,
     MatMenuModule,
     MatTabsModule,
-    DragDropModule,
-    ReactiveFormsModule,
+    MatToolbarModule,
     // MatAutocompleteModule,
     // MatDialogModule,
     // MatListModule,
     // MatRippleModule,
+    DragDropModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     // MatSnackBarModule
   ],

@@ -11,17 +11,11 @@ import { SoundService } from './sound.service';
 export class DataService {
 
   //!undo and redo are not consistent because dataService is not updated when they change table values
-  public teachers: Teacher[] = [{ name: 'Ahmed Shaikh' },
-  { name: 'Hassen' },
-  { name: 'Hamzah' }];
+  public teachers: Teacher[] = [{ name: 'Ahmed Shaikh' }];
 
-  lessons: Lesson[] = [{ name: 'PM' },
-  { name: 'HCI' },
-  { name: 'Server-side' }];
+  lessons: Lesson[] = [];
 
-  rooms: Room[] = [{ name: '301' },
-  { name: '401' },
-  { name: '302' }];
+  rooms: Room[] = [];
 
   public tableLecturesEvent = new MyEventEmitter();
   public tableLectures: SolveLec[] = [{

@@ -1,3 +1,4 @@
 dataService: fix undo redo
 root: let user change theme. Note: cdk-drag-handler in styles.css file is static color
 edit-lecture: when extend duration of lec in table if there is lecture after it then it'll be swallowed
+table:google (how to disable placeholder in angular material drop and drag)

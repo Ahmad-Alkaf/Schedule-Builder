@@ -7,13 +7,13 @@
 }
 
 html {
-  height: 100%;
+  height: 100vh !important;
 }
 
 body {
   border: 0;
   padding: 0;
-  background-color: rgb(240, 240, 240) !important;
+  background-color: rgb(245, 245, 245) !important;
   width: 100%;
   height: 100%;
   margin: 0;
