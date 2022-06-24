@@ -14,7 +14,6 @@ import { Table } from 'src/app/main/main/table/utility/tableBinder';
 export class EditLectureComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<NavTreeComponent>, @Inject(MAT_DIALOG_DATA) public data: SolveLec,
     public dataService: DataService, public final: Final) {
-    console.log('editLec data', data);
   }
   ngOnInit(): void {
     this.validHours = this.validLectureHours();
@@ -33,7 +32,6 @@ export class EditLectureComponent implements OnInit {
     const hours = this.final.LECTURE_HOURS;
     const row: Row = this.dataService.getActiveTable().rows.filter(v => v.day == this.data.day)[0];
     const index: number = this.dataService.getIndex(row.day, this.data.startTime);
-    console.log('index', index, ' of lecture', this.data);
     let validHours: number[] = hours.filter(v => v <= this.data.duration);
     let dur = this.data.duration;
     for (let i = index + 1; i < row.tds.length && dur < this.final.MAX_LECTURE_HOUR; i++) {

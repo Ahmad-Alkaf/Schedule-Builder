@@ -40,6 +40,7 @@ import { TableTabsComponent } from './main/main/table/table-tabs/table-tabs.comp
 import { HeaderComponent } from './main/header/header.component';
 import { ApiService } from './services/api.service';
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { AddTableComponent } from './dialog/add-table/add-table.component';
 // import {CdkMenuModule} from '@angular/cdk/menu'; 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     EditLectureComponent,
     TableTabsComponent,
     HeaderComponent,
-    AutofocusDirective
+    AutofocusDirective,
+    AddTableComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { AddTableComponent } from 'src/app/dialog/add-table/add-table.component';
 import { DataService } from 'src/app/services/data.service';
+import { Table } from '../utility/tableBinder';
 
 @Component({
   selector: 'app-table-tabs',
@@ -10,9 +13,20 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class TableTabsComponent {
 
-  constructor(public dataService:DataService) { }
-  tabChanged(event: MatTabChangeEvent) {
-    this.dataService.tabActiveIndex = event.index;
-  }
+  constructor(public dataService: DataService, private dialog: MatDialog) { }
+  
 
+  openAddTable() {
+    const ref = this.dialog.open(AddTableComponent, {
+      width: '300px',
+    });
+    ref.afterClosed().subscribe((result: string) => {
+      console.log({ result });
+      if (result){
+        this.dataService.tables.push(new Table(this.dataService.tables.length, result));
+        this.dataService.saveState();
+        this.dataService.tabActiveIndex = this.dataService.tables.length - 1;
+      }
+    })
+  }
 }

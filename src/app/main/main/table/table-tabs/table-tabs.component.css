@@ -1,17 +1,29 @@
 /* Styles for tab labels */
 .mat-tab-label {
-   border-left:1px solid gray;
-   /* padding: 5px; */
-   /* background-color: white; */
-   /* color: red; */
-   /* font-weight: 700; */
+  /* border-left:1px solid gray; */
+  /* padding: 5px; */
+  /* background-color: white; */
+  /* color: red; */
+  /* font-weight: 700; */
 }
 
 /* Styles for the active tab label */
 .mat-tab-label.mat-tab-label-active {
-   /* padding: 5px; */
-   /* background-color: white; */
-   /* color: red; */
-   /* font-weight: 700; */
+  /* padding: 5px; */
+  /* background-color: white; */
+  /* color: red; */
+  /* font-weight: 700; */
 }
 
+.mat-tab-label:last-child {
+  opacity: 1;
+  min-width: 20px;
+  padding: 0;
+}
+
+.mat-tab-label:last-child button mat-icon:focus:active {
+
+  outline: none;
+  box-shadow: none;
+
+}
