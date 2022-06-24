@@ -1,18 +1,10 @@
-<mat-tab-group mat-align-tabs="start">
-   <mat-tab label="CIS">
+<mat-tab-group (selectedTabChange)="dataService.tabActiveIndex = $event.index;" mat-align-tabs="start">
+   <mat-tab *ngFor="let table of dataService.tables;" [label]="table.name">
       <div class="my-3">
-         <app-table></app-table>
+         <app-table [table]="table" ></app-table>
 
       </div>
    </mat-tab>
-   <mat-tab label="IT">
-      <div class="my-3">
-         <app-table ></app-table>
-      </div><!--todo pass tableIndex to app-table and dataService.tableLectures as matrix[][] finally make tab dynamic-->
-   </mat-tab>
-   <mat-tab label="Third">
-      <div class="my-3">
-         <app-table></app-table>
-      </div>
-   </mat-tab>
+   <button mat-icon-button><mat-icon>add</mat-icon></button>
+   <mat-tab label="+ Add Table"></mat-tab>
 </mat-tab-group>

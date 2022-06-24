@@ -1,6 +1,15 @@
 dataService: fix undo redo
+
 root: let user change theme. Note: cdk-drag-handler in styles.css file is static color
-edit-lecture: when extend duration of lec in table if there is lecture after it then it'll be swallowed
-table:google (how to disable placeholder in angular material drop and drag)
-created-lecture:change preview width when dragging base on lecture duration
 root: on project load there are some pushed index(flow being pushed) so you press ctr+z num of times before reaching last state!!!
+
+table:google (how to disable placeholder in angular material drop and drag)
+
+edit-lecture: when extend duration of lec in table if there is lecture after it then it'll be swallowed
+
+created-lecture:implement paste i don't know how it will be
+created-lecture:change preview width when dragging base on lecture duration
+
+keyboardService: make edit shortcut there is already function called editFocus()
+
+nav-tree: when click add input will appear. todo auto focus in the input when appear.

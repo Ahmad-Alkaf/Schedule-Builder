@@ -34,10 +34,12 @@ import { LectureOptionsComponent } from './dialog/lecture-options/lecture-option
 import { DataService } from './services/data.service';
 import { KeyboardService } from './services/keyboard.service';
 import { Final } from './main/main/table/utility/static';
-import { TableBinder } from './main/main/table/utility/tableBinder';
+// import { Table } from './main/main/table/utility/tableBinder';
 import { EditLectureComponent } from './dialog/edit-lecture/edit-lecture.component';
 import { TableTabsComponent } from './main/main/table/table-tabs/table-tabs.component';
 import { HeaderComponent } from './main/header/header.component';
+import { ApiService } from './services/api.service';
+import { AutofocusDirective } from './directives/autofocus.directive';
 // import {CdkMenuModule} from '@angular/cdk/menu'; 
 @NgModule({
   declarations: [
@@ -52,7 +54,8 @@ import { HeaderComponent } from './main/header/header.component';
     LectureOptionsComponent,
     EditLectureComponent,
     TableTabsComponent,
-    HeaderComponent
+    HeaderComponent,
+    AutofocusDirective
   ],
   imports: [
     BrowserModule,
@@ -84,7 +87,7 @@ import { HeaderComponent } from './main/header/header.component';
     BrowserAnimationsModule,
     // MatSnackBarModule
   ],
-  providers: [SoundService,DataService,KeyboardService,Final, TableBinder],
+  providers: [SoundService,DataService,KeyboardService,Final,ApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

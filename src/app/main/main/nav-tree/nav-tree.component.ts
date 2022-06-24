@@ -1,5 +1,5 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { DataService } from 'src/app/services/data.service';
 
@@ -21,6 +21,8 @@ interface FlatNode {
 
 export class NavTreeComponent implements OnInit {
 
+ 
+  
   treeControl = new FlatTreeControl<FlatNode>(
     node => node.level,
     node => node.expandable
@@ -125,7 +127,7 @@ export class NavTreeComponent implements OnInit {
     let tree: FlatNode[] = [];
 
     tree.push({
-      name: 'Teacher',
+      name: 'Teacher',//saveNewNode use this.
       level: 0,
       expandable: true
     })
@@ -133,7 +135,7 @@ export class NavTreeComponent implements OnInit {
       tree.push({ name: t.name, level: 1, expandable: false })
 
     tree.push({
-      name: 'Subject',
+      name: 'Subject',//saveNewNode use this.
       level: 0,
       expandable: true
     })
@@ -141,7 +143,7 @@ export class NavTreeComponent implements OnInit {
       tree.push({ name: s.name, level: 1, expandable: false })
 
     tree.push({
-      name: 'Room',
+      name: 'Room',//saveNewNode use this.
       level: 0,
       expandable: true
     })

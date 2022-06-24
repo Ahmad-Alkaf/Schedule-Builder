@@ -17,7 +17,7 @@ export class CreateLectureComponent {
   constructor(public dialog: MatDialog, public dataService: DataService, public final: Final) {
   }
 
-  openAddNewLectureDialog=()=> {
+  openAddNewLectureDialog = () => {
     this.dialog.open(AddLectureComponent, {
       width: '800px',
     });
@@ -37,12 +37,21 @@ export class CreateLectureComponent {
         if (td) {
           // td.startTime = -1;
           this.dataService.newLecContainer.splice(tdIndex, 0, td);
-          this.dataService.tableLectures.splice(this.dataService.tableLectures.indexOf(td), 1);
+          let table = this.dataService.getActiveTable();
+          let lecs = [...table.lectures];
+          lecs.splice(table.lectures.indexOf(td), 1);
+          table.lectures = lecs;
         } else throw new Error('unexpected value of td=' + td)
-
-        this.dataService.sync.emit('tableLecturesChanged');
+        // this.dataService.sync.emit('tableLecturesChanged');
       } else throw new Error('Unexpected dropped in created-lecture component!');//else if tds in table it'll call table drop
     }
     this.dataService.saveState()
+  }
+  connectTables(): string[] {
+    let arr: string[] = [];
+    for (let table of this.dataService.tables)
+      for (let i = 0; i < table.rows.length; i++)
+        arr.push('row' + table.index + i);
+    return arr;
   }
 }

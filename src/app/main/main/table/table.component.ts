@@ -1,7 +1,7 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Final, SolveLec, WeekDays } from './utility/static';
-import { TableBinder } from './utility/tableBinder'
+import { Table } from './utility/tableBinder'
 import { SoundService } from 'src/app/services/sound.service';
 import { GenerateTableService } from './utility/generate-table.service';
 import { DataService } from 'src/app/services/data.service';
@@ -12,15 +12,9 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./table.component.css'],
 })
 export class TableComponent implements OnInit {
-  // table = table;
-  constructor(private sound: SoundService, public gt: GenerateTableService, public dataService: DataService, public tableBinder: TableBinder, private final: Final) {
-    this.dataService.sync.on('tableLecturesChanged', () => {
-      this.rows = this.tableBinder.lecsToRows(this.dataService.tableLectures)
-      this.updateTime()
-      console.log('emit listener rows', this.rows);
-    });
+  @Input() table: Table = new Table(-1,'error: assigned manually');
+  constructor(private sound: SoundService, public gt: GenerateTableService, public dataService: DataService, private final: Final) {
   }
-  public rows = this.tableBinder.lecsToRows(this.dataService.tableLectures);
 
   ngOnInit(): void {
     
@@ -28,10 +22,7 @@ export class TableComponent implements OnInit {
   }
 
   focused(td: SolveLec | { index: number; day: WeekDays; }): void{
-    console.log('focused')
-    if (td != null)
       this.dataService.focused = td;
-    else this.dataService.focused = td
   }
 
 
@@ -55,10 +46,9 @@ export class TableComponent implements OnInit {
         if (this.validContainerToTable(preTds, tds, tdIndex, tdPreIndex, td)) {
           tds.splice(tdIndex, td.duration * 2, td);
           this.updateTime();
-          this.dataService.tableLectures.push(td);
           this.dataService.newLecContainer.splice(this.dataService.newLecContainer.indexOf(td), 1);
+          this.table.lectures = [...this.table.lectures,td];
           this.dataService.saveState();
-      this.dataService.sync.emit('tableLecturesChanged');
         } else {
           console.log('invalid container to table'); //todo error sound
           this.sound.play('error');
@@ -174,7 +164,7 @@ export class TableComponent implements OnInit {
   }
 
   updateTime = () => {
-    for (let row of this.rows)
+    for (let row of this.table.rows)
       for (let td of row.tds) {
         if (td) {
           let index = this.getIndex(row.tds, td);

@@ -1,9 +1,9 @@
 <div>
 
    <div class="lecture-container rounded-2" cdkDropList [cdkDropListData]="dataService.newLecContainer"
-      (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="['row0','row1','row2','row3','row4','row5']" id="createdLectures">
+      (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="connectTables()" id="createdLectures">
 
-      <div tabindex="0" class="td" *ngFor="let t of dataService.newLecContainer" [cdkDragData]="t" cdkDrag>
+      <div tabindex="0" class="td" *ngFor="let t of dataService.newLecContainer" (focus)="this.dataService.focused = t" [cdkDragData]="t" cdkDrag>
 
          <div *cdkDragPlaceholder style="min-height: 65px;"></div>
          <app-td [td]="t"></app-td>

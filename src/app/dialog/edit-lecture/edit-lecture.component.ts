@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DataService } from 'src/app/services/data.service';
 import { NavTreeComponent } from 'src/app/main/main/nav-tree/nav-tree.component';
 import { Final, Row, SolveLec } from 'src/app/main/main/table/utility/static';
-import { TableBinder } from 'src/app/main/main/table/utility/tableBinder';
+import { Table } from 'src/app/main/main/table/utility/tableBinder';
 
 @Component({
   selector: 'app-edit-lecture',
@@ -12,7 +12,7 @@ import { TableBinder } from 'src/app/main/main/table/utility/tableBinder';
   styleUrls: ['./edit-lecture.component.css']
 })
 export class EditLectureComponent implements OnInit {
-  constructor(public dialogRef: MatDialogRef<NavTreeComponent>, private tableBinder: TableBinder, @Inject(MAT_DIALOG_DATA) public data: SolveLec,
+  constructor(public dialogRef: MatDialogRef<NavTreeComponent>, @Inject(MAT_DIALOG_DATA) public data: SolveLec,
     public dataService: DataService, public final: Final) {
     console.log('editLec data', data);
   }
@@ -31,7 +31,7 @@ export class EditLectureComponent implements OnInit {
 
   validLectureHours(): number[] {
     const hours = this.final.LECTURE_HOURS;
-    const row: Row = this.tableBinder.lecsToRows(this.dataService.tableLectures).filter(v => v.day == this.data.day)[0];
+    const row: Row = this.dataService.getActiveTable().rows.filter(v => v.day == this.data.day)[0];
     const index: number = this.dataService.getIndex(row.day, this.data.startTime);
     console.log('index', index, ' of lecture', this.data);
     let validHours: number[] = hours.filter(v => v <= this.data.duration);
