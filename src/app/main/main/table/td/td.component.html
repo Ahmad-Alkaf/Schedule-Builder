@@ -5,10 +5,10 @@
    </div>
 
    <div class="d-flex justify-content-evenly">
-      <div *ngIf="td.lecture.teacher">
+      <div class="teacherDiv" *ngIf="td.lecture.teacher">
          {{td.lecture.teacher}}
       </div>
-      <div *ngIf="td.lecture.room">
+      <div class="roomDiv" *ngIf="td.lecture.room">
          {{td.lecture.room}}
       </div>
       <div *ngIf="!dataService.newLecContainer.includes(td); else duration">

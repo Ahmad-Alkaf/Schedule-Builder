@@ -6,6 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { DataService } from 'src/app/services/data.service';
 import { AddLectureComponent } from 'src/app/dialog/add-lecture/add-lecture.component';
 import { Final, SolveLec } from '../table/utility/static';
+import { ControlLectureService } from 'src/app/services/control-lecture.service';
 
 @Component({
   selector: 'app-created-lecture',
@@ -14,7 +15,7 @@ import { Final, SolveLec } from '../table/utility/static';
 })
 
 export class CreateLectureComponent {
-  constructor(public dialog: MatDialog, public dataService: DataService, public final: Final) {
+  constructor(public dialog: MatDialog, public dataService: DataService, public final: Final,public lecControl:ControlLectureService) {
   }
 
   openAddNewLectureDialog = () => {

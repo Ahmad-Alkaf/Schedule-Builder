@@ -36,11 +36,9 @@ export class DataService {
 
   private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Subject[], rooms: Room[], tables: Table[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
 
-  private clipboard: SolveLec | undefined = undefined
-  public focused: SolveLec | { index: number, day: WeekDays } | undefined = undefined;
 
   constructor(private sound: SoundService, private final: Final,
-    private dialog: MatDialog, private api:ApiService) {
+    private dialog: MatDialog, private api: ApiService) {
     this.tables.push(new Table(0, 'IT'));
     this.tables[0].lectures = [{
       startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
@@ -75,54 +73,62 @@ export class DataService {
     }, {
       startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
       lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
+    }];
+    this.tables.push(new Table(1, 'CIS'));
+    this.tables[1].lectures = [{
+      startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
+      lecture: { name: 'Math', teacher: 'Ahmed', weekDuration: 6, room: '301' }
+    }, {
+      startTime: 10, duration: 1, day: 'Saturday', id: Math.random().toString(36).substring(2),
+      lecture: { name: 'Chemistry', teacher: 'Ali', weekDuration: 6, room: 'Lab 4' }
+    }, {
+      startTime: 8, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
+      lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
+    }, {
+      startTime: 10, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
+      lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
+    }, {
+      startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
+      lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
       }];
-      this.tables.push(new Table(1, 'CIS'));
-      this.tables[1].lectures = [{
-        startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
-        lecture: { name: 'Math', teacher: 'Ahmed', weekDuration: 6, room: '301' }
-      }, {
-        startTime: 10, duration: 1, day: 'Saturday', id: Math.random().toString(36).substring(2),
-        lecture: { name: 'Chemistry', teacher: 'Ali', weekDuration: 6, room: 'Lab 4' }
-      }, {
-        startTime: 8, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-        lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-      }, {
-        startTime: 10, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-        lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-      }, {
-        startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
-        lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
-      }];
+    this.saveState()
   }
   //VVVV dataService Functions VVVV
   /**
    * will save dataService variables into (flow) array to be return when undo or redo
    */
-  public saveState = () => {//todo if after undo we saveState then 
-    
+  public saveState = () => {
+    //todo change how tables are saves!
+    //todo save tabActive index to change tabs when ctr + z so user see all undos
+    //!fucking bug that won't let me save tables as other data
     this.flow.data[this.flow.curIndex + 1] = JSON.parse(JSON.stringify({
       teachers: this.teachers,
       lessons: this.subjects,
       rooms: this.rooms,
-      tables: this.tables.map(v=>v.lectures),
-      newLecContainer: this.newLecContainer
+      tableLectures: this.tables.map(v => v.lectures),
+      newLecContainer: this.newLecContainer,
+      tabActiveIndex: this.tabActiveIndex,
     }));
     this.flow.curIndex = ++this.flow.curIndex;
     this.flow.data.splice(this.flow.curIndex, this.flow.data.length - 1 - this.flow.curIndex);
-    console.log('pushed index', this.flow.curIndex)
+    console.log('pushed index', this.flow.curIndex);
+    this.checkCollision()
   }
 
   public undo = () => {
     if (this.flow.data[this.flow.curIndex - 1]) {
-      const { teachers, lessons, rooms, tables, newLecContainer } = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
+      const { teachers, lessons, rooms, tableLectures, newLecContainer,tabActiveIndex } = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
       this.teachers = teachers;
       this.subjects = lessons;
       this.rooms = rooms;
-      for (let i = 0; i < tables.length; i++)
-      if (this.tables[i])
-        this.tables[i].lectures = tables[i];
-      else throw new Error(`wow you made it that far ok then come here handle me`);
       this.newLecContainer = newLecContainer;
+      // this.tabActiveIndex = tabActiveIndex;
+      // this.tables = []
+      for (let i = 0; i < tableLectures.length; i++) {
+        if (this.tables[i])
+          this.tables[i].lectures = tableLectures[i];
+      }
+ 
       console.log('retain index', this.flow.curIndex);
     }
     else this.sound.play('notification');
@@ -130,138 +136,21 @@ export class DataService {
 
   public redo = () => {
     if (this.flow.data[this.flow.curIndex + 1]) {
-      const { teachers, lessons, rooms, tables, newLecContainer } = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
+      const { teachers, lessons, rooms, tableLectures, newLecContainer,tabActiveIndex } = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
       this.teachers = teachers;
       this.subjects = lessons;
       this.rooms = rooms;
-      for (let i = 0; i < tables.length; i++)
-        if (this.tables[i])
-          this.tables[i].lectures = tables[i];
-        else throw new Error(`wow you made it that far ok then come here handle me`);
       this.newLecContainer = newLecContainer;
+      // this.tabActiveIndex = tabActiveIndex;
+      for (let i = 0; i < tableLectures.length; i++)
+        if (this.tables[i])
+          this.tables[i].lectures = tableLectures[i];
+        // else throw new Error(`wow you made it that far ok then come here handle me`);
       console.log('retain index', this.flow.curIndex);
     } else this.sound.play('notification');
   }
 
-  /**
-     * edit the focused lecture if null play 'notification' sound
-     */
-  public editFocus(): void {//todo keyboard shortcut
-    if (!this.focused || 'index' in this.focused)
-      this.sound.play('notification')
-    else this.edit(this.focused)
-  }
 
-  /**
-   * 
-   * @param lecture lecture to be edit
-   * pop up dialog with copy of edited lecture and if submit then result form will be assigned at edited lecture
-   */
-  public edit(lecture: SolveLec): void {
-    const ref = this.dialog.open(EditLectureComponent, {
-      width: '800px',
-      data: JSON.parse(JSON.stringify(lecture))//copy
-    });
-
-    ref.afterClosed().subscribe(result => {
-      if (!result) return;//cancel dialog
-      let table = this.getTableOf(lecture);
-      if (table == 'container')
-        this.newLecContainer.splice(this.newLecContainer.indexOf(lecture), 1, result);
-      else {
-        let lecs = [...table.lectures];
-        lecs.splice(table.lectures.indexOf(lecture), 1, result);
-        table.lectures = lecs;
-      }
-      this.saveState()
-    });
-  }
-  /**
-     * delete the focused lecture if null play 'notification' sound
-     */
-  public deleteFocus() {
-    if (!this.focused || 'index' in this.focused)
-      this.sound.play('notification')
-    else this.delete(this.focused)
-  }
-  public delete(lecture: SolveLec): void {
-    console.log('delete called');
-    let table = this.getTableOf(lecture);
-    if (table == 'container') {
-      this.newLecContainer.splice(this.newLecContainer.indexOf(lecture), 1);
-    } else {
-      let lecs = [...table.lectures];
-      lecs.splice(table.lectures.indexOf(lecture), 1);
-      table.lectures = lecs;
-    }
-    //todo snackbar: lecture deleted Undo
-    this.saveState();
-  }
-
-  /**
-   * copy the focused lecture if null play 'notification' sound
-   */
-  public copyFocus() {
-    if (!this.focused || 'index' in this.focused)
-      this.sound.play('notification');
-    else
-      this.copy(this.focused)
-  }
-
-  public copy(lecture: SolveLec) {
-    console.log('copy', lecture)
-    this.clipboard = JSON.parse(JSON.stringify(lecture));//todo snackbar: lecture copied
-  }
-
-  /**
-  * cut the focused lecture if null play 'notification' sound
-  */
-  public cutFocus() {
-    if (!this.focused || 'index' in this.focused) //typeof {{ index: number, day: WeekDays }
-      this.sound.play('notification');
-    else
-      this.cut(this.focused);//todo snackbar: lecture cut
-  }
-
-  /**
-   * 
-   * @param lecture lecture to be cut
-   */
-  public cut(lecture: SolveLec) {
-    console.log('cut', lecture)
-    this.clipboard = JSON.parse(JSON.stringify(lecture));
-    this.delete(lecture);
-  }
-
-  /**
-  * paste on the focused td if td=lecture play 'notification' sound
-  */
-  public pasteFocus() {
-    if (this.focused && 'index' in this.focused)
-      this.paste(this.focused);
-    else this.sound.play('notification');
-  }
-
-  /**
-   * @param pos is object that have index of tds and day to know where to paste
-   */
-  public paste(pos: { index: number, day: WeekDays }): void {
-    if (!this.clipboard)//empty clipboard
-      return this.sound.play('notification');
-    
-    let lecture: SolveLec = JSON.parse(JSON.stringify(this.clipboard));//
-
-    if (lecture && this.isAvailableSpace(pos.day, pos.index, lecture.duration)) {
-      lecture.day = pos.day;
-      lecture.startTime = this.getStartTime(pos.day, pos.index);
-      if (lecture.startTime == -1)
-        console.error('paste index is in critical position. come here');
-      let table = this.getActiveTable();
-      table.lectures = [...table.lectures, lecture];
-      this.saveState();
-    } else this.sound.play('notification');
-    //todo snackbar: empty clipboard
-  }
 
   /**
    * 
@@ -309,38 +198,15 @@ export class DataService {
 
   /********************************* PRIVATE METHODS *****************************************************/
 
-  /**
-   * 
-   * @pram index for position in row
-   * @returns boolean whether a lecture can be place in that day, index with its duration
-   */
-  private isAvailableSpace(day: WeekDays, index: number, duration: number): boolean {
-    const row: Row = this.getActiveTable().rows.filter(v => v.day == day)[0];
-    for (let i = index; i < index + duration * 2; i++) {
-      if (row.tds.length <= i || row.tds[i] != null)
-        return false;
-    }
-    return true;
-  }
 
-  /**
-   * 
-   * @param index of lecture in row.tds where row.day = @param day
-   * @returns startTime of that index. -1 if not found
-   */
-  private getStartTime(day: WeekDays, index: number): number {
-    const row: Row = this.getActiveTable().rows.filter(v => v.day == day)[0];
-    let st = this.final.START_TIME;
-    for (let i = 0; i < row.tds.length; i++) {
-      if (index == i)
-        return st;
-      let td = row.tds[i];
-      if (td && 'duration' in td)
-        st += td.duration;
-      else
-        st += this.final.STEP_TIME
+
+  private checkCollision() {
+    let tables = this.tables;
+    for (let i = 0; i < tables.length; i++){
+      tables[i].lectures[0].collision = 'Room';
+      tables[i].lectures[1].collision = 'Teacher';
     }
-    return -1;
   }
+  
 
 }

@@ -41,6 +41,7 @@ import { HeaderComponent } from './main/header/header.component';
 import { ApiService } from './services/api.service';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { AddTableComponent } from './dialog/add-table/add-table.component';
+import { ControlLectureService } from './services/control-lecture.service';
 // import {CdkMenuModule} from '@angular/cdk/menu'; 
 @NgModule({
   declarations: [
@@ -89,7 +90,7 @@ import { AddTableComponent } from './dialog/add-table/add-table.component';
     BrowserAnimationsModule,
     // MatSnackBarModule
   ],
-  providers: [SoundService,DataService,KeyboardService,Final,ApiService],
+  providers: [SoundService,DataService,KeyboardService,Final,ApiService,ControlLectureService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

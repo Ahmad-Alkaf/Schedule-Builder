@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import { Final, SolveLec } from 'src/app/main/main/table/utility/static';
 import { SoundService } from 'src/app/services/sound.service';
+import { ControlLectureService } from 'src/app/services/control-lecture.service';
 
 @Component({
   selector: 'app-lecture-options',
@@ -10,26 +11,25 @@ import { SoundService } from 'src/app/services/sound.service';
 })
 export class LectureOptionsComponent {
   @Input() td: SolveLec | null = null;
-  @Input() isTable: boolean = false;
 
-  constructor(public final: Final, public dataService: DataService,private sound:SoundService) {
+  constructor(public final: Final, public dataService: DataService,private sound:SoundService,private lecControl:ControlLectureService) {
   }
   edit(): void {
-    this.td ? this.dataService.edit(this.td) : this.sound.play('notification');
+    this.td ? this.lecControl.edit(this.td) : this.sound.play('notification');
   }
 
   delete(): void {
     if(this.td)
-      this.dataService.delete(this.td);
+      this.lecControl.delete(this.td);
     else this.sound.play('notification')
   }
 
   copy() {
-    this.td ? this.dataService.copy(this.td) : this.sound.play('notification'); 
+    this.td ? this.lecControl.copy(this.td) : this.sound.play('notification'); 
   }
   
   cut() {
-    this.td ? this.dataService.cut(this.td) : this.sound.play('notification');
+    this.td ? this.lecControl.cut(this.td) : this.sound.play('notification');
   }
   
   

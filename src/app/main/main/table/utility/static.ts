@@ -16,12 +16,14 @@ export interface StaticLec {
    weekDuration: number;
 }
 
+type Collision = 'Teacher' | 'Room';
 export interface SolveLec {
    id: string;
    lecture: StaticLec;
    day: WeekDays;
    duration: number;
    startTime: number;
+   collision?: Collision;
 }
 
 

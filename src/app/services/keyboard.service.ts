@@ -1,4 +1,5 @@
 import { HostListener, Injectable } from '@angular/core';
+import { ControlLectureService } from './control-lecture.service';
 import { DataService } from './data.service';
 
 @Injectable({
@@ -6,7 +7,7 @@ import { DataService } from './data.service';
 })
 export class KeyboardService {
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService,private lecControl:ControlLectureService) {
     document.onkeydown = (event: any) => {
 
       var e = window.event ? window.event : event;
@@ -15,13 +16,13 @@ export class KeyboardService {
       else if (e.keyCode == 89 && e.ctrlKey)
         this.dataService.redo();
       else if (e.keyCode == 86 && e.ctrlKey)
-        this.dataService.pasteFocus()
+        this.lecControl.pasteFocus()
       else if (e.keyCode == 67 && e.ctrlKey)
-        this.dataService.copyFocus()
+        this.lecControl.copyFocus()
       else if (e.keyCode == 88 && e.ctrlKey)
-        this.dataService.cutFocus()
+        this.lecControl.cutFocus()
       else if (e.keyCode == 46)
-        this.dataService.deleteFocus()
+        this.lecControl.deleteFocus()
       // else
       //   console.log('KeyCoded', e.keyCode);
 

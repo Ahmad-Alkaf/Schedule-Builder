@@ -5,6 +5,7 @@ import { Table } from './utility/tableBinder'
 import { SoundService } from 'src/app/services/sound.service';
 import { GenerateTableService } from './utility/generate-table.service';
 import { DataService } from 'src/app/services/data.service';
+import { ControlLectureService } from 'src/app/services/control-lecture.service';
 
 @Component({
   selector: 'app-table',
@@ -13,16 +14,16 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class TableComponent implements OnInit {
   @Input() table: Table = new Table(-1,'error: assigned manually');
-  constructor(private sound: SoundService, public gt: GenerateTableService, public dataService: DataService, private final: Final) {
+  constructor(private lecControl:ControlLectureService,private sound: SoundService, public gt: GenerateTableService, public dataService: DataService, private final: Final) {
   }
 
   ngOnInit(): void {
     
-    this.dataService.saveState()
+    // this.dataService.saveState()
   }
 
   focused(td: SolveLec | { index: number; day: WeekDays; }): void{
-      this.dataService.focused = td;
+      this.lecControl.focused = td;
   }
 
 

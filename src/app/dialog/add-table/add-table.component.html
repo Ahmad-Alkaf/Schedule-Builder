@@ -3,7 +3,7 @@
    <mat-form-field appearance="outline">
       <mat-label>Table Name</mat-label>
       <input matInput [formControl]="tableControl" required>
-      <mat-error *ngIf="tableControl.hasError('max-length') ">Error: table name is too long</mat-error>
+      <mat-error *ngIf="tableControl.hasError('maxlength') ">Error: table name is too long</mat-error>
    </mat-form-field>
 </div>
 <div mat-dialog-actions>

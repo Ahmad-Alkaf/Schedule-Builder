@@ -24,10 +24,6 @@ td {
   
 }
 
-.lecture{
-}
-.off{
-}
 .invalidTable{
   border:2px solid var(--bs-danger);
 }
@@ -39,3 +35,4 @@ td {
 div.cdk-drag-preview {
   vertical-align: middle;
 }
+

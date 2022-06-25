@@ -45,6 +45,3 @@ export class Table {
       return rows
    }
 }
-
-
-let table = new Table(0, 'CIS');
