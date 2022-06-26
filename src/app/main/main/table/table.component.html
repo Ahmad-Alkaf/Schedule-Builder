@@ -19,7 +19,7 @@
             [cdkDropListEnterPredicate]="predicateRow">
             <td cdkDragDisabled><b>{{r.day}}</b></td>
             <td  *ngFor="let t of r.tds;let i = index" tabindex="0" (focus)="focused(t||{index:i,day:r.day})" [colSpan]="t != null?t.duration*2:1" [cdkDragData]="t"
-               cdkDrag [cdkDragDisabled]="!t" class="td" [ngClass]="{'collTeacher':t?.collision == 'Teacher','collRoom':t?.collision == 'Room'}">
+               cdkDrag [cdkDragDisabled]="!t" class="td" [ngClass]="{'collTeacher':t?.collision?.includes('Teacher'),'collRoom':t?.collision?.includes('Room')}">
                <div *cdkDragPlaceholder ></div>
                <app-td [td]="t"></app-td>
                <div *ngIf="t" class="lecture-handle" cdkDragHandle>

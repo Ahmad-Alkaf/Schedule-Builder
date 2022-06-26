@@ -6,6 +6,7 @@ import { Final, Subject, MyEventEmitter, Room, Row, SolveLec, Teacher, WeekDays 
 import { Table } from '../main/main/table/utility/tableBinder';
 import { ApiService } from './api.service';
 import { SoundService } from './sound.service';
+import * as $ from 'JQuery';
 @Injectable({
   providedIn: 'root'
 })
@@ -77,20 +78,22 @@ export class DataService {
     this.tables.push(new Table(1, 'CIS'));
     this.tables[1].lectures = [{
       startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Math', teacher: 'Ahmed', weekDuration: 6, room: '301' }
+      lecture: { name: 'Math', teacher: 'Khaled', weekDuration: 6, room: '301' }
     }, {
       startTime: 10, duration: 1, day: 'Saturday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Chemistry', teacher: 'Ali', weekDuration: 6, room: 'Lab 4' }
+      lecture: { name: 'Chemistry', teacher: 'Ali', weekDuration: 6, room: 'Lab 5' }
     }, {
       startTime: 8, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
       lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-    }, {
-      startTime: 10, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-    }, {
-      startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
-      }];
+    },
+      //   {
+      //   startTime: 10, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
+      //   lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
+      // }, {
+      //   startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
+      //   lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
+      //   }
+    ];
     this.saveState()
   }
   //VVVV dataService Functions VVVV
@@ -98,8 +101,7 @@ export class DataService {
    * will save dataService variables into (flow) array to be return when undo or redo
    */
   public saveState = () => {
-    //todo change how tables are saves!
-    //todo save tabActive index to change tabs when ctr + z so user see all undos
+    
     //!fucking bug that won't let me save tables as other data
     this.flow.data[this.flow.curIndex + 1] = JSON.parse(JSON.stringify({
       teachers: this.teachers,
@@ -112,12 +114,12 @@ export class DataService {
     this.flow.curIndex = ++this.flow.curIndex;
     this.flow.data.splice(this.flow.curIndex, this.flow.data.length - 1 - this.flow.curIndex);
     console.log('pushed index', this.flow.curIndex);
-    this.checkCollision()
+    this.checkCollision();
   }
 
   public undo = () => {
     if (this.flow.data[this.flow.curIndex - 1]) {
-      const { teachers, lessons, rooms, tableLectures, newLecContainer,tabActiveIndex } = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
+      const { teachers, lessons, rooms, tableLectures, newLecContainer, tabActiveIndex } = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
       this.teachers = teachers;
       this.subjects = lessons;
       this.rooms = rooms;
@@ -128,7 +130,7 @@ export class DataService {
         if (this.tables[i])
           this.tables[i].lectures = tableLectures[i];
       }
- 
+
       console.log('retain index', this.flow.curIndex);
     }
     else this.sound.play('notification');
@@ -136,7 +138,7 @@ export class DataService {
 
   public redo = () => {
     if (this.flow.data[this.flow.curIndex + 1]) {
-      const { teachers, lessons, rooms, tableLectures, newLecContainer,tabActiveIndex } = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
+      const { teachers, lessons, rooms, tableLectures, newLecContainer, tabActiveIndex } = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
       this.teachers = teachers;
       this.subjects = lessons;
       this.rooms = rooms;
@@ -145,7 +147,7 @@ export class DataService {
       for (let i = 0; i < tableLectures.length; i++)
         if (this.tables[i])
           this.tables[i].lectures = tableLectures[i];
-        // else throw new Error(`wow you made it that far ok then come here handle me`);
+      // else throw new Error(`wow you made it that far ok then come here handle me`);
       console.log('retain index', this.flow.curIndex);
     } else this.sound.play('notification');
   }
@@ -201,12 +203,70 @@ export class DataService {
 
 
   private checkCollision() {
+    console.log('check Collision')
     let tables = this.tables;
-    for (let i = 0; i < tables.length; i++){
-      tables[i].lectures[0].collision = 'Room';
-      tables[i].lectures[1].collision = 'Teacher';
+    for (let table of tables) {//init
+      table.isCollide = false;
+      for (let lec of table.lectures)
+        lec.collision = [];
     }
-  }
-  
 
+    for (let i = 0; i < tables.length; i++)//setting
+      for (let j = i + 1; j < tables.length; j++)
+        for (let k = 0; k < tables[i].lectures.length; k++)
+          for (let l = 0; l < tables[j].lectures.length; l++) {
+            let lecture = tables[i].lectures[k];
+            let lec = tables[j].lectures[l];
+            if (lec.day != lecture.day)
+              continue;
+            if (lecture.startTime >= lec.startTime) {
+              if (lec.startTime + lec.duration > lecture.startTime) {
+                if (lec.lecture.room == lecture.lecture.room) {
+                  lec.collision?.push('Room');
+                  lecture.collision?.push('Room');
+                  tables[i].isCollide = true;
+                  tables[j].isCollide = true;
+                }
+                if (lec.lecture.teacher == lecture.lecture.teacher) {
+                  lec.collision?.push('Teacher');
+                  lecture.collision?.push('Teacher');
+                  tables[i].isCollide = true;
+                  tables[j].isCollide = true;
+                }
+              }
+            } else if (lec.startTime >= lecture.startTime)
+              if (lecture.startTime + lecture.duration > lec.startTime) {
+                if (lec.lecture.room == lecture.lecture.room) {
+                  lec.collision?.push('Room');
+                  lecture.collision?.push('Room');
+                  tables[i].isCollide = true;
+                  tables[j].isCollide = true;
+                }
+                if (lec.lecture.teacher == lecture.lecture.teacher) {
+                  lec.collision?.push('Teacher');
+                  lecture.collision?.push('Teacher');
+                  tables[i].isCollide = true;
+                  tables[j].isCollide = true;
+                }
+              }
+          }
+    this.setTabCollide()
+  }
+  setTabCollide() {
+    $(() => {
+      let labels = $('mat-tab-header div.mat-tab-labels .mat-tab-label div.mat-tab-label-content');
+      labels = labels.not(labels.last());
+      let arr = labels.toArray();
+      for (let i = 0; i < this.tables.length; i++)
+        if(arr[i])
+          if (arr[i].innerText == this.tables[i].name) {
+            let tab = $(arr[i]).parent();
+            if (this.tables[i].isCollide)
+              tab.addClass('collide');
+            else tab.removeClass('collide');
+            
+          }
+          
+    })
+  }
 }

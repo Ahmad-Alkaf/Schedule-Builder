@@ -14,7 +14,11 @@
   /* color: red; */
   /* font-weight: 700; */
 }
-
+.mat-tab-label.collide {
+  color: var(--bs-danger);
+  opacity: 1;
+  animation: flash 800ms infinite;
+}
 .mat-tab-label:last-child {
   opacity: 1;
   min-width: 20px;

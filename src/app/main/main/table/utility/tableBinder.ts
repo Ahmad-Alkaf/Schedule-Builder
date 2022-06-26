@@ -44,4 +44,5 @@ export class Table {
       // console.log('rows',rows)
       return rows
    }
+   public isCollide: boolean = false;
 }

@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Room, Subject, Teacher } from '../main/main/table/utility/static';
 import { Table } from '../main/main/table/utility/tableBinder';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  constructor() { }
-  
-  public pushTables(tables:Table[]) {
+  constructor(private dataService:DataService) { }
+  // private tables: Table[] = [];
+  public pushTables(tables: Table[]) {
+    // if(tables === tables)
     localStorage.setItem('tables',JSON.stringify(tables))
   }
   

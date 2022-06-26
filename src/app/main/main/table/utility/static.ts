@@ -23,7 +23,7 @@ export interface SolveLec {
    day: WeekDays;
    duration: number;
    startTime: number;
-   collision?: Collision;
+   collision?: Collision[];
 }
 
 
