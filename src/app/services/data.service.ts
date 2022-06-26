@@ -13,87 +13,106 @@ import * as $ from 'JQuery';
 export class DataService {
 
   //!undo and redo are not consistent because dataService is not updated when they change table values
-  public teachers: Teacher[] = [{ name: 'Ahmed Shaikh' },
-  { name: 'Hassen' },
-  { name: 'Hamzah' }];
+  public teachers: Teacher[] = [
+  //   { name: 'Ahmed Shaikh' },
+  // { name: 'Hassen' },
+  //   { name: 'Hamzah' }
+  ];
 
-  subjects: Subject[] = [{ name: 'PM' },
-  { name: 'HCI' },
-  { name: 'Server-side' }];
+  subjects: Subject[] = [
+  //   { name: 'PM' },
+  // { name: 'HCI' },
+  //   { name: 'Server-side' }
+  ];
 
-  rooms: Room[] = [{ name: '301' },
-  { name: '401' },
-  { name: '302' }];
+  rooms: Room[] = [
+  //   { name: '301' },
+  // { name: '401' },
+  //   { name: '302' }
+  ];
 
   public tables: Table[] = [];
 
-  public newLecContainer: SolveLec[] = [{
-    startTime: -1, duration: 3, day: 'Friday', id: Math.random().toString(36).substring(2),
-    lecture: { name: 'C++', teacher: 'Omer', weekDuration: -1, room: '233' }
-  }, {
-    startTime: -1, duration: 1, day: 'Friday', id: Math.random().toString(36).substring(2),
-    lecture: { name: 'Java', teacher: 'Salem Hassen', weekDuration: -1, room: '233' }
-  }];
+  public newLecContainer: SolveLec[] = [
+  //   {
+  //   startTime: -1, duration: 3, day: 'Friday', id: Math.random().toString(36).substring(2),
+  //   lecture: { name: 'C++', teacher: 'Omer', weekDuration: -1, room: '233' }
+  // }, {
+  //   startTime: -1, duration: 1, day: 'Friday', id: Math.random().toString(36).substring(2),
+  //   lecture: { name: 'Java', teacher: 'Salem Hassen', weekDuration: -1, room: '233' }
+  //   }
+  ];
 
   private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Subject[], rooms: Room[], tables: Table[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
 
 
-  constructor(private sound: SoundService, private final: Final,
-    private dialog: MatDialog, private api: ApiService) {
-    this.tables.push(new Table(0, 'IT'));
-    this.tables[0].lectures = [{
-      startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Math', teacher: 'Ahmed', weekDuration: 6, room: '301' }
-    }, {
-      startTime: 10, duration: 1, day: 'Saturday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Chemistry', teacher: 'Ali', weekDuration: 6, room: 'Lab 4' }
-    }, {
-      startTime: 12, duration: 1, day: 'Thursday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'PM', teacher: 'Hamza', weekDuration: 1, room: '401' }
-    }, {
-      startTime: 11, duration: 1.5, day: 'Wednesday', id: Math.random().toString(36).substring(2),
-      lecture: { name: "HCI", teacher: 'Ahmed', weekDuration: 1.5, room: '500' }
-    },
-    {
-      startTime: 9, duration: 2, day: 'Wednesday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Server-Side', teacher: 'Hassen', weekDuration: 2, room: '403' }
-    },
-    {
-      startTime: 8, duration: 2, day: 'Sunday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'English', teacher: 'Abduallah', weekDuration: 3, room: '301' },
-    },
-    {
-      startTime: 11, duration: 2, day: 'Sunday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Database', teacher: 'Mohammed', weekDuration: 2, room: 'Lab 3' }
-    }, {
-      startTime: 8, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-    }, {
-      startTime: 10, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-    }, {
-      startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
-    }];
-    this.tables.push(new Table(1, 'CIS'));
-    this.tables[1].lectures = [{
-      startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Math', teacher: 'Khaled', weekDuration: 6, room: '301' }
-    }, {
-      startTime: 10, duration: 1, day: 'Saturday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Chemistry', teacher: 'Ali', weekDuration: 6, room: 'Lab 5' }
-    }, {
-      startTime: 8, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-      lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-    },
-      //   {
-      //   startTime: 10, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-      //   lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-      // }, {
-      //   startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
-      //   lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
-      //   }
-    ];
+  constructor(private sound: SoundService, private api: ApiService) {
+    // this.tables.push(new Table(0, 'IT'));
+    // this.tables[0].lectures = [{
+    //   startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'Math', teacher: 'Ahmed', weekDuration: 6, room: '301' }
+    // }, {
+    //   startTime: 10, duration: 1, day: 'Saturday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'Chemistry', teacher: 'Ali', weekDuration: 6, room: 'Lab 4' }
+    // }, {
+    //   startTime: 12, duration: 1, day: 'Thursday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'PM', teacher: 'Hamza', weekDuration: 1, room: '401' }
+    // }, {
+    //   startTime: 11, duration: 1.5, day: 'Wednesday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: "HCI", teacher: 'Ahmed', weekDuration: 1.5, room: '500' }
+    // },
+    // {
+    //   startTime: 9, duration: 2, day: 'Wednesday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'Server-Side', teacher: 'Hassen', weekDuration: 2, room: '403' }
+    // },
+    // {
+    //   startTime: 8, duration: 2, day: 'Sunday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'English', teacher: 'Abduallah', weekDuration: 3, room: '301' },
+    // },
+    // {
+    //   startTime: 11, duration: 2, day: 'Sunday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'Database', teacher: 'Mohammed', weekDuration: 2, room: 'Lab 3' }
+    // }, {
+    //   startTime: 8, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
+    // }, {
+    //   startTime: 10, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
+    // }, {
+    //   startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
+    // }];
+    // this.tables.push(new Table(1, 'CIS'));
+    // this.tables[1].lectures = [{
+    //   startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'Math', teacher: 'Khaled', weekDuration: 6, room: '301' }
+    // }, {
+    //   startTime: 10, duration: 1, day: 'Saturday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'Chemistry', teacher: 'Ali', weekDuration: 6, room: 'Lab 5' }
+    // }, {
+    //   startTime: 8, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
+    // },
+    //   //   {
+    //   //   startTime: 10, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
+    //   //   lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
+    //   // }, {
+    //   //   startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
+    //   //   lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
+    //   //   }
+    // ];
+    var { tables:tablesData, teachers, rooms, subjects, container } = this.api.pullAll()
+    console.log({ tablesData, container, teachers, subjects, rooms });
+    // let names = ['one', 'two', 'three'];
+    for (let i = 0; i < tablesData.length; i++){
+      this.tables.push(new Table(i, tablesData[i].name));
+      this.tables[i].lectures = tablesData[i].lectures;
+    }
+    
+    this.newLecContainer = container;
+    this.teachers = teachers;
+    this.rooms = rooms;
+    this.subjects = subjects;
     this.saveState()
   }
   //VVVV dataService Functions VVVV
@@ -101,7 +120,6 @@ export class DataService {
    * will save dataService variables into (flow) array to be return when undo or redo
    */
   public saveState = () => {
-    
     //!fucking bug that won't let me save tables as other data
     this.flow.data[this.flow.curIndex + 1] = JSON.parse(JSON.stringify({
       teachers: this.teachers,
@@ -115,6 +133,7 @@ export class DataService {
     this.flow.data.splice(this.flow.curIndex, this.flow.data.length - 1 - this.flow.curIndex);
     console.log('pushed index', this.flow.curIndex);
     this.checkCollision();
+    this.api.pushAll(this.tables,this.newLecContainer,this.teachers,this.rooms,this.subjects);
   }
 
   public undo = () => {
