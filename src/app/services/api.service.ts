@@ -1,6 +1,8 @@
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ErrorComponent } from '../dialog/error/error.component';
 import { Room, SolveLec, Subject, Teacher } from '../main/main/table/utility/static';
 import { Table } from '../main/main/table/utility/tableBinder';
 import { DataService } from './data.service';
@@ -14,22 +16,22 @@ interface TableData {
 })
 export class ApiService {
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private dialog: MatDialog) { }
   private tables: TableData[] = [];
   private container: SolveLec[] = [];
   private teachers: Teacher[] = [];
   private subjects: Subject[] = [];
   private rooms: Room[] = [];
-  public pushAll(tables: Table[], container: SolveLec[], teachers: Teacher[], rooms: Room[], subjects: Subject[]) {
+  public async pushAll(tables: Table[], container: SolveLec[], teachers: Teacher[], rooms: Room[], subjects: Subject[]) {
     // console.log('pushAll',{tables,container,teachers,rooms,subjects})
     let tableData: TableData[] = [];
     for (let t of tables)
       tableData.push({ name: t.name, index: t.index, lectures: [...t.lectures] });
-    this.pushTables(tableData);
-    this.pushContainer(container);
-    this.pushTeachers(teachers);
-    this.pushSubjects(subjects);
-    this.pushRooms(rooms);
+    await this.pushTables(tableData);
+    await this.pushContainer(container);
+    await this.pushTeachers(teachers);
+    await this.pushSubjects(subjects);
+    await this.pushRooms(rooms);
   }
   private pushTables(tables: TableData[]) {
     if (JSON.stringify(this.tables) === JSON.stringify(tables))
@@ -62,29 +64,29 @@ export class ApiService {
     })
   }
 
-  private pushTeachers(teachers: Teacher[]) {
+  private pushTeachers(teachers: Teacher[]): Promise<''> {
     return new Promise(async (resolve, reject) => {
-      this.http.post('/api/teacher?token=' + await this.getToken(), teachers).subscribe((res: any) => {
-        if (res.success)
-          resolve()
-      })
-    })
-    if (JSON.stringify(this.teachers) === JSON.stringify(teachers))
-      return;
-    console.log('pushed teachers', teachers.find(v => v.id == undefined))
-
-    this.teachers = teachers;
-    localStorage.setItem('teachers', JSON.stringify(teachers))
+      if (JSON.stringify(this.teachers) === JSON.stringify(teachers))
+        return resolve('');
+      this.teachers = teachers;
+      this.http.post('/api/teacher?token=' + await this.getToken(), teachers).subscribe((data: any) => {
+        if (data.success)
+          return resolve('');
+        else this.dialog.open(ErrorComponent, { data });
+      }, data => this.dialog.open(ErrorComponent, { data }));
+    });
   }
 
   public pullTeachers(): Promise<Teacher[]> {
     return new Promise(async (resolve, reject) => {
       this.http.get<Teacher[]>('/api/teacher?token=' + await this.getToken()).subscribe((data: any) => {
-        console.log(data);
-        if (data.success)
-          resolve(data);
-        else return this.
-      }, e => reject(e));
+        console.log('pullTeachers', data);
+        if (data.success != false)
+          return resolve(data);
+        return this.dialog.open(ErrorComponent, { data:{...data,source:'pullTeachers data.success= false'} });
+      }, e => {
+         this.dialog.open(ErrorComponent, { data: { ...e, source: 'e in pullTeachers' } })
+      });
     });
 
   }
@@ -124,36 +126,68 @@ export class ApiService {
   private token: string = '';
   private getToken(): Promise<string> {
     return new Promise(async (resolve, reject) => {
-      if (this.token != '')
+      if (this.token != '' && await this.isValidToken(this.token))
         return resolve(this.token);
-      let token = localStorage.getItem('token');
-      if (token != null) {
-        this.token = token;
-        return resolve(token);
+      
+      let storage = localStorage.getItem('token');
+      if (storage != null && await this.isValidToken(storage)) {
+        this.token = storage;
+        return resolve(storage);
       }
-      let user = localStorage.getItem('user');
-      if (user != null) {
-        let newToken = await this.login(JSON.parse(user));
-        if (newToken != '') {
-          this.token = newToken;
-          return resolve(newToken);
-        }
-      }
-
-      this.router.navigate(['/login']);
+      
+      return await this.getTokenByLocalUserInfo();
     })
   }
 
+  private isValidToken(token: string): Promise<boolean> {
+    return new Promise(async(resolve, reject) => {
+      this.http.get('/api/token?token=' + token).subscribe((data: any) => {
+        if (data.success)
+          return resolve(true);
+        return resolve(false);
+      },()=>resolve(false));
+    })
+  }
+  /**
+   * return token by login to the server by user info in localStorage if exist else will redirect to login page
+   */
+  private getTokenByLocalUserInfo(): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+      let user = localStorage.getItem('user');
+      try {
+        if (user != null) {
+          console.log('user',JSON.parse(user))
+          let newToken = await this.login(JSON.parse(user))
+          if (await this.isValidToken(newToken)) {
+            this.token = newToken;
+            localStorage.setItem('token', newToken);
+            return resolve(newToken);
+          }else this.router.navigate(['/login']);
+        }
+      } catch { 
+        console.error('catch called but not redirect!')
+        this.router.navigate(['/login']);
+      }
+
+    })
+  }
+
+  /**
+   * 
+   * @param user 
+   * @returns promise will resolve with token or reject with user friendly error message. Exception will halt this function and open error dialog i.e won't resolve nor reject
+   */
   public login(user: { username: string, password: string }): Promise<string> {
     return new Promise((resolve, reject) => {
       this.http.post('/api/token', user).subscribe((res: any) => {
         console.log('response from get /api/token', res);
-        if (res && res.success) {
+        if (res && res.success != false) {
           localStorage.setItem('token', res.token);
           localStorage.setItem('user', JSON.stringify(user));
-          resolve(res.token);
-        } else { console.log('error while login', res); resolve('') }
-      });
+          return resolve(res.token);
+        } else if (res.message) { reject(res.message) }
+        else this.dialog.open(ErrorComponent, { data: { ...res, user } });
+      }, (e) => {return e && e.message? reject(e.message):this.dialog.open(ErrorComponent,{data:e}) });
     })
   }
 }

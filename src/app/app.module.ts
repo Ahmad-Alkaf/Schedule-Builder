@@ -45,6 +45,7 @@ import { ControlLectureService } from './services/control-lecture.service';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './main/login/login.component';
 import { RegisterComponent } from './main/register/register.component';
+import { ErrorComponent } from './dialog/error/error.component';
 // import {CdkMenuModule} from '@angular/cdk/menu'; 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { RegisterComponent } from './main/register/register.component';
     AutofocusDirective,
     AddTableComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
