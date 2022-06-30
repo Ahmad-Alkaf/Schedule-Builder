@@ -6,6 +6,7 @@ import { SoundService } from 'src/app/services/sound.service';
 import { GenerateTableService } from './utility/generate-table.service';
 import { DataService } from 'src/app/services/data.service';
 import { ControlLectureService } from 'src/app/services/control-lecture.service';
+declare var jsPDF: any;
 
 @Component({
   selector: 'app-table',
@@ -174,6 +175,18 @@ export class TableComponent implements OnInit {
         }
       }
   }
+  
+  
+  pdf = (id: string) => {
+      let pdf = new jsPDF('l', 'pt', [1920, 640]);
+      pdf.html(document.getElementById(id), {
+        callback:  (pdf: any) =>{
+          
+              pdf.save(`Table: ${this.table.name} - ${new Date().toISOString().substring(0,10)}.pdf`);
+        },
+        
+      });
+  }
 }
- 
+
 

@@ -17,7 +17,8 @@
 .mat-tab-label.collide {
   color: var(--bs-danger);
   opacity: 1;
-  animation: flash 800ms infinite;
+  /* animation: flash 2000ms infinite;
+  animation-delay: 200ms; */
 }
 .mat-tab-label:last-child {
   opacity: 1;

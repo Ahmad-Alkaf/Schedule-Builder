@@ -12,7 +12,7 @@
          {{td.lecture.room}}
       </div>
       <div *ngIf="!dataService.newLecContainer.includes(td); else duration">
-         {{td.startTime}} - {{((td.startTime + td.duration)>=13?(td.startTime + td.duration-12):(td.startTime +
+         {{time(td.startTime)}} - {{((td.startTime + td.duration)>=13?time(td.startTime + td.duration-12):time(td.startTime +
          td.duration))}}
       </div>
       <ng-template #duration>

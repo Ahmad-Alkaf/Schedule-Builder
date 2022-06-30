@@ -1,5 +1,6 @@
 @import url(./assets/bootstrap.css);
 @import url("./assets/icon.css");
+@import url("./assets/google.font.style.css");
 /* @import url("./app/main/main/table/table.component.css"); */
 
 .mat-danger {
@@ -75,47 +76,46 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   outline: 1.8px dotted #555!important;
   border:none;
 }
-
+.td:focus.collTeacher,.td:focus.collRoom{
+  outline: 1.8px dotted var(--bs-danger)!important;
+  border:none;
+}
 
 
 
 .collTeacher{
   outline:2px solid var(--bs-danger) !important;
-  /* border:1px solid var(--bs-danger) !important; */
-  /* color:white; */
   border:none !important;
-  
 }
 .collTeacher app-td div div.teacherDiv{
-  animation-name: flash;
-  animation-duration: 800ms;
-  animation-iteration-count: infinite;
+  animation: flash 1200ms infinite linear;
+  color:var(--bs-danger);
 }
+.collRoom{
+  outline:2px solid var(--bs-danger) !important;
+  border:none !important;
+}
+.collRoom app-td div div.roomDiv{
+  animation: flash 1200ms infinite;
+  color:var(--bs-danger);
+}
+
 @keyframes flash {
-  0%{
+  /* 0%{
     color:white;
+  } */
+  0%{
+    color:var(--bs-danger);
   }
+ 
   30%{
     color:var(--bs-danger);
   }
-  70%{
-    color:var(--bs-danger);
-  }
-  100%{
+  50%{
     color:white;
   }
-}
-
-.collRoom{
-  outline:2px solid var(--bs-danger) !important;
-  /* border:1px solid var(--bs-danger) !important; */
-  border:none !important;
-}
-
-.collRoom app-td div div.roomDiv{
-  animation-name: flash;
-  animation-duration: 800ms;
-  animation-iteration-count: infinite;
-  
+ 60%{
+    color:var(--bs-danger);
+  }
 }
 

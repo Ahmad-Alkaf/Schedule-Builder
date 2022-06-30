@@ -7,6 +7,7 @@ import { Table } from '../main/main/table/utility/tableBinder';
 import { ApiService } from './api.service';
 import { SoundService } from './sound.service';
 import * as $ from 'JQuery';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Injectable({
   providedIn: 'root'
 })
@@ -46,74 +47,19 @@ export class DataService {
   private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Subject[], rooms: Room[], tables: Table[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
 
 
-  constructor(private sound: SoundService, private api: ApiService) {
-    // this.tables.push(new Table(0, 'IT'));
-    // this.tables[0].lectures = [{
-    //   startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'Math', teacher: 'Ahmed', weekDuration: 6, room: '301' }
-    // }, {
-    //   startTime: 10, duration: 1, day: 'Saturday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'Chemistry', teacher: 'Ali', weekDuration: 6, room: 'Lab 4' }
-    // }, {
-    //   startTime: 12, duration: 1, day: 'Thursday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'PM', teacher: 'Hamza', weekDuration: 1, room: '401' }
-    // }, {
-    //   startTime: 11, duration: 1.5, day: 'Wednesday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: "HCI", teacher: 'Ahmed', weekDuration: 1.5, room: '500' }
-    // },
-    // {
-    //   startTime: 9, duration: 2, day: 'Wednesday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'Server-Side', teacher: 'Hassen', weekDuration: 2, room: '403' }
-    // },
-    // {
-    //   startTime: 8, duration: 2, day: 'Sunday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'English', teacher: 'Abduallah', weekDuration: 3, room: '301' },
-    // },
-    // {
-    //   startTime: 11, duration: 2, day: 'Sunday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'Database', teacher: 'Mohammed', weekDuration: 2, room: 'Lab 3' }
-    // }, {
-    //   startTime: 8, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-    // }, {
-    //   startTime: 10, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-    // }, {
-    //   startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
-    // }];
-    // this.tables.push(new Table(1, 'CIS'));
-    // this.tables[1].lectures = [{
-    //   startTime: 8, duration: 1.5, day: 'Saturday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'Math', teacher: 'Khaled', weekDuration: 6, room: '301' }
-    // }, {
-    //   startTime: 10, duration: 1, day: 'Saturday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'Chemistry', teacher: 'Ali', weekDuration: 6, room: 'Lab 5' }
-    // }, {
-    //   startTime: 8, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-    // },
-    //   //   {
-    //   //   startTime: 10, duration: 2, day: 'Monday', id: Math.random().toString(36).substring(2),
-    //   //   lecture: { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' }
-    //   // }, {
-    //   //   startTime: 12, duration: 1, day: 'Monday', id: Math.random().toString(36).substring(2),
-    //   //   lecture: { name: 'JavaScript', teacher: 'Omer', weekDuration: 2, room: '233' }
-    //   //   }
-    // ];
-    var { tables:tablesData, teachers, rooms, subjects, container } = this.api.pullAll()
-    console.log({ tablesData, container, teachers, subjects, rooms });
-    // let names = ['one', 'two', 'three'];
-    for (let i = 0; i < tablesData.length; i++){
-      this.tables.push(new Table(i, tablesData[i].name));
-      this.tables[i].lectures = tablesData[i].lectures;
-    }
+  constructor(private sound: SoundService, private api: ApiService, private snackbar:MatSnackBar) {    
+    Promise.all([this.api.pullTables(), this.api.pullContainer()]).then(([tablesData, container])=> {
+      console.log({ tablesData, container});
+      this.newLecContainer = container;
+      for (let i = 0; i < tablesData.length; i++) {
+        this.tables.push(new Table(i, tablesData[i].name));
+        this.tables[i].lectures = tablesData[i].lectures;
+      }
     
-    this.newLecContainer = container;
-    this.teachers = teachers;
-    this.rooms = rooms;
-    this.subjects = subjects;
-    this.saveState()
+      this.saveState()
+      this.tabActiveIndex = 0;
+    }).catch(e => console.error('dataService', e));
+    
   }
   //VVVV dataService Functions VVVV
   /**
@@ -127,7 +73,7 @@ export class DataService {
       rooms: this.rooms,
       tableLectures: this.tables.map(v => v.lectures),
       newLecContainer: this.newLecContainer,
-      tabActiveIndex: this.tabActiveIndex,
+      // tabActiveIndex: this.tabActiveIndex,
     }));
     this.flow.curIndex = ++this.flow.curIndex;
     this.flow.data.splice(this.flow.curIndex, this.flow.data.length - 1 - this.flow.curIndex);
@@ -149,7 +95,7 @@ export class DataService {
         if (this.tables[i])
           this.tables[i].lectures = tableLectures[i];
       }
-
+      this.checkCollision();
       console.log('retain index', this.flow.curIndex);
     }
     else this.sound.play('notification');
@@ -157,7 +103,7 @@ export class DataService {
 
   public redo = () => {
     if (this.flow.data[this.flow.curIndex + 1]) {
-      const { teachers, lessons, rooms, tableLectures, newLecContainer, tabActiveIndex } = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
+      const { teachers, lessons, rooms, tableLectures, newLecContainer } = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
       this.teachers = teachers;
       this.subjects = lessons;
       this.rooms = rooms;
@@ -167,6 +113,7 @@ export class DataService {
         if (this.tables[i])
           this.tables[i].lectures = tableLectures[i];
       // else throw new Error(`wow you made it that far ok then come here handle me`);
+      this.checkCollision();
       console.log('retain index', this.flow.curIndex);
     } else this.sound.play('notification');
   }
@@ -276,14 +223,16 @@ export class DataService {
       let labels = $('mat-tab-header div.mat-tab-labels .mat-tab-label div.mat-tab-label-content');
       labels = labels.not(labels.last());
       let arr = labels.toArray();
+      for (let i = 0; i < arr.length; i++)
+        if (arr[i] && arr[i].innerText == this.tables[i].name)
+          $(arr[i]).parent().removeClass('collide');
+      
       for (let i = 0; i < this.tables.length; i++)
         if(arr[i])
           if (arr[i].innerText == this.tables[i].name) {
             let tab = $(arr[i]).parent();
             if (this.tables[i].isCollide)
-              tab.addClass('collide');
-            else tab.removeClass('collide');
-            
+              tab.addClass('collide');            
           }
           
     })

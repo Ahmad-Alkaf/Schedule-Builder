@@ -35,7 +35,9 @@
               "src/assets/jquery-3.6.0.js",
               "src/assets/popper.js",
               "src/assets/bootstrap.min.js",
-              "src/assets/bootstrap.bundle.min.js"
+              "src/assets/bootstrap.bundle.min.js",
+              "src/assets/jspdf.js",
+              "src/assets/html2canvas.js"
             ]
           },
           "configurations": {
@@ -73,6 +75,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "src/proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "browserTarget": "schedule_maker:build:production"

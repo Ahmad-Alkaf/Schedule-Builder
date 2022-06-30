@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditLectureComponent } from '../dialog/edit-lecture/edit-lecture.component';
 import { Final, Row, SolveLec, WeekDays } from '../main/main/table/utility/static';
 import { DataService } from './data.service';
@@ -13,7 +14,7 @@ export class ControlLectureService {
   private clipboard: SolveLec | undefined = undefined
   public focused: SolveLec | { index: number, day: WeekDays } | undefined = undefined;
 
-  constructor(private ds:DataService,private sound:SoundService,private dialog:MatDialog,private final:Final) { }
+  constructor(private ds:DataService,private sound:SoundService,private dialog:MatDialog,private final:Final, private snackbar:MatSnackBar) { }
     /**
      * edit the focused lecture if null play 'notification' sound
      */
@@ -65,10 +66,20 @@ export class ControlLectureService {
         lecs.splice(table.lectures.indexOf(lecture), 1);
         table.lectures = lecs;
       }
-      //todo snackbar: lecture deleted Undo
       this.ds.saveState();
+      
+      this.snackbar.open('Lecture Deleted!', 'Undo',{duration:4000}).onAction().subscribe(() => {
+        if (table == 'container') {
+          this.ds.newLecContainer.push(lecture);
+        } else {
+          let lecs = [...table.lectures];
+          lecs.push(lecture);
+          table.lectures = lecs;
+        }
+        this.ds.saveState();
+      })
     }
-  
+    
     /**
      * copy the focused lecture if null play 'notification' sound
      */
@@ -81,7 +92,8 @@ export class ControlLectureService {
   
     public copy(lecture: SolveLec) {
       console.log('copy', lecture)
-      this.clipboard = JSON.parse(JSON.stringify(lecture));//todo snackbar: lecture copied
+      this.clipboard = JSON.parse(JSON.stringify(lecture));
+      this.snackbar.open('Lecture Copied',undefined,{duration:2000})
     }
   
     /**
@@ -91,7 +103,7 @@ export class ControlLectureService {
       if (!this.focused || 'index' in this.focused) //typeof {{ index: number, day: WeekDays }
         this.sound.play('notification');
       else
-        this.cut(this.focused);//todo snackbar: lecture cut
+        this.cut(this.focused);
     }
   
     /**
@@ -102,6 +114,7 @@ export class ControlLectureService {
       console.log('cut', lecture)
       this.clipboard = JSON.parse(JSON.stringify(lecture));
       this.delete(lecture);
+      this.snackbar.open('Lecture Cutted',undefined,{duration:2000})
     }
   
     /**
@@ -117,9 +130,10 @@ export class ControlLectureService {
      * @param pos is object that have index of tds and day to know where to paste
      */
     public paste(pos: { index: number, day: WeekDays }): void {
-      if (!this.clipboard)//empty clipboard
+      if (!this.clipboard) {//empty clipboard
+        this.snackbar.open('Empty Clipboard!',undefined,{duration:2000})
         return this.sound.play('notification');
-  
+      }
       let lecture: SolveLec = JSON.parse(JSON.stringify(this.clipboard));//
   
       if (lecture && this.isAvailableSpace(pos.day, pos.index, lecture.duration)) {
@@ -130,8 +144,11 @@ export class ControlLectureService {
         let table = this.ds.getActiveTable();
         table.lectures = [...table.lectures, lecture];
         this.ds.saveState();
-      } else this.sound.play('notification');
-      //todo snackbar: empty clipboard
+      } else {
+        this.sound.play('notification');
+        this.snackbar.open('No Enough Space!',undefined,{duration:2000})
+
+      }
     }
   
   /*********************************** PRIVATE *********************************************/

@@ -6,7 +6,11 @@
 tr td:first-child,tr th:first-child {
   width: 10% !important;
   /* background-color: blue; */
+  vertical-align: middle;
   border-right: 2px solid black;
+}
+tr td:first-child{
+  padding-bottom: 11px;
 }
 
 th {

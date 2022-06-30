@@ -14,4 +14,11 @@ export class TdComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  time(n: number):string {
+    let s: string = n.toString();
+    if (!s.includes('.'))
+      return s;
+    let [hour,min]= s.split('.');
+    return hour + ':' + (Number(min) * 6);
+  }
 }

@@ -2,6 +2,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { DataService } from 'src/app/services/data.service';
+import { ApiService } from 'src/app/services/api.service';
 
 /** Flat to-do item node with expandable and level information */
 interface FlatNode {
@@ -92,7 +93,17 @@ export class NavTreeComponent implements OnInit {
 
   dataSource: ArrayDataSource<FlatNode> = new ArrayDataSource<FlatNode>(this.treeData)
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService,private api:ApiService) {
+    Promise.all([this.api.pullTeachers(), this.api.pullSubjects(), this.api.pullRooms()])
+      .then(([teachers, subjects, rooms]) => {
+        this.dataService.teachers = teachers;
+        this.dataService.subjects = subjects;
+        this.dataService.rooms = rooms;
+        console.log({ teachers, subjects, rooms });
+        this.treeData = this.createFlatNode();
+        this.dataSource = new ArrayDataSource(this.treeData);
+        
+      }).catch(e => console.error('nav-tree', e));
   }
 
   getParentNode(node: FlatNode) {
