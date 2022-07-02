@@ -178,14 +178,38 @@ export class TableComponent implements OnInit {
   
   
   pdf = (id: string) => {
-      let pdf = new jsPDF('l', 'pt', [1920, 640]);
-      pdf.html(document.getElementById(id), {
-        callback:  (pdf: any) =>{
+    //FIRST TRY
+      // let pdf = new jsPDF('l', 'pt', [1920, 640]);
+      // pdf.html(document.getElementById(id), {
+      //   callback:  (pdf: any) =>{
           
-              pdf.save(`Table: ${this.table.name} - ${new Date().toISOString().substring(0,10)}.pdf`);
-        },
+      //         pdf.save(`Table: ${this.table.name} - ${new Date().toISOString().substring(0,10)}.pdf`);
+      //   },
         
-      });
+      // });
+    //SECOND TRY
+  //     var divToPrint=document.getElementById(id);
+  // let  newWin= window.open("");
+  //  newWin?.document.write(divToPrint?.outerHTML||'null');
+  //  newWin?.print();
+  //  newWin?.close();
+    
+    //THIRD TRY
+    // //Get the HTML of div
+    // var divElements = document.getElementById(id)?.innerHTML;
+    // //Get the HTML of whole page
+    // var oldPage = document.body.innerHTML;
+    // //Reset the page's HTML with div's HTML only
+    // document.body.innerHTML = 
+    //   "<html><head><title></title></head><body>" + 
+    //   divElements + "</body>";
+    // //Print Page
+    // window.print();
+    // //Restore orignal HTML
+    // document.body.innerHTML = oldPage;
+    
+    
+    
   }
 }
 

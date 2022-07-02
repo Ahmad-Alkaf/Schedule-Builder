@@ -1,3 +1,7 @@
 <mat-toolbar color="primary">
    <a routerLink="/" mat-icon-button><mat-icon>view_module</mat-icon>&nbsp;<span>Schedule Maker</span></a>
+   <div style="margin-left:auto;">
+      <div *ngIf="api.token == '';else logout;"><button mat-button (click)="registerHandle()">Register</button><button (click)="loginHandle()" mat-button>Login</button></div>
+      <ng-template #logout><button (click)="logoutHandle()" mat-button>Logout</button></ng-template>
+   </div>
 </mat-toolbar>

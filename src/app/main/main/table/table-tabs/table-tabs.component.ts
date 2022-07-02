@@ -32,7 +32,8 @@ export class TableTabsComponent {
         this.dataService.tables.push(new Table(this.dataService.tables.length, result));
         this.dataService.saveState();
         console.log('saveState by openAddTable in table-tabs')
-        this.dataService.tabActiveIndex = this.dataService.tables.length - 1;
+        this.dataService.tabActiveIndex = 100;
+        setTimeout(() => this.dataService.tabActiveIndex = this.dataService.tables.length - 1);
       }
     })
   }

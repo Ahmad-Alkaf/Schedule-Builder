@@ -35,12 +35,15 @@ export class ApiService {
     let _container: any = container
     for (let lec of _container) {
       lec.id = undefined;
-      lec.lecture.id = undefined
+      lec.lecture.id = undefined;
+      
     }
     let _tableData: any = tableData;
     for (let t of _tableData)
       for (let lec of t.lectures) {
         lec.id = undefined;
+        lec.LectureId = undefined;
+        // lec.TableDataId = undefined
         lec.lecture.id = undefined
       }
 
@@ -213,7 +216,7 @@ export class ApiService {
   }
 
 
-  private token: string = '';
+  public token: string = '';
   private getToken(): Promise<string> {
     return new Promise(async (resolve, reject) => {
       if (this.token != '' && await this.isValidToken(this.token))
