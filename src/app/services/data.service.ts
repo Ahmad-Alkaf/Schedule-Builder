@@ -8,6 +8,7 @@ import { ApiService } from './api.service';
 import { SoundService } from './sound.service';
 import * as $ from 'JQuery';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorComponent } from '../dialog/error/error.component';
 @Injectable({
   providedIn: 'root'
 })
@@ -47,7 +48,7 @@ export class DataService {
   private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Subject[], rooms: Room[], tables: Table[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
 
 
-  constructor(private sound: SoundService, private api: ApiService, private snackbar:MatSnackBar) {    
+  constructor(private sound: SoundService, private api: ApiService, private snackbar:MatSnackBar,private dialog:MatDialog) {    
     Promise.all([this.api.pullTables(), this.api.pullContainer()]).then(([tablesData, container])=> {
       console.log({ tablesData, container});
       this.newLecContainer = container;
@@ -55,9 +56,9 @@ export class DataService {
         this.tables.push(new Table(i, tablesData[i].name));
         this.tables[i].lectures = tablesData[i].lectures;
       }
-    
-      this.saveState()
-      this.tabActiveIndex = 0;
+      this.tabActiveIndex = 1;
+      this.saveState();
+      setTimeout(() => this.tabActiveIndex = 0);
     }).catch(e => console.error('dataService', e));
     
   }
@@ -79,7 +80,8 @@ export class DataService {
     this.flow.data.splice(this.flow.curIndex, this.flow.data.length - 1 - this.flow.curIndex);
     console.log('pushed index', this.flow.curIndex);
     this.checkCollision();
-    this.api.pushAll(this.tables,this.newLecContainer,this.teachers,this.rooms,this.subjects);
+
+   
   }
 
   public undo = () => {

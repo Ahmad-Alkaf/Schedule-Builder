@@ -9,9 +9,13 @@ import { ApiService } from 'src/app/services/api.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
-  constructor(private http: HttpClient, private router: Router, private api: ApiService) { }
+  constructor(private http: HttpClient, private router: Router, private api: ApiService) { 
+  }
+  ngOnInit(): void {
+
+  }
   loading = false;
   form = new FormGroup({
     username: new FormControl(null, Validators.required),
@@ -25,10 +29,10 @@ export class LoginComponent {
         console.log('req body', this.form.value)
         if (await this.api.login(this.form.value) != '') {
           this.router.navigate(['/']);
-          window.location.reload();
         }
-      } catch (e:any) {
-        this.errorMessage = typeof e == 'string' ? e : '';
+      } catch (e: any) {
+        console.log(e)
+        this.errorMessage = typeof e == 'string' ? e:(typeof e.message == 'string'?e.message: '');
       } finally {
         
         this.loading = false;
