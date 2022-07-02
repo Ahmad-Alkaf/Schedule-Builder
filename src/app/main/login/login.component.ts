@@ -16,17 +16,23 @@ export class LoginComponent {
   form = new FormGroup({
     username: new FormControl(null, Validators.required),
     password: new FormControl(null, Validators.required),
-  }) 
+  });
+  errorMessage = '';
   async login() {
     if (this.form.valid) {
       this.loading = true;
-      console.log('req body', this.form.value)
-      if (await this.api.login(this.form.value) != '')
-        this.router.navigate(['/']);
-      else {
-
+      try {
+        console.log('req body', this.form.value)
+        if (await this.api.login(this.form.value) != '') {
+          this.router.navigate(['/']);
+          window.location.reload();
+        }
+      } catch (e:any) {
+        this.errorMessage = typeof e == 'string' ? e : '';
+      } finally {
+        
+        this.loading = false;
       }
-      this.loading = false;
     }
   }
 
