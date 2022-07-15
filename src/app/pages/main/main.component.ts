@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
@@ -8,13 +8,11 @@ import { DataService } from 'src/app/services/data.service';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css']
 })
-export class MainComponent implements OnInit {
+export class MainComponent {
 
 
  constructor(private api:ApiService,private dataService:DataService,private snackbar:MatSnackBar){}
-  ngOnInit(): void {
-    
-  }
+  
   loading = false;
   saveAll() {
     this.loading = true;

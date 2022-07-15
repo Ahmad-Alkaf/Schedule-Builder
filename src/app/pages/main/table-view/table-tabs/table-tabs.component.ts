@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AddTableComponent } from 'src/app/dialog/add-table/add-table.component';
 import { DataService } from 'src/app/services/data.service';
-import { Table } from '../utility/tableBinder';
+import { Table } from 'src/app/services/tableBinder';
 
 @Component({
   selector: 'app-table-tabs',

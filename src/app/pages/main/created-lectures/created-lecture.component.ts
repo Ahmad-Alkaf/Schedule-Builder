@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DataService } from 'src/app/services/data.service';
 import { AddLectureComponent } from 'src/app/dialog/add-lecture/add-lecture.component';
-import { Final, SolveLec } from '../table/utility/static';
+import { Final, SolveLec } from 'src/app/services/static';
 import { ControlLectureService } from 'src/app/services/control-lecture.service';
 
 @Component({

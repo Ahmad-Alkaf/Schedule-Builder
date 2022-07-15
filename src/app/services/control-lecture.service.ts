@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditLectureComponent } from '../dialog/edit-lecture/edit-lecture.component';
-import { Final, Row, SolveLec, WeekDays } from '../pages/main/table/utility/static';
+import { Final, Row, SolveLec, WeekDays } from 'src/app/services/static';
 import { DataService } from './data.service';
 import { SoundService } from './sound.service';
 

@@ -1,9 +1,9 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem, } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
-import { Final, SolveLec, WeekDays } from './utility/static';
-import { Table } from './utility/tableBinder'
+import { Final, SolveLec, WeekDays } from 'src/app/services/static';
+import { Table } from 'src/app/services/tableBinder'
 import { SoundService } from 'src/app/services/sound.service';
-import { GenerateTableService } from './utility/generate-table.service';
+import { GenerateTableService } from 'src/app/services/generate-table.service';
 import { DataService } from 'src/app/services/data.service';
 import { ControlLectureService } from 'src/app/services/control-lecture.service';
 declare var jsPDF: any;

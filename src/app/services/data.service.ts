@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 // import {EventEmitter}  from 'events';
-import { Final, Subject, Room, Row, SolveLec, Teacher, WeekDays } from '../pages/main/table/utility/static';
-import { Table } from '../pages/main/table/utility/tableBinder';
+import { Subject, Room, Row, SolveLec, Teacher, WeekDays } from 'src/app/services/static';
+import { Table } from 'src/app/services/tableBinder';
 import { ApiService } from './api.service';
 import { SoundService } from './sound.service';
 import * as $ from 'JQuery';
@@ -13,35 +13,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class DataService {
 
   //!undo and redo are not consistent because dataService is not updated when they change table values
-  public teachers: Teacher[] = [
-    //   { name: 'Ahmed Shaikh' },
-    // { name: 'Hassen' },
-    //   { name: 'Hamzah' }
-  ];
+  public teachers: Teacher[] = [];
 
-  subjects: Subject[] = [
-    //   { name: 'PM' },
-    // { name: 'HCI' },
-    //   { name: 'Server-side' }
-  ];
+  subjects: Subject[] = [];
 
-  rooms: Room[] = [
-    //   { name: '301' },
-    // { name: '401' },
-    //   { name: '302' }
-  ];
+  rooms: Room[] = [];
 
   public tables: Table[] = [];
 
-  public newLecContainer: SolveLec[] = [
-    //   {
-    //   startTime: -1, duration: 3, day: 'Friday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'C++', teacher: 'Omer', weekDuration: -1, room: '233' }
-    // }, {
-    //   startTime: -1, duration: 1, day: 'Friday', id: Math.random().toString(36).substring(2),
-    //   lecture: { name: 'Java', teacher: 'Salem Hassen', weekDuration: -1, room: '233' }
-    //   }
-  ];
+  public newLecContainer: SolveLec[] = [];
 
   private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Subject[], rooms: Room[], tables: Table[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
 

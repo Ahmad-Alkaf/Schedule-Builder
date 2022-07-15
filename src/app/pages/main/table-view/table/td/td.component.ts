@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
-import { GenerateTableService } from '../utility/generate-table.service';
-import { SolveLec,Final } from '../utility/static';
+import { GenerateTableService } from 'src/app/services/generate-table.service';
+import { SolveLec,Final } from 'src/app/services/static';
 @Component({
   selector: 'app-td',
   templateUrl: './td.component.html',

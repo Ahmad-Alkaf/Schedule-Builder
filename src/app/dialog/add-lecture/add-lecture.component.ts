@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DataService } from 'src/app/services/data.service';
 import { NavTreeComponent } from 'src/app/pages/main/nav-tree/nav-tree.component';
-import { GenerateTableService } from 'src/app/pages/main/table/utility/generate-table.service';
-import { Final } from 'src/app/pages/main/table/utility/static';
+import { GenerateTableService } from 'src/app/services/generate-table.service';
+import { Final } from 'src/app/services/static';
 @Component({
   selector: 'app-add-lecture',
   templateUrl: './add-lecture.component.html',
