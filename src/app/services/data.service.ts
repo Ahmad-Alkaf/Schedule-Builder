@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { EditLectureComponent } from '../dialog/edit-lecture/edit-lecture.component';
 // import {EventEmitter}  from 'events';
-import { Final, Subject, MyEventEmitter, Room, Row, SolveLec, Teacher, WeekDays } from '../main/main/table/utility/static';
-import { Table } from '../main/main/table/utility/tableBinder';
+import { Final, Subject, Room, Row, SolveLec, Teacher, WeekDays } from '../pages/main/table/utility/static';
+import { Table } from '../pages/main/table/utility/tableBinder';
 import { ApiService } from './api.service';
 import { SoundService } from './sound.service';
 import * as $ from 'JQuery';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ErrorComponent } from '../dialog/error/error.component';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,41 +14,41 @@ export class DataService {
 
   //!undo and redo are not consistent because dataService is not updated when they change table values
   public teachers: Teacher[] = [
-  //   { name: 'Ahmed Shaikh' },
-  // { name: 'Hassen' },
-  //   { name: 'Hamzah' }
+    //   { name: 'Ahmed Shaikh' },
+    // { name: 'Hassen' },
+    //   { name: 'Hamzah' }
   ];
 
   subjects: Subject[] = [
-  //   { name: 'PM' },
-  // { name: 'HCI' },
-  //   { name: 'Server-side' }
+    //   { name: 'PM' },
+    // { name: 'HCI' },
+    //   { name: 'Server-side' }
   ];
 
   rooms: Room[] = [
-  //   { name: '301' },
-  // { name: '401' },
-  //   { name: '302' }
+    //   { name: '301' },
+    // { name: '401' },
+    //   { name: '302' }
   ];
 
   public tables: Table[] = [];
 
   public newLecContainer: SolveLec[] = [
-  //   {
-  //   startTime: -1, duration: 3, day: 'Friday', id: Math.random().toString(36).substring(2),
-  //   lecture: { name: 'C++', teacher: 'Omer', weekDuration: -1, room: '233' }
-  // }, {
-  //   startTime: -1, duration: 1, day: 'Friday', id: Math.random().toString(36).substring(2),
-  //   lecture: { name: 'Java', teacher: 'Salem Hassen', weekDuration: -1, room: '233' }
-  //   }
+    //   {
+    //   startTime: -1, duration: 3, day: 'Friday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'C++', teacher: 'Omer', weekDuration: -1, room: '233' }
+    // }, {
+    //   startTime: -1, duration: 1, day: 'Friday', id: Math.random().toString(36).substring(2),
+    //   lecture: { name: 'Java', teacher: 'Salem Hassen', weekDuration: -1, room: '233' }
+    //   }
   ];
 
   private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Subject[], rooms: Room[], tables: Table[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
 
 
-  constructor(private sound: SoundService, private api: ApiService, private snackbar:MatSnackBar,private dialog:MatDialog) {    
-    Promise.all([this.api.pullTables(), this.api.pullContainer()]).then(([tablesData, container])=> {
-      console.log({ tablesData, container});
+  constructor(private sound: SoundService, private api: ApiService, private snackbar: MatSnackBar, private dialog: MatDialog) {
+    Promise.all([this.api.pullTables(), this.api.pullContainer()]).then(([tablesData, container]) => {
+      console.log({ tablesData, container });
       this.newLecContainer = container;
       for (let i = 0; i < tablesData.length; i++) {
         this.tables.push(new Table(i, tablesData[i].name));
@@ -60,7 +58,7 @@ export class DataService {
       this.saveState();
       setTimeout(() => this.tabActiveIndex = 0);
     }).catch(e => console.error('dataService', e));
-    
+
   }
   //VVVV dataService Functions VVVV
   /**
@@ -80,24 +78,28 @@ export class DataService {
     this.flow.data.splice(this.flow.curIndex, this.flow.data.length - 1 - this.flow.curIndex);
     console.log('pushed index', this.flow.curIndex);
     this.checkCollision();
-
-   
+    if (this.tmp == true)
+      this.api.SaveAll(this.tables, this.newLecContainer, this.teachers, this.rooms, this.subjects)
+        .then(() => console.log('SAVED'))
+        .catch(() => console.error("CATCH IN SAVING"));
+    else this.tmp = true;
   }
-
+  private tmp = false;
   public undo = () => {
     if (this.flow.data[this.flow.curIndex - 1]) {
-      const { teachers, lessons, rooms, tableLectures, newLecContainer, tabActiveIndex } = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
+      const { teachers, lessons, rooms, tableLectures, newLecContainer } = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
       this.teachers = teachers;
       this.subjects = lessons;
       this.rooms = rooms;
       this.newLecContainer = newLecContainer;
-      // this.tabActiveIndex = tabActiveIndex;
-      // this.tables = []
       for (let i = 0; i < tableLectures.length; i++) {
         if (this.tables[i])
           this.tables[i].lectures = tableLectures[i];
       }
       this.checkCollision();
+      this.api.SaveAll(this.tables, this.newLecContainer, this.teachers, this.rooms, this.subjects)
+        .then(() => console.log('SAVED'))
+        .catch(() => console.error("CATCH IN SAVING"));
       console.log('retain index', this.flow.curIndex);
     }
     else this.sound.play('notification');
@@ -116,6 +118,9 @@ export class DataService {
           this.tables[i].lectures = tableLectures[i];
       // else throw new Error(`wow you made it that far ok then come here handle me`);
       this.checkCollision();
+      this.api.SaveAll(this.tables, this.newLecContainer, this.teachers, this.rooms, this.subjects)
+        .then(() => console.log('SAVED'))
+        .catch(() => console.error("CATCH IN SAVING"));
       console.log('retain index', this.flow.curIndex);
     } else this.sound.play('notification');
   }
@@ -228,15 +233,15 @@ export class DataService {
       for (let i = 0; i < arr.length; i++)
         if (arr[i] && arr[i].innerText == this.tables[i].name)
           $(arr[i]).parent().removeClass('collide');
-      
+
       for (let i = 0; i < this.tables.length; i++)
-        if(arr[i])
+        if (arr[i])
           if (arr[i].innerText == this.tables[i].name) {
             let tab = $(arr[i]).parent();
             if (this.tables[i].isCollide)
-              tab.addClass('collide');            
+              tab.addClass('collide');
           }
-          
+
     })
   }
 }

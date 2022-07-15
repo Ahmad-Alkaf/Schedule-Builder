@@ -4,8 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ErrorComponent } from '../dialog/error/error.component';
-import { Room, SolveLec, Subject, Teacher } from '../main/main/table/utility/static';
-import { Table } from '../main/main/table/utility/tableBinder';
+import { Room, SolveLec, Subject, Teacher } from '../pages/main/table/utility/static';
+import { Table } from '../pages/main/table/utility/tableBinder';
 import { DataService } from './data.service';
 interface TableData {
   index: number;
@@ -42,16 +42,16 @@ export class ApiService {
     for (let t of _tableData)
       for (let lec of t.lectures) {
         lec.id = undefined;
-        lec.LectureId = undefined;
+        // lec.LectureId = undefined;
         // lec.TableDataId = undefined
         lec.lecture.id = undefined
       }
 
-    await this.pushTables(tableData);
-    await this.pushContainer(container);
-    await this.pushTeachers(teachers);
-    await this.pushSubjects(subjects);
-    await this.pushRooms(rooms);
+      await this.pushTeachers(teachers);
+      await this.pushSubjects(subjects);
+      await this.pushRooms(rooms);
+      await this.pushContainer(container);
+      await this.pushTables(tableData);
   }
   
   private pushTables(tables: TableData[]) {
@@ -227,7 +227,8 @@ export class ApiService {
         this.token = storage;
         return resolve(storage);
       }
-      this.router.navigate(['/login']);
+      if(window.location.href.includes('login')||window.location.href.includes('register')){}
+      else window.location.href = '/login'
 
       // return await this.getTokenByLocalUserInfo();
     })

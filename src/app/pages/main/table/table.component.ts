@@ -179,14 +179,15 @@ export class TableComponent implements OnInit {
   
   pdf = (id: string) => {
     //FIRST TRY
-      // let pdf = new jsPDF('l', 'pt', [1920, 640]);
-      // pdf.html(document.getElementById(id), {
-      //   callback:  (pdf: any) =>{
+    let pdf = new jsPDF('l', 'pt', [1920, 640]);
+    $('table mat-icon').addClass('d-none');
+      pdf.html(document.getElementById(id), {
+        callback:  (pdf: any) =>{
           
-      //         pdf.save(`Table: ${this.table.name} - ${new Date().toISOString().substring(0,10)}.pdf`);
-      //   },
-        
-      // });
+              pdf.save(`Table: ${this.table.name} - ${new Date().toISOString().substring(0,10)}.pdf`);
+          $('table mat-icon').removeClass('d-none');
+        }
+      });
     //SECOND TRY
   //     var divToPrint=document.getElementById(id);
   // let  newWin= window.open("");

@@ -1,9 +1,8 @@
-import { Component, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AddTableComponent } from 'src/app/dialog/add-table/add-table.component';
 import { DataService } from 'src/app/services/data.service';
-import { TableComponent } from '../table.component';
 import { Table } from '../utility/tableBinder';
 
 @Component({
@@ -18,8 +17,13 @@ export class TableTabsComponent {
  
   
   
-  
-  
+  tabChanged(event:MatTabChangeEvent) {
+    if (event.index >= this.dataService.tables.length) { }
+    else if (this.tmp == true) setTimeout(() => this.dataService.tabActiveIndex = event.index);
+    else this.tmp = true;
+      // setTimeout(()=>this.dataService.tabActiveIndex = event.index);
+  }
+  tmp = false;
   
   
   openAddTable() {

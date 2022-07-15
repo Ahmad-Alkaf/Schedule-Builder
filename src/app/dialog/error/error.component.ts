@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NavTreeComponent } from 'src/app/main/main/nav-tree/nav-tree.component';
+import { NavTreeComponent } from 'src/app/pages/main/nav-tree/nav-tree.component';
 
 @Component({
   selector: 'app-error',

@@ -18,12 +18,12 @@ export class RegisterComponent  {
     email:new FormControl(null,[Validators.required,Validators.email])
   }) 
   serverResponse = '';
-  async register() {
+  register() {
     if (this.form.valid) {
       this.loading = true;
-      await this.api.register(this.form.value)
-        .then(() => this.router.navigate(['/']))
-        .catch((e) => { this.serverResponse = e.message || 'Something Went Wrong in server' })
+      this.api.register(this.form.value)
+        .then(() => window.location.href = '/')
+        .catch((e) => { console.error({source:'catch in register in registerComponent'},e); this.serverResponse = typeof e == 'string'?e:(e.message || 'Something went wrong! Try again later...' )})
         .finally(() => { this.loading = false;  })
     
     }

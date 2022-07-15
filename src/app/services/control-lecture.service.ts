@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditLectureComponent } from '../dialog/edit-lecture/edit-lecture.component';
-import { Final, Row, SolveLec, WeekDays } from '../main/main/table/utility/static';
+import { Final, Row, SolveLec, WeekDays } from '../pages/main/table/utility/static';
 import { DataService } from './data.service';
 import { SoundService } from './sound.service';
 
@@ -57,7 +57,6 @@ export class ControlLectureService {
       else this.delete(this.focused)
     }
     public delete(lecture: SolveLec): void {
-      console.log('delete called');
       let table = this.ds.getTableOf(lecture);
       if (table == 'container') {
         this.ds.newLecContainer.splice(this.ds.newLecContainer.indexOf(lecture), 1);
@@ -131,7 +130,7 @@ export class ControlLectureService {
      */
     public paste(pos: { index: number, day: WeekDays }): void {
       if (!this.clipboard) {//empty clipboard
-        this.snackbar.open('Empty Clipboard!',undefined,{duration:2000})
+        this.snackbar.open('Clipboard is Empty!',undefined,{duration:2000})
         return this.sound.play('notification');
       }
       let lecture: SolveLec = JSON.parse(JSON.stringify(this.clipboard));//

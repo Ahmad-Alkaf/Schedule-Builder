@@ -17,17 +17,17 @@ export class HeaderComponent implements OnInit {
     localStorage['token'] = undefined;
     // localStorage.setItem('user', '');
     this.api.token = '';
-    this.router.navigate(['/register']);
+    window.location.href = '/register';
   }
   loginHandle() {
     this.api.token = '';
     localStorage['token'] = undefined;
     // localStorage.setItem('user', '');
-    this.router.navigate(['/login'])
+    window.location.href = '/login';
   }
   logoutHandle() {
     localStorage['token'] = undefined;
     this.api.token = '';
-    this.router.navigate(['/login'])
+    window.location.href = '/login';
   }
 }

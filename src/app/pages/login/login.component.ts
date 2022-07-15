@@ -18,8 +18,8 @@ export class LoginComponent implements OnInit {
   }
   loading = false;
   form = new FormGroup({
-    username: new FormControl(null, Validators.required),
-    password: new FormControl(null, Validators.required),
+    username: new FormControl(null, [Validators.required,Validators.minLength(6),Validators.maxLength(32)]),
+    password: new FormControl(null, [Validators.required,Validators.minLength(4),Validators.maxLength(32)]),
   });
   errorMessage = '';
   async login() {
@@ -28,11 +28,11 @@ export class LoginComponent implements OnInit {
       try {
         console.log('req body', this.form.value)
         if (await this.api.login(this.form.value) != '') {
-          this.router.navigate(['/']);
+          window.location.href = '/';
         }
       } catch (e: any) {
         console.log(e)
-        this.errorMessage = typeof e == 'string' ? e:(typeof e.message == 'string'?e.message: '');
+        this.errorMessage = typeof e == 'string' ? e:(typeof e.message == 'string'?e.message: 'Something went wrong! Try again later...');
       } finally {
         
         this.loading = false;

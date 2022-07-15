@@ -1,4 +1,4 @@
-import { WeekDays, SolveLec, WEEK_DAYS, Row } from './static';
+import { SolveLec, WEEK_DAYS, Row } from './static';
 import { Final } from './static';
 const final = new Final();
 

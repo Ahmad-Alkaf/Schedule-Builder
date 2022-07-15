@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DataService } from 'src/app/services/data.service';
-import { NavTreeComponent } from 'src/app/main/main/nav-tree/nav-tree.component';
-import { Final, Row, SolveLec } from 'src/app/main/main/table/utility/static';
-import { Table } from 'src/app/main/main/table/utility/tableBinder';
+import { NavTreeComponent } from 'src/app/pages/main/nav-tree/nav-tree.component';
+import { Final, Row, SolveLec } from 'src/app/pages/main/table/utility/static';
+import { Table } from 'src/app/pages/main/table/utility/tableBinder';
 
 @Component({
   selector: 'app-edit-lecture',
@@ -29,6 +29,8 @@ export class EditLectureComponent implements OnInit {
 
 
   validLectureHours(): number[] {
+    if (this.data.day == 'Friday' || this.data.startTime == -1)
+      return this.final.LECTURE_HOURS;
     const hours = this.final.LECTURE_HOURS;
     const row: Row = this.dataService.getActiveTable().rows.filter(v => v.day == this.data.day)[0];
     const index: number = this.dataService.getIndex(row.day, this.data.startTime);

@@ -1,6 +1,6 @@
 <form [formGroup]="form">
    <div class="container m-auto my-5" style="width:500px">
-      <h1 color="primary">Register</h1>
+      <h1>Register</h1>
       <mat-form-field appearance="outline" class="d-block">
          <mat-label>Username</mat-label>
          <input matInput formControlName="username" required />
@@ -18,12 +18,12 @@
 
       <mat-form-field appearance="outline" class="d-block">
          <mat-label>Password</mat-label>
-         <input matInput formControlName="password" required />
+         <input type="password" matInput formControlName="password" required />
          <mat-error *ngIf="form.controls['password'].hasError('required')">Please enter your password</mat-error>
          <mat-error *ngIf="form.controls['password'].hasError('maxlength'); ">Value entered is too long</mat-error>
          <mat-error *ngIf="form.controls['password'].hasError('minlength'); ">Value entered is too short</mat-error>
       </mat-form-field>
-      <span class="  small text-danger">{{serverResponse}}&nbsp;</span>
+      <span class="  small text-danger">{{serverResponse?'Error: '+serverResponse:''}}&nbsp;</span>
       <button class="my-2 w-100" mat-raised-button color="primary" [disabled]="loading" (click)="register()">Register</button>
 
       <div class="my-1">

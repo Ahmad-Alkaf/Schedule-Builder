@@ -1,10 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { DataService } from 'src/app/services/data.service';
-import { NavTreeComponent } from 'src/app/main/main/nav-tree/nav-tree.component';
-import { GenerateTableService } from 'src/app/main/main/table/utility/generate-table.service';
-import { Final } from 'src/app/main/main/table/utility/static';
+import { NavTreeComponent } from 'src/app/pages/main/nav-tree/nav-tree.component';
+import { GenerateTableService } from 'src/app/pages/main/table/utility/generate-table.service';
+import { Final } from 'src/app/pages/main/table/utility/static';
 @Component({
   selector: 'app-add-lecture',
   templateUrl: './add-lecture.component.html',
@@ -15,7 +15,7 @@ export class AddLectureComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<NavTreeComponent>,
     public dataService: DataService, public tableService: GenerateTableService, public final: Final) { }
 
-  form = new FormGroup({
+  public form = new FormGroup({
     teacher: new FormControl(null),
     name: new FormControl(null, Validators.required),
     room: new FormControl(null),
