@@ -21,7 +21,13 @@
     "lib": [
       "es2020",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@service/*": ["src/app/services/*"],
+      "@page/*":["src/app/pages/*"],
+      "@main/*":["src/app/pages/main/*"],
+      "@dialog/*":["src/app/dialog/*"],
+    },
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

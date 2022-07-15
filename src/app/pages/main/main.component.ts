@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ApiService } from 'src/app/services/api.service';
-import { DataService } from 'src/app/services/data.service';
+import { ApiService } from '@service/api.service';
+import { DataService } from '@service/data.service';
 
 @Component({
   selector: 'app-main',

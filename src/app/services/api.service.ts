@@ -1,11 +1,11 @@
-import { HttpClient, HttpRequest } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { ErrorComponent } from '../dialog/error-msg/error.component';
-import { Room, SolveLec, Subject, Teacher } from 'src/app/services/static';
-import { Table } from 'src/app/services/tableBinder';
+import { ErrorComponent } from '@dialog/error-msg/error.component';
+import { Room, SolveLec, Subject, Teacher } from '@service/static';
+import { Table } from '@service/tableBinder';
 interface TableData {
   index: number;
   name: string;

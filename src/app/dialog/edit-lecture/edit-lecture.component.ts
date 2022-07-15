@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DataService } from 'src/app/services/data.service';
-import { NavTreeComponent } from 'src/app/pages/main/nav-tree/nav-tree.component';
-import { Final, Row, SolveLec } from 'src/app/services/static';
+import { DataService } from '@service/data.service';
+import { NavTreeComponent } from '@main/nav-tree/nav-tree.component';
+import { Final, Row, SolveLec } from '@service/static';
 
 @Component({
   selector: 'app-edit-lecture',

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { NavTreeComponent } from 'src/app/pages/main/nav-tree/nav-tree.component';
+import { NavTreeComponent } from '@main/nav-tree/nav-tree.component';
 
 @Component({
   selector: 'app-add-table',

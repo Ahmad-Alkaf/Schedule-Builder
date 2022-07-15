@@ -1,10 +1,10 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DataService } from 'src/app/services/data.service';
-import { AddLectureComponent } from 'src/app/dialog/add-lecture/add-lecture.component';
-import { Final, SolveLec } from 'src/app/services/static';
-import { ControlLectureService } from 'src/app/services/control-lecture.service';
+import { DataService } from '@service/data.service';
+import { AddLectureComponent } from '@dialog/add-lecture/add-lecture.component';
+import { Final, SolveLec } from '@service/static';
+import { ControlLectureService } from '@service/control-lecture.service';
 
 @Component({
   selector: 'app-created-lecture',

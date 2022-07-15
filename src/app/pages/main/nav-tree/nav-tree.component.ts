@@ -1,8 +1,8 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, OnInit } from '@angular/core';
 import { ArrayDataSource } from '@angular/cdk/collections';
-import { DataService } from 'src/app/services/data.service';
-import { ApiService } from 'src/app/services/api.service';
+import { DataService } from '@service/data.service';
+import { ApiService } from '@service/api.service';
 
 /** Flat to-do item node with expandable and level information */
 interface FlatNode {

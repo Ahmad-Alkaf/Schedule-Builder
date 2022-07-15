@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { DataService } from 'src/app/services/data.service';
-import { Final, SolveLec } from 'src/app/services/static';
-import { SoundService } from 'src/app/services/sound.service';
-import { ControlLectureService } from 'src/app/services/control-lecture.service';
+import { DataService } from '@service/data.service';
+import { Final, SolveLec } from '@service/static';
+import { SoundService } from '@service/sound.service';
+import { ControlLectureService } from '@service/control-lecture.service';
 
 @Component({
   selector: 'app-lecture-options',

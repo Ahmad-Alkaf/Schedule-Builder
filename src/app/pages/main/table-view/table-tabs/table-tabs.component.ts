@@ -1,9 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { AddTableComponent } from 'src/app/dialog/add-table/add-table.component';
-import { DataService } from 'src/app/services/data.service';
-import { Table } from 'src/app/services/tableBinder';
+import { AddTableComponent } from '@dialog/add-table/add-table.component';
+import { DataService } from '@service/data.service';
+import { Table } from '@service/tableBinder';
 
 @Component({
   selector: 'app-table-tabs',

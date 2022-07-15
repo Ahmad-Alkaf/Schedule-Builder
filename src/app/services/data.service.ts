@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 // import {EventEmitter}  from 'events';
-import { Subject, Room, Row, SolveLec, Teacher, WeekDays } from 'src/app/services/static';
-import { Table } from 'src/app/services/tableBinder';
+import { Subject, Room, Row, SolveLec, Teacher, WeekDays } from '@service/static';
+import { Table } from '@service/tableBinder';
 import { ApiService } from './api.service';
 import { SoundService } from './sound.service';
 import * as $ from 'JQuery';

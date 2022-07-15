@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { KeyboardService } from './services/keyboard.service';
+import { KeyboardService } from '@service/keyboard.service';
 
 @Component({
   selector: 'app-root',

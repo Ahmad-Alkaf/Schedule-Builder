@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { DataService } from 'src/app/services/data.service';
-import { NavTreeComponent } from 'src/app/pages/main/nav-tree/nav-tree.component';
-import { GenerateTableService } from 'src/app/services/generate-table.service';
-import { Final } from 'src/app/services/static';
+import { DataService } from '@service/data.service';
+import { NavTreeComponent } from '@main/nav-tree/nav-tree.component';
+import { GenerateTableService } from '@service/generate-table.service';
+import { Final } from '@service/static';
 @Component({
   selector: 'app-add-lecture',
   templateUrl: './add-lecture.component.html',
