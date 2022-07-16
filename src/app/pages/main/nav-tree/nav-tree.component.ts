@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { DataService } from '@service/data.service';
 import { ApiService } from '@service/api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 /** Flat to-do item node with expandable and level information */
 interface FlatNode {
@@ -22,12 +23,52 @@ interface FlatNode {
 
 export class NavTreeComponent implements OnInit {
 
- 
-  
+
+
   treeControl = new FlatTreeControl<FlatNode>(
     node => node.level,
     node => node.expandable
   );
+
+  treeData = this.createFlatNode();
+
+  dataSource: ArrayDataSource<FlatNode> = new ArrayDataSource<FlatNode>(this.treeData)
+
+
+  constructor(private dataService: DataService, private api: ApiService, private snackbar: MatSnackBar) {
+  }
+
+
+
+
+  removeNode(node: FlatNode) {
+    let nodeIndex = this.treeData.indexOf(node);
+    let parent_ = this.getParentNode(node);
+    let parent: FlatNode;
+    if (parent_ == null) return console.error('parent node: ' + node + ' of removed tree leave is null:' + parent_)
+    else parent = parent_;
+    
+    this.treeData.splice(nodeIndex, 1);
+    this.dataSource = new ArrayDataSource<FlatNode>(this.treeData);
+
+    let toDelete = setTimeout(() => {
+      switch (parent.name) {
+        case 'Teacher': this.dataService.teachers.splice(this.dataService.teachers.indexOf(node), 1); break;
+        case 'Subject': this.dataService.subjects.splice(this.dataService.subjects.indexOf(node), 1); break;
+        case 'Room': this.dataService.rooms.splice(this.dataService.rooms.indexOf(node), 1); break;
+        default: console.error('default in switch called is must not!');
+      }
+      this.dataService.saveState();
+    }, 4100);
+    
+    this.snackbar.open(`${parent.name} '${node.name}' Removed!`, 'Undo', { duration: 4000 }).onAction().subscribe({
+      next: () => {
+        this.treeData.splice(nodeIndex, 0, node);
+        this.dataSource = new ArrayDataSource<FlatNode>(this.treeData);
+        clearTimeout(toDelete);
+      }
+    })
+  }
 
   handleAdd(node: FlatNode) {//handleAdd is for button that only in root tree i.e (teacher, subject and room)
     let parentIndex = this.treeData.indexOf(node);
@@ -46,13 +87,13 @@ export class NavTreeComponent implements OnInit {
   }
 
   saveNewNode(node: FlatNode, value: string) {
-    let n: FlatNode = { ...this.treeData[this.treeData.indexOf(node)] ,name: value };
-    
+    let n: FlatNode = { ...this.treeData[this.treeData.indexOf(node)], name: value };
+
     this.treeData[this.treeData.indexOf(node)] = n;
     this.dataSource = new ArrayDataSource(this.treeData);
     let parent = this.getParentNode(n);
     if (parent == null)
-      return console.error('parent in tree is null!')
+      return console.error('parent in tree is null!' + parent);
     switch (parent.name) {
       case 'Teacher': this.dataService.teachers.push({ name: value }); break;
       case 'Subject': this.dataService.subjects.push({ name: value }); break;
@@ -63,7 +104,7 @@ export class NavTreeComponent implements OnInit {
   }
 
   removeInput(node: FlatNode) {
-    for (let i = this.treeData.indexOf(node)+1; i < this.treeData.length; i++)
+    for (let i = this.treeData.indexOf(node) + 1; i < this.treeData.length; i++)
       if (this.treeData[i].expandable == true)
         break;
       else if (this.treeData[i].name === ' ') {
@@ -83,7 +124,7 @@ export class NavTreeComponent implements OnInit {
         console.log({ teachers, subjects, rooms });
         this.treeData = this.createFlatNode();
         this.dataSource = new ArrayDataSource(this.treeData);
-        
+
       }).catch(e => console.error('nav-tree', e));
   }
 
@@ -99,12 +140,7 @@ export class NavTreeComponent implements OnInit {
   };
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
-  treeData = this.createFlatNode();
 
-  dataSource: ArrayDataSource<FlatNode> = new ArrayDataSource<FlatNode>(this.treeData)
-
-  constructor(private dataService: DataService,private api:ApiService) {
-  }
 
   getParentNode(node: FlatNode) {
     const nodeIndex = this.treeData.indexOf(node);

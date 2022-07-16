@@ -28,6 +28,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ErrorComponent } from '@dialog/error-msg/error.component'; 
 import { AngularMaterialsModule } from './modules/angular-materials.module';
+import { OptionsComponent } from './pages/main/table-view/options/options.component';
+import { EditTableComponent } from './dialog/edit-table/edit-table.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +47,9 @@ import { AngularMaterialsModule } from './modules/angular-materials.module';
     AddTableComponent,
     LoginComponent,
     RegisterComponent,
-    ErrorComponent
+    ErrorComponent,
+    OptionsComponent,
+    EditTableComponent
   ],
   imports: [
     BrowserModule,

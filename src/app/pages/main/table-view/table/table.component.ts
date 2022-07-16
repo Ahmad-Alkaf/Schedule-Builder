@@ -6,7 +6,6 @@ import { SoundService } from '@service/sound.service';
 import { GenerateTableService } from '@service/generate-table.service';
 import { DataService } from '@service/data.service';
 import { ControlLectureService } from '@service/control-lecture.service';
-declare var jsPDF: any;
 
 @Component({
   selector: 'app-table',
@@ -177,41 +176,7 @@ export class TableComponent implements OnInit {
   }
   
   
-  pdf = (id: string) => {
-    //FIRST TRY
-    let pdf = new jsPDF('l', 'pt', [1920, 640]);
-    $('table mat-icon').addClass('d-none');
-      pdf.html(document.getElementById(id), {
-        callback:  (pdf: any) =>{
-          
-              pdf.save(`Table: ${this.table.name} - ${new Date().toISOString().substring(0,10)}.pdf`);
-          $('table mat-icon').removeClass('d-none');
-        }
-      });
-    //SECOND TRY
-  //     var divToPrint=document.getElementById(id);
-  // let  newWin= window.open("");
-  //  newWin?.document.write(divToPrint?.outerHTML||'null');
-  //  newWin?.print();
-  //  newWin?.close();
-    
-    //THIRD TRY
-    // //Get the HTML of div
-    // var divElements = document.getElementById(id)?.innerHTML;
-    // //Get the HTML of whole page
-    // var oldPage = document.body.innerHTML;
-    // //Reset the page's HTML with div's HTML only
-    // document.body.innerHTML = 
-    //   "<html><head><title></title></head><body>" + 
-    //   divElements + "</body>";
-    // //Print Page
-    // window.print();
-    // //Restore orignal HTML
-    // document.body.innerHTML = oldPage;
-    
-    
-    
-  }
+ 
 }
 
 

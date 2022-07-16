@@ -3,7 +3,8 @@
   <cdk-tree-node *cdkTreeNodeDef="let node" cdkTreeNodePadding [style.display]="shouldRender(node) ? 'flex' : 'none'"
     class="tree-node">
     <!-- use a disabled button to provide padding for tree leaf -->
-    <button mat-icon-button disabled></button>
+    <!-- <span style="width:2px"></span> -->
+    <button mat-icon-button (click)="removeNode(node)"><mat-icon color="warn">remove</mat-icon></button>
     {{node.name}}
   </cdk-tree-node>
   
@@ -13,7 +14,7 @@
     <!-- <button mat-icon-button disabled></button> -->
     <mat-form-field appearance="fill">
       <mat-label>Add {{getParentNode(node)?.name}}</mat-label>
-      <input appAutofocus matInput #itemValue>
+      <input appAutofocus matInput #itemValue (keyup.enter)="saveNewNode(node,itemValue.value)">
     </mat-form-field>
     <button mat-button color="primary" (click)="saveNewNode(node, itemValue.value)">Save</button>
   </div>
