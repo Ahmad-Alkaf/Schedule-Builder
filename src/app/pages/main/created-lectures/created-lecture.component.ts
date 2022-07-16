@@ -9,7 +9,7 @@ import { ControlLectureService } from '@service/control-lecture.service';
 @Component({
   selector: 'app-created-lecture',
   templateUrl: './created-lecture.component.html',
-  styleUrls: ['./created-lecture.component.css'],
+  styleUrls: ['./created-lecture.component.scss'],
 })
 
 export class CreateLectureComponent {

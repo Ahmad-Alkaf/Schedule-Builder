@@ -5,7 +5,7 @@ import { SolveLec,Final } from '@service/static';
 @Component({
   selector: 'app-td',
   templateUrl: './td.component.html',
-  styleUrls: ['./td.component.css'],
+  styleUrls: ['./td.component.scss'],
 })
 export class TdComponent implements OnInit {
   @Input() td: SolveLec|null = null;

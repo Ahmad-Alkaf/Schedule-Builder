@@ -1,0 +1,8 @@
+<div mat-dialog-title [class]="'text-'+data.title['text-color'] ">{{ data.title.text}}</div>
+<div mat-dialog-content>
+   {{data.content}}
+</div>
+<div *ngIf="!!data.actions" mat-dialog-actions>
+   <button mat-button (click)="dialogRef.close(data.actions.no.text)" [color]="data.actions.no.color">{{data.actions.no.text}}</button>
+   <button mat-button (click)="dialogRef.close(data.actions.yes.text)"  [color]="data.actions.yes.color">{{data.actions.yes.text}}</button>
+</div> 

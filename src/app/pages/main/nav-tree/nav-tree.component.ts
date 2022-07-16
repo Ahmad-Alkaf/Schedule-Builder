@@ -18,7 +18,7 @@ interface FlatNode {
 @Component({
   selector: 'app-nav-tree',
   templateUrl: './nav-tree.component.html',
-  styleUrls: ['./nav-tree.component.css']
+  styleUrls: ['./nav-tree.component.scss']
 })
 
 export class NavTreeComponent implements OnInit {

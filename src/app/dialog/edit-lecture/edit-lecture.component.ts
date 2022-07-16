@@ -8,7 +8,7 @@ import { Final, Row, SolveLec } from '@service/static';
 @Component({
   selector: 'app-edit-lecture',
   templateUrl: './edit-lecture.component.html',
-  styleUrls: ['./edit-lecture.component.css']
+  styleUrls: ['./edit-lecture.component.scss']
 })
 export class EditLectureComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<NavTreeComponent>, @Inject(MAT_DIALOG_DATA) public data: SolveLec,

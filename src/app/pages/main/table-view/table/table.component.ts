@@ -10,7 +10,7 @@ import { ControlLectureService } from '@service/control-lecture.service';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css'],
+  styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
   @Input() table: Table = new Table(-1,'error: assigned manually');

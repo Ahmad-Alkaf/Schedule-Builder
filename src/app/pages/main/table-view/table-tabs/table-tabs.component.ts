@@ -8,7 +8,7 @@ import { Table } from '@service/tableBinder';
 @Component({
   selector: 'app-table-tabs',
   templateUrl: './table-tabs.component.html',
-  styleUrls: ['./table-tabs.component.css'],
+  styleUrls: ['./table-tabs.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class TableTabsComponent {

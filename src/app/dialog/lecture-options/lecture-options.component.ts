@@ -7,7 +7,7 @@ import { ControlLectureService } from '@service/control-lecture.service';
 @Component({
   selector: 'app-lecture-options',
   templateUrl: './lecture-options.component.html',
-  styleUrls: ['./lecture-options.component.css']
+  styleUrls: ['./lecture-options.component.scss']
 })
 export class LectureOptionsComponent {
   @Input() td: SolveLec | null = null;

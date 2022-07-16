@@ -6,7 +6,7 @@ import { NavTreeComponent } from '@main/nav-tree/nav-tree.component';
 @Component({
   selector: 'app-add-table',
   templateUrl: './add-table.component.html',
-  styleUrls: ['./add-table.component.css']
+  styleUrls: ['./add-table.component.scss']
 })
 export class AddTableComponent  {
   tableControl = new FormControl('', Validators.maxLength(15));

@@ -30,6 +30,7 @@ import { ErrorComponent } from '@dialog/error-msg/error.component';
 import { AngularMaterialsModule } from './modules/angular-materials.module';
 import { OptionsComponent } from './pages/main/table-view/options/options.component';
 import { EditTableComponent } from './dialog/edit-table/edit-table.component';
+import { PromptComponent } from './dialog/prompt/prompt.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,7 +50,8 @@ import { EditTableComponent } from './dialog/edit-table/edit-table.component';
     RegisterComponent,
     ErrorComponent,
     OptionsComponent,
-    EditTableComponent
+    EditTableComponent,
+    PromptComponent
   ],
   imports: [
     BrowserModule,

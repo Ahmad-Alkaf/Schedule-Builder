@@ -9,7 +9,6 @@ export class SoundService implements OnInit {
   constructor() { }
   ngOnInit(): void {
     this.notification.load();
-    // this.error.load();
     this.error.volume = 0;
     this.error.load()
   }

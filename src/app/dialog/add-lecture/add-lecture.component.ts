@@ -8,7 +8,7 @@ import { Final } from '@service/static';
 @Component({
   selector: 'app-add-lecture',
   templateUrl: './add-lecture.component.html',
-  styleUrls: ['./add-lecture.component.css'],
+  styleUrls: ['./add-lecture.component.scss'],
 })
 export class AddLectureComponent implements OnInit {
   lecture: { name: string, teacher: string, room: string, duration: number } = { name: '', teacher: '', room: '', duration: -1 }
