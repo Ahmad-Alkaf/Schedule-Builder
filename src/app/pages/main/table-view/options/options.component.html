@@ -1,14 +1,21 @@
 <div class="d-flex">
-   <div class="mx-2">
-      <button mat-flat-button color="primary" (click)="changeName()">Change Table Name</button>
+   <div>
+      <button mat-flat-button color="primary" (click)="changeName()">
+         <mat-icon>edit</mat-icon>&nbsp;
+         <span>Change Table Name</span>
+      </button>
    </div>
    
    <div class="mx-2">
-      <button mat-flat-button color="warn" (click)="delete()">Delete Table</button>
+      <button mat-flat-button color="warn" (click)="delete()">
+         <mat-icon>delete</mat-icon>&nbsp;<span>Delete Table</span></button>
    </div>
    
    <div style="margin-left:auto;">
-      <button mat-flat-button color="primary" (click)="pdf()">PDF</button>
+      <button mat-flat-button color="primary" (click)="pdf()">
+         <mat-icon>print</mat-icon>&nbsp;<span>PDF</span></button>
    </div>
    
 </div>
+
+<h1 class=" theme-text-primary" style="font-size:80px;">hi there</h1>

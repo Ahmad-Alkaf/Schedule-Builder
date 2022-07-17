@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { ApiService } from '@service/api.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit{
 
-  constructor(public api:ApiService, private router:Router) { }
+  constructor(public api: ApiService) { }
 
-  ngOnInit(): void {
-  }
   registerHandle() {
     localStorage['token'] = undefined;
     // localStorage.setItem('user', '');
@@ -29,5 +27,27 @@ export class HeaderComponent implements OnInit {
     localStorage['token'] = undefined;
     this.api.token = '';
     window.location.href = '/login';
+  }
+
+  /**
+   * array of css classes that toggle in <body> to set the theme
+   */
+  public themes: string[] = [
+    'light-theme-indigo',
+    'dark-theme-purple',
+  ];
+  public selectedTheme: BehaviorSubject<string> = new BehaviorSubject<string>(this.themes[0]);
+  ngOnInit() {
+    $('body').addClass(this.selectedTheme.value);
+    this.selectedTheme.subscribe({
+      next: (v) => {
+        for (let t of this.themes)
+          $('body').removeClass(t);
+        $('body').addClass(v);
+    }})
+  }
+  
+  changeTheme(event: any) {
+    
   }
 }

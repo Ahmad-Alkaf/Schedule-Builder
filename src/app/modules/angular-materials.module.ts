@@ -12,6 +12,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatRadioModule } from '@angular/material/radio';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkTreeModule } from '@angular/cdk/tree';
 
@@ -30,7 +32,9 @@ const MatArr: any = [
   MatTabsModule,
   MatToolbarModule,
   MatSnackBarModule,
-  CdkTreeModule
+  CdkTreeModule,
+  MatRadioModule,
+  MatSlideToggleModule
 ]
 
 @NgModule({

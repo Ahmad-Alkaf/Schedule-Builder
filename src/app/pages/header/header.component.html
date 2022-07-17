@@ -1,7 +1,28 @@
-<mat-toolbar color="primary">
-   <a routerLink="/" mat-icon-button><mat-icon>view_module</mat-icon>&nbsp;<span>Schedule Maker</span></a>
-   <div style="margin-left:auto;">
-      <div *ngIf="api.token == '';else logout;"><button mat-button (click)="registerHandle()">Register</button><button (click)="loginHandle()" mat-button>Login</button></div>
+<mat-toolbar color="primary" class="theme-bg-primary">
+   <button routerLink="/" mat-icon-button>
+      <mat-icon>view_module</mat-icon>&nbsp;<span>Schedule Maker</span>
+   </button>
+   <div class=" d-flex" style="margin-left:auto;">
+      <!-- <mat-radio-group (change)="changeTheme($event)" aria-label="Select a theme">
+         <mat-radio-button selected value="indigo">Dark blue (Light)</mat-radio-button>
+         <mat-radio-button value="purple">Purple (Dark)</mat-radio-button>
+       </mat-radio-group> -->
+      <div>
+         <button mat-icon-button [matMenuTriggerFor]="themesMenu" aria-label="Theme selector">
+            <mat-icon>format_color_fill</mat-icon>
+         </button>
+         <mat-menu #themesMenu="matMenu">
+            <mat-radio-group (change)="selectedTheme.next($event.value)" aria-label="Select a theme">
+
+               <button *ngFor="let theme of themes" mat-menu-item>
+                  <mat-radio-button [checked]="theme == selectedTheme.value" [value]="theme">{{theme.split('-')[2] | titlecase}} ({{theme.split('-')[0]|titlecase}})</mat-radio-button>
+               </button>
+            </mat-radio-group>
+         </mat-menu>
+      </div>
+
+      <div *ngIf="api.token == '';else logout;"><button mat-button (click)="registerHandle()">Register</button><button
+            (click)="loginHandle()" mat-button>Login</button></div>
       <ng-template #logout><button (click)="logoutHandle()" mat-button>Logout</button></ng-template>
    </div>
 </mat-toolbar>
