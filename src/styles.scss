@@ -51,54 +51,88 @@
 
 // You have to define one of those for every theme you offer
 .dark-theme-purple {
-    @import "./themes/dark/purple";
-    @include angular-material-theme($dark-theme);
-    @include generate-theme-vars($dark-theme);
-    .theme-text-primary{
-      color:var(--primary-color);
-    }
-    .theme-text-accent{
-      color:var(--accent-color);
-    }
-    .theme-bg-primary{
-      background-color: var(--primary-color);
-    }
-    .theme-bg-accent{
-      background-color: var(--accent-color);
-    }
+  @import "./themes/purple";
+
+  $purple-theme: mat-dark-theme($purple-theme-primary,
+      $purple-theme-accent,
+      $purple-theme-warn);
+  @include angular-material-theme($purple-theme);
+  @include angular-material-theme($purple-theme);
+  @include generate-theme-vars($purple-theme);
+}// You have to define one of those for every theme you offer
+.light-theme-purple {
+  @import "./themes/purple";
+
+  $purple-theme: mat-light-theme($purple-theme-primary,
+      $purple-theme-accent,
+      $purple-theme-warn);
+  @include angular-material-theme($purple-theme);
+  @include angular-material-theme($purple-theme);
+  @include generate-theme-vars($purple-theme);
 }
 
 .light-theme-indigo {
-    @import "./themes/light/indigo";
-    @include angular-material-theme($light-theme);
-    @include generate-theme-vars($light-theme);
-    .theme-text-primary{
-      color:var(--primary-color);
-    }
-    .theme-text-accent{
-      color:var(--accent-color);
-    }
-    .theme-bg-primary{
-      background-color: var(--primary-color);
-    }
-    .theme-bg-accent{
-      background-color: var(--accent-color);
-    }
+  @import "./themes/indigo";
+  $indigo-theme: mat-light-theme($indigo-theme-primary,
+      $indigo-theme-accent,
+      $indigo-theme-warn);
+  @include angular-material-theme($indigo-theme);
+  @include angular-material-theme($indigo-theme);
+  @include generate-theme-vars($indigo-theme);
 }
 
-// .light-theme {
-//     @import "themes/light-theme";
-//     @include angular-material-theme($light-theme);
-//     @include generate-theme-vars($light-theme);
-// }
+.dark-theme-indigo {
+  @import "./themes/indigo";
+  $indigo-theme: mat-dark-theme($indigo-theme-primary,
+      $indigo-theme-accent,
+      $indigo-theme-warn);
+  @include angular-material-theme($indigo-theme);
+  @include angular-material-theme($indigo-theme);
+  @include generate-theme-vars($indigo-theme);
+}
+
+.dark-theme-yellow {
+  @import "./themes/yellow";
+  $yellow-theme: mat-dark-theme($yellow-theme-primary,
+      $yellow-theme-accent,
+      $yellow-theme-warn);
+
+  @include angular-material-theme($yellow-theme);
+  @include angular-material-theme($yellow-theme);
+  @include generate-theme-vars($yellow-theme);
+}
+
+.light-theme-yellow {
+  @import "./themes/yellow";
+  $yellow-theme: mat-light-theme($yellow-theme-primary,
+      $yellow-theme-accent,
+      $yellow-theme-warn);
+
+  @include angular-material-theme($yellow-theme);
+  @include angular-material-theme($yellow-theme);
+  @include generate-theme-vars($yellow-theme);
+}
+
+.theme-text-primary {
+  color: var(--primary-color);
+}
+
+.theme-text-accent {
+  color: var(--accent-color);
+}
+
+.theme-bg-primary {
+  background-color: var(--primary-color);
+}
+
+.theme-bg-accent {
+  background-color: var(--accent-color);
+}
 
 @import url(./assets/bootstrap.css);
 @import url("./assets/icon.css");
 @import url("./assets/google.font.style.css");
 
-.mat-danger {
-  color: rgb(220, 53, 69, 1);
-}
 
 html {
   height: 100vh !important;
@@ -107,7 +141,7 @@ html {
 body {
   border: 0;
   padding: 0;
-  // background-color: rgb(245, 245, 245) !important;
+  background-color: var(--background-color) !important;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -138,7 +172,7 @@ body {
   cursor: move;
   width: 18px;
   height: 18px;
-  color: #3f51b5;
+  color: var(--primary-color);
 }
 
 .cdk-drag-preview {
@@ -168,7 +202,7 @@ body {
   height: 65px !important;
   text-align: center;
   vertical-align: middle;
-  border: 1px solid #ccc;
+  border: 1px solid var(--disabled-color);
   padding: 0vh !important;
   margin: 0px !important
 }
@@ -180,30 +214,30 @@ body {
 
 .td:focus.collTeacher,
 .td:focus.collRoom {
-  outline: 1.8px dotted var(--bs-danger) !important;
+  outline: 1.8px dotted var(--warn-color) !important;
   border: none;
 }
 
 
 
 .collTeacher {
-  outline: 2px solid var(--bs-danger) !important;
+  outline: 2px solid var(--warn-color) !important;
   border: none !important;
 }
 
 .collTeacher app-td div div.teacherDiv {
   animation: flash 1200ms infinite linear;
-  color: var(--bs-danger);
+  color: var(--warn-color);
 }
 
 .collRoom {
-  outline: 2px solid var(--bs-danger) !important;
+  outline: 2px solid var(--warn-color) !important;
   border: none !important;
 }
 
 .collRoom app-td div div.roomDiv {
   animation: flash 1200ms infinite;
-  color: var(--bs-danger);
+  color: var(--warn-color);
 }
 
 @keyframes flash {
@@ -212,11 +246,11 @@ body {
     color:white;
   } */
   0% {
-    color: var(--bs-danger);
+    color: var(--warn-color);
   }
 
   30% {
-    color: var(--bs-danger);
+    color: var(--warn-color);
   }
 
   50% {
@@ -224,7 +258,6 @@ body {
   }
 
   60% {
-    color: var(--bs-danger);
+    color: var(--warn-color);
   }
 }
-

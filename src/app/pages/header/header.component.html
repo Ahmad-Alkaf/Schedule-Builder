@@ -8,6 +8,7 @@
          <mat-radio-button value="purple">Purple (Dark)</mat-radio-button>
        </mat-radio-group> -->
       <div>
+         <mat-slide-toggle color="white" (toggleChange)="isDark = !isDark;selectedTheme.next(selectedTheme.value)" class="mx-2" labelPosition="before" >Dark Mode</mat-slide-toggle>
          <button mat-icon-button [matMenuTriggerFor]="themesMenu" aria-label="Theme selector">
             <mat-icon>format_color_fill</mat-icon>
          </button>
@@ -15,7 +16,7 @@
             <mat-radio-group (change)="selectedTheme.next($event.value)" aria-label="Select a theme">
 
                <button *ngFor="let theme of themes" mat-menu-item>
-                  <mat-radio-button [checked]="theme == selectedTheme.value" [value]="theme">{{theme.split('-')[2] | titlecase}} ({{theme.split('-')[0]|titlecase}})</mat-radio-button>
+                  <mat-radio-button [checked]="theme == selectedTheme.value" [value]="theme" [class]="theme.split('-')[1]">{{theme.split('-')[1] | titlecase}}</mat-radio-button>
                </button>
             </mat-radio-group>
          </mat-menu>

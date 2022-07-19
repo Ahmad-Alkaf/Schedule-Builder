@@ -1,15 +1,26 @@
-
-*{
+* {
   box-sizing: border-box !important;
 }
 
-tr td:first-child,tr th:first-child {
+table{
+  background-color: var(--card-color) !important;
+}
+
+tr td:first-child,
+tr th:first-child {
   width: 10% !important;
   /* background-color: blue; */
   vertical-align: middle;
-  border-right: 2px solid black;
+  border-right: 2px solid var(--disabled-color);
 }
-tr td:first-child{
+th,td,tr{
+  color:var(--text-color) !important;
+  // border-color: var(--text-color) !important;
+}
+th{
+  border-bottom: 2px solid var(--disabled-color) !important;
+}
+tr td:first-child {
   padding-bottom: 11px;
 }
 
@@ -17,26 +28,26 @@ th {
   width: 15% !important;
   
 }
-th{
-  border:1px solid #ccc;
+
+th {
+  border: 1px solid var(--disabled-color);
 }
 
 td {
-  min-width:7.5%;
+  min-width: 7.5%;
   position: relative;
-  border:1px solid #ccc;
-  
+  border: 1px solid var(--disabled-color);
+
 }
 
-.invalidTable{
-  border:2px solid var(--bs-danger);
+.invalidTable {
+  border: 2px solid var(--warn-color);
 }
-.lecture,.off{
-  
-}
+
+.lecture,
+.off {}
 
 
 div.cdk-drag-preview {
   vertical-align: middle;
 }
-
