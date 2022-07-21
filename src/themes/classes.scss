@@ -1,0 +1,222 @@
+
+@import "../assets/functions.scss";
+@import "~@angular/material/theming";
+
+
+.dark-theme-purple {
+  @import "./purple";
+
+  $purple-theme: mat-dark-theme($purple-theme-primary,
+      $purple-theme-accent,
+      $purple-theme-warn);
+  @include angular-material-theme($purple-theme);
+  @include angular-material-theme($purple-theme);
+  @include generate-theme-vars($purple-theme);
+}
+
+// You have to define one of those for every theme you offer
+.light-theme-purple {
+  @import "./purple";
+
+  $purple-theme: mat-light-theme($purple-theme-primary,
+      $purple-theme-accent,
+      $purple-theme-warn);
+  @include angular-material-theme($purple-theme);
+  @include angular-material-theme($purple-theme);
+  @include generate-theme-vars($purple-theme);
+}
+
+.light-theme-indigo {
+  @import "./indigo";
+  $indigo-theme: mat-light-theme($indigo-theme-primary,
+      $indigo-theme-accent,
+      $indigo-theme-warn);
+  @include angular-material-theme($indigo-theme);
+  @include angular-material-theme($indigo-theme);
+  @include generate-theme-vars($indigo-theme);
+}
+
+.dark-theme-indigo {
+  @import "./indigo";
+  $indigo-theme: mat-dark-theme($indigo-theme-primary,
+      $indigo-theme-accent,
+      $indigo-theme-warn);
+  @include angular-material-theme($indigo-theme);
+  @include angular-material-theme($indigo-theme);
+  @include generate-theme-vars($indigo-theme);
+}
+
+.dark-theme-yellow {
+  @import "./yellow";
+  $yellow-theme: mat-dark-theme($yellow-theme-primary,
+      $yellow-theme-accent,
+      $yellow-theme-warn);
+
+  @include angular-material-theme($yellow-theme);
+  @include angular-material-theme($yellow-theme);
+  @include generate-theme-vars($yellow-theme);
+}
+
+.light-theme-yellow {
+  @import "./yellow";
+  $yellow-theme: mat-light-theme($yellow-theme-primary,
+      $yellow-theme-accent,
+      $yellow-theme-warn);
+
+  @include angular-material-theme($yellow-theme);
+  @include angular-material-theme($yellow-theme);
+  @include generate-theme-vars($yellow-theme);
+}
+
+.dark-theme-blue {
+  @import "./blue";
+  $blue-theme: mat-dark-theme($blue-theme-primary,
+      $blue-theme-accent,
+      $blue-theme-warn);
+
+  @include angular-material-theme($blue-theme);
+  @include angular-material-theme($blue-theme);
+  @include generate-theme-vars($blue-theme);
+}
+
+.light-theme-blue {
+  @import "./blue";
+  $blue-theme: mat-light-theme($blue-theme-primary,
+      $blue-theme-accent,
+      $blue-theme-warn);
+
+  @include angular-material-theme($blue-theme);
+  @include angular-material-theme($blue-theme);
+  @include generate-theme-vars($blue-theme);
+}
+.dark-theme-brown {
+  @import "./brown";
+  $brown-theme: mat-dark-theme($brown-theme-primary,
+      $brown-theme-accent,
+      $brown-theme-warn);
+
+  @include angular-material-theme($brown-theme);
+  @include angular-material-theme($brown-theme);
+  @include generate-theme-vars($brown-theme);
+}
+
+.light-theme-brown {
+  @import "./brown";
+  $brown-theme: mat-light-theme($brown-theme-primary,
+      $brown-theme-accent,
+      $brown-theme-warn);
+
+  @include angular-material-theme($brown-theme);
+  @include angular-material-theme($brown-theme);
+  @include generate-theme-vars($brown-theme);
+}
+
+
+.dark-theme-pink {
+  @import "./pink";
+  $pink-theme: mat-dark-theme($pink-theme-primary,
+      $pink-theme-accent,
+      $pink-theme-warn);
+
+  @include angular-material-theme($pink-theme);
+  @include angular-material-theme($pink-theme);
+  @include generate-theme-vars($pink-theme);
+}
+
+.light-theme-pink {
+  @import "./pink";
+  $pink-theme: mat-light-theme($pink-theme-primary,
+      $pink-theme-accent,
+      $pink-theme-warn);
+
+  @include angular-material-theme($pink-theme);
+  @include angular-material-theme($pink-theme);
+  @include generate-theme-vars($pink-theme);
+}
+
+
+
+.dark-theme-red {
+  @import "./red";
+  $red-theme: mat-dark-theme($red-theme-primary,
+      $red-theme-accent,
+      $red-theme-warn);
+
+  @include angular-material-theme($red-theme);
+  @include angular-material-theme($red-theme);
+  @include generate-theme-vars($red-theme);
+}
+
+.light-theme-red {
+  @import "./red";
+  $red-theme: mat-light-theme($red-theme-primary,
+      $red-theme-accent,
+      $red-theme-warn);
+
+  @include angular-material-theme($red-theme);
+  @include angular-material-theme($red-theme);
+  @include generate-theme-vars($red-theme);
+}
+
+
+
+.dark-theme-teal {
+  @import "./teal";
+  $teal-theme: mat-dark-theme($teal-theme-primary,
+      $teal-theme-accent,
+      $teal-theme-warn);
+
+  @include angular-material-theme($teal-theme);
+  @include angular-material-theme($teal-theme);
+  @include generate-theme-vars($teal-theme);
+}
+
+.light-theme-teal {
+  @import "./teal";
+  $teal-theme: mat-light-theme($teal-theme-primary,
+      $teal-theme-accent,
+      $teal-theme-warn);
+
+  @include angular-material-theme($teal-theme);
+  @include angular-material-theme($teal-theme);
+  @include generate-theme-vars($teal-theme);
+}
+
+.dark-theme-green {
+  @import "./green";
+  $green-theme: mat-dark-theme($green-theme-primary,
+      $green-theme-accent,
+      $green-theme-warn);
+
+  @include angular-material-theme($green-theme);
+  @include angular-material-theme($green-theme);
+  @include generate-theme-vars($green-theme);
+}
+
+.light-theme-green {
+  @import "./green";
+  $green-theme: mat-light-theme($green-theme-primary,
+      $green-theme-accent,
+      $green-theme-warn);
+
+  @include angular-material-theme($green-theme);
+  @include angular-material-theme($green-theme);
+  @include generate-theme-vars($green-theme);
+}
+
+
+.theme-text-primary {
+  color: var(--primary-color);
+}
+
+.theme-text-accent {
+  color: var(--accent-color);
+}
+
+.theme-bg-primary {
+  background-color: var(--primary-color);
+}
+
+.theme-bg-accent {
+  background-color: var(--accent-color);
+}

@@ -1,19 +1,28 @@
 <div class="d-flex">
-   <div>
-      <button mat-flat-button color="primary" (click)="changeName()">
-         <mat-icon>edit</mat-icon>&nbsp;
-         <span>Change Table Name</span>
-      </button>
-   </div>
-   
-   <div class="mx-2">
-      <button mat-flat-button color="warn" (click)="delete()">
-         <mat-icon>delete</mat-icon>&nbsp;<span>Delete Table</span></button>
-   </div>
-   
+   <button mat-flat-button [matMenuTriggerFor]="tableOptions" color="primary" aria-label="Table Options">
+      <mat-icon >settings</mat-icon>&nbsp;<span>Options</span>
+   </button>
+   <mat-menu #tableOptions="matMenu">
+         <button mat-menu-item (click)="changeName()">
+            <mat-icon color="primary">edit</mat-icon>&nbsp;
+            <span>Change Table Name</span>
+         </button>
+
+         <button mat-menu-item (click)="delete()">
+            <mat-icon color="warn">delete</mat-icon>&nbsp;<span>Delete Table</span>
+         </button>
+         <mat-divider class="m-1"></mat-divider>
+         <button mat-menu-item>
+            <mat-icon color="primary">table</mat-icon>
+            <span>Add Lectures in Valid Position</span>
+         </button>
+   </mat-menu>
+
+
    <div style="margin-left:auto;">
       <button mat-flat-button color="primary" (click)="pdf()">
-         <mat-icon>print</mat-icon>&nbsp;<span>PDF</span></button>
+         <mat-icon>print</mat-icon>&nbsp;<span>PDF</span>
+      </button>
    </div>
-   
+
 </div>

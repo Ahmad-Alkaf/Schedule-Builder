@@ -1,7 +1,7 @@
 <mat-tab-group [selectedIndex]="dataService.tabActiveIndex" (selectedTabChange)="tabChanged($event)"
    mat-align-tabs="start">
    <mat-tab *ngFor="let table of dataService.tables;" [label]="table.name">
-      <div class="my-3">
+      <div class="my-3" style="overflow:hidden">
          <app-table [table]="table"></app-table>
 
       </div>

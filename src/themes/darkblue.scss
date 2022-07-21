@@ -1,0 +1,8 @@
+@include mat-core();
+
+// Set variables to whatever colors you want for your app
+$darkblue-theme-primary: mat-palette($mat-darkblue, 700);
+$darkblue-theme-accent: mat-palette($mat-darkblue, 100);
+$darkblue-theme-warn: mat-palette($mat-red, 700);
+
+

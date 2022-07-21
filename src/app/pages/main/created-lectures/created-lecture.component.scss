@@ -10,7 +10,9 @@ div.cdk-drag-preview {
    min-width: 23vw;
    /* background-color: red; */
  }
-
+div.lecture{
+  border:1px solid var(--disabled-color) !important;
+}
 
 
  

@@ -31,6 +31,7 @@ import { AngularMaterialsModule } from './modules/angular-materials.module';
 import { OptionsComponent } from './pages/main/table-view/options/options.component';
 import { EditTableComponent } from './dialog/edit-table/edit-table.component';
 import { PromptComponent } from './dialog/prompt/prompt.component';
+import { ThemeComponent } from './pages/header/theme/theme.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +52,8 @@ import { PromptComponent } from './dialog/prompt/prompt.component';
     ErrorComponent,
     OptionsComponent,
     EditTableComponent,
-    PromptComponent
+    PromptComponent,
+    ThemeComponent
   ],
   imports: [
     BrowserModule,

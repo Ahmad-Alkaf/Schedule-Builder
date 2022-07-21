@@ -1,0 +1,8 @@
+@include mat-core();
+
+// Set variables to whatever colors you want for your app
+$teal-theme-primary: mat-palette($mat-teal, 500);
+$teal-theme-accent: mat-palette($mat-teal, 100);
+$teal-theme-warn: mat-palette($mat-red, 700);
+
+

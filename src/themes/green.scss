@@ -1,0 +1,11 @@
+@include mat-core();
+@include mat-core();
+@include mat-core();
+@include mat-core();
+
+// Set variables to whatever colors you want for your app
+$green-theme-primary: mat-palette($mat-green, 700);
+$green-theme-accent: mat-palette($mat-green, 100);
+$green-theme-warn: mat-palette($mat-red, 700);
+
+

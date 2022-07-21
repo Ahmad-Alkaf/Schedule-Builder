@@ -1,138 +1,9 @@
-// @use '@angular/material'as mat;
 
-// @include mat.core();
+@import "./themes/classes.scss";
 
-// // Define a light theme
-// $light-primary: mat.define-palette(mat.$indigo-palette);
-// $light-accent: mat.define-palette(mat.$pink-palette);
-// $light-theme: mat.define-light-theme((color: (primary: $light-primary,
-//       accent: $light-accent,
-//     )));
-
-// // Define a dark theme
-// $dark-primary: mat.define-palette(mat.$purple-palette);
-// $dark-accent: mat.define-palette(mat.$green-palette);
-// $dark-theme: mat.define-dark-theme((color: (primary: $dark-primary,
-//       accent: $dark-accent,
-//     )));
-
-// // Apply the dark theme by default
-// .my-light-theme{  
-//   @include mat.core-theme($light-theme);
-//   @include mat.button-theme($light-theme);
-//   .theme-text-primary{
-//     color: #{mat-color(map-get($light-theme, primary))};
-//   }
-// }
-
-// // Apply the light theme only when the `.my-light-theme` CSS class is applied
-// // to an ancestor element of the components (such as `body`).
-// .my-dark-theme {
-//   @include mat.core-color($dark-theme);
-//   @include mat.button-color($dark-theme);
-// }
-
-// //text
-// .my-dark-theme > .theme-text-primary {
-//  color: mat.get-color-from-palette($dark-theme, '400');
-// }
-
-
-// //bg
-// .my-dark-theme>.theme-bg-primary{
-//   background-color: mat.get-color-from-palette($dark-theme,'400');
-// }
-// .my-light-theme>.theme-bg-primary{
-//   background-color: mat.get-color-from-palette($light-theme,'400');
-// }
-
-@import "./assets/functions";
-@import "~@angular/material/theming";
-
-// You have to define one of those for every theme you offer
-.dark-theme-purple {
-  @import "./themes/purple";
-
-  $purple-theme: mat-dark-theme($purple-theme-primary,
-      $purple-theme-accent,
-      $purple-theme-warn);
-  @include angular-material-theme($purple-theme);
-  @include angular-material-theme($purple-theme);
-  @include generate-theme-vars($purple-theme);
-}// You have to define one of those for every theme you offer
-.light-theme-purple {
-  @import "./themes/purple";
-
-  $purple-theme: mat-light-theme($purple-theme-primary,
-      $purple-theme-accent,
-      $purple-theme-warn);
-  @include angular-material-theme($purple-theme);
-  @include angular-material-theme($purple-theme);
-  @include generate-theme-vars($purple-theme);
-}
-
-.light-theme-indigo {
-  @import "./themes/indigo";
-  $indigo-theme: mat-light-theme($indigo-theme-primary,
-      $indigo-theme-accent,
-      $indigo-theme-warn);
-  @include angular-material-theme($indigo-theme);
-  @include angular-material-theme($indigo-theme);
-  @include generate-theme-vars($indigo-theme);
-}
-
-.dark-theme-indigo {
-  @import "./themes/indigo";
-  $indigo-theme: mat-dark-theme($indigo-theme-primary,
-      $indigo-theme-accent,
-      $indigo-theme-warn);
-  @include angular-material-theme($indigo-theme);
-  @include angular-material-theme($indigo-theme);
-  @include generate-theme-vars($indigo-theme);
-}
-
-.dark-theme-yellow {
-  @import "./themes/yellow";
-  $yellow-theme: mat-dark-theme($yellow-theme-primary,
-      $yellow-theme-accent,
-      $yellow-theme-warn);
-
-  @include angular-material-theme($yellow-theme);
-  @include angular-material-theme($yellow-theme);
-  @include generate-theme-vars($yellow-theme);
-}
-
-.light-theme-yellow {
-  @import "./themes/yellow";
-  $yellow-theme: mat-light-theme($yellow-theme-primary,
-      $yellow-theme-accent,
-      $yellow-theme-warn);
-
-  @include angular-material-theme($yellow-theme);
-  @include angular-material-theme($yellow-theme);
-  @include generate-theme-vars($yellow-theme);
-}
-
-.theme-text-primary {
-  color: var(--primary-color);
-}
-
-.theme-text-accent {
-  color: var(--accent-color);
-}
-
-.theme-bg-primary {
-  background-color: var(--primary-color);
-}
-
-.theme-bg-accent {
-  background-color: var(--accent-color);
-}
-
-@import url(./assets/bootstrap.css);
+@import url("./assets/bootstrap.css");
 @import url("./assets/icon.css");
 @import url("./assets/google.font.style.css");
-
 
 html {
   height: 100vh !important;
@@ -160,10 +31,6 @@ body {
   height: 100%;
 }
 
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
 
 .lecture-handle {
   position: absolute;
@@ -202,9 +69,17 @@ body {
   height: 65px !important;
   text-align: center;
   vertical-align: middle;
-  border: 1px solid var(--disabled-color);
   padding: 0vh !important;
-  margin: 0px !important
+  margin: 0px !important;
+  // border: 1px solid var(--disabled-color);
+}
+.lecture{
+  border: 2px solid var(--disabled-color) !important;
+  
+}
+.tdForPrint{
+  border:none;
+  border-bottom:2px solid var(--disabled-color) !important;
 }
 
 .td:focus {
@@ -241,10 +116,6 @@ body {
 }
 
 @keyframes flash {
-
-  /* 0%{
-    color:white;
-  } */
   0% {
     color: var(--warn-color);
   }

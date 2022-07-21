@@ -26,7 +26,7 @@ export class OptionsComponent {
       }
     }
     const ref = this.dialog.open(PromptComponent, {
-      width:'400px',
+      width: '400px',
       data: prompt
     })
     ref.afterClosed().subscribe((res) => {
@@ -59,11 +59,18 @@ export class OptionsComponent {
     //FIRST TRY
     let pdf = new jsPDF('l', 'pt', [1920, 640]);
     $('table mat-icon').addClass('d-none');
+
+    // console.log($('td')[0].classList); //('light-theme-indigo');
+    // $('table#' + id + ' .td').addClass('tdForPrint')
+    $('table#' + id).addClass('light-theme-indigo');
     pdf.html(document.getElementById(id), {
       callback: (pdf: any) => {
 
         pdf.save(`Table: ${this.table.name} - ${new Date().toISOString().substring(0, 10)}.pdf`);
         $('table mat-icon').removeClass('d-none');
+        $('table#' + id).removeClass('light-theme-indigo');
+    // $('table#' + id + ' .td').removeClass('tdForPrint')
+    // $('table#' + id + ' .td').css('border', '1px solid var(--disabled-color)');
       }
     });
     //SECOND TRY
