@@ -1,28 +1,58 @@
-
 <form [formGroup]="form">
-  <div class="container m-auto my-5" style="width:500px">
-    <h1>Login</h1>
+   <div class="container m-auto my-5" style="width:500px">
+      <h1>Login</h1>
 
-   <mat-form-field appearance="outline" class="d-block">
-      <mat-label>Username</mat-label>
-      <input matInput formControlName="username" required/>
-      <mat-error *ngIf="form.controls['username'].hasError('required');">Please enter your username</mat-error>
-      <mat-error *ngIf="form.controls['username'].hasError('maxlength'); ">Value entered is too long</mat-error>
-      <mat-error *ngIf="form.controls['username'].hasError('minlength'); ">Value entered is too short</mat-error>
-       </mat-form-field>
-    
-    <mat-form-field appearance="outline" class="d-block">
-      <mat-label>Password</mat-label>
-      <input type="password" matInput formControlName="password" required/>
-      <mat-error *ngIf="form.controls['password'].hasError('required')">Please enter your password</mat-error>
-      <mat-error *ngIf="form.controls['password'].hasError('maxlength'); ">Value entered is too long</mat-error>
-      <mat-error *ngIf="form.controls['password'].hasError('minlength'); ">Value entered is too short</mat-error>
-       </mat-form-field>
-    <span class=" small text-danger">{{errorMessage}}&nbsp;</span>
-    <button class="my-2 w-100" mat-raised-button color="primary" [disabled]="loading" (click)="login()">Login</button>
-    
-    <div class="my-1">
-       <p class="opacity-50">Don't have an account? <a class="opacity-100 anchor" routerLink="/register">Register Now</a></p>
-    </div>
- </div>
-</form> 
+      <mat-form-field appearance="outline" class="d-block">
+         <mat-label>Username</mat-label>
+         <input matInput formControlName="username" required />
+         <mat-error *ngIf="form.controls['username'].hasError('required');">Please enter your username</mat-error>
+         <mat-error *ngIf="form.controls['username'].hasError('maxlength'); ">Value entered is too long</mat-error>
+         <mat-error *ngIf="form.controls['username'].hasError('minlength'); ">Value entered is too short</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="d-block">
+         <mat-label>Password</mat-label>
+         <input type="password" matInput formControlName="password" required />
+         <mat-error *ngIf="form.controls['password'].hasError('required')">Please enter your password</mat-error>
+         <mat-error *ngIf="form.controls['password'].hasError('maxlength'); ">Value entered is too long</mat-error>
+         <mat-error *ngIf="form.controls['password'].hasError('minlength'); ">Value entered is too short</mat-error>
+      </mat-form-field>
+      <span class=" small text-danger">{{errorMessage}}&nbsp;</span>
+      <button class="my-2 w-100" mat-raised-button color="primary" [disabled]="loading" (click)="login()">Login</button>
+
+      <div class="my-1">
+         <p class="opacity-50">Don't have an account? <a class="opacity-100 anchor" routerLink="/register">Register
+               Now</a></p>
+      </div>
+   </div>
+</form>
+
+<div id="test">
+   <div class="test1">--primary-color:</div>
+   <div class="test2">--accent-color:</div>
+   <div class="test3">--warn-color:</div>
+   <div class="test4">--base-color:</div>
+   <div class="test5">--divider-color:</div>
+   <div class="test6">--dividers-color:</div>
+   <div class="test7">--disabled-color:</div>
+   <div class="test8">--disabled-text-</div>
+   <div class="test9">--hint-text-</div>
+   <div class="test10">--secondary-text-</div>
+   <div class="test11">--icon-color:</div>
+   <div class="test12">--icons-color:</div>
+   <div class="test13">--text-color:</div>
+   <div class="test14">--slider-off-</div>
+   <div class="test15">--slider-off-active</div>
+   <div class="test16">--status-bar-</div>
+   <div class="test17">--app-bar-</div>
+   <div class="test18">--background-color:</div>
+   <div class="test19">--hover-color:</div>
+   <div class="test20">--card-color:</div>
+   <div class="test21">--dialog-color:</div>
+   <div class="test22">--disabled-button-</div>
+   <div class="test23">--raised-button-</div>
+   <div class="test24">--focused-button-</div>
+   <div class="test25">--selected-button-</div>
+   <div class="test26">--selected-disabled-button</div>
+   <div class="test27">--disabled-button-toggle</div>
+</div>
