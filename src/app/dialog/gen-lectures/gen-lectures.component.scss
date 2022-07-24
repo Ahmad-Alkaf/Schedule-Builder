@@ -1,0 +1,31 @@
+
+div.header{
+   font-size: 1rem;
+   opacity: 0.8;
+   text-align: center;
+   text-decoration: solid;
+   justify-content: center;
+   align-items: center;
+   margin-top: 20px;
+   margin-bottom: 15px;
+   // position: relative;
+}
+div.header div{
+   width:100%;
+}
+div.header div div{
+   width:70%;
+   padding-bottom: 8px;
+   margin:auto;
+   border-bottom: 2px solid var(--primary-color);
+}
+
+div.container{
+   justify-content: center;
+   align-items: center;
+   width:100%;
+}
+div.container *{
+   
+   margin:auto;
+}

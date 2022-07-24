@@ -12,9 +12,12 @@ declare var jsPDF: any;
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.scss']
 })
-export class OptionsComponent {
+export class OptionsComponent implements OnInit {
   @Input() table: Table = new Table(-1, 'NULL');
   constructor(private dataService: DataService, private dialog: MatDialog) { }
+  ngOnInit(): void {
+    this.addLecturesInValidPos();
+  }
 
 
   delete() {
@@ -55,9 +58,15 @@ export class OptionsComponent {
   }
   
   addLecturesInValidPos() {
-    this.dialog.open(GenLecturesComponent, {
+    let ref =  this.dialog.open(GenLecturesComponent, {
       data: this.table
     });
+    ref.afterClosed().subscribe({
+      next: (solvedLecs) => {
+        if (solvedLecs) {
+        //todo set lecs to table
+      }
+    }})
   }
 
   pdf = () => {

@@ -1,59 +1,82 @@
-<div style="width:800px;">
+<div>
    <h1 mat-dialog-title style="color:var(--primary-color);">Generate Lectures</h1>
-   <div mat-dialog-content>
-      <div class="d-flex ">
-         <mat-form-field *ngFor="let staticLec of staticLecs" appearance="outline">
-            <mat-label>Select Subject</mat-label>
-            <mat-select required [(ngModel)]="staticLec.name">
-               <mat-option *ngFor="let subject of dataService.subjects.value" [value]="subject.name.toString()">
-                  {{subject.name}}
-               </mat-option>
-            </mat-select>
-         </mat-form-field>
-         <mat-form-field appearance="outline">
-            <mat-label>Subject</mat-label>
-            <mat-select required [(ngModel)]="temp.name">
-               <mat-option *ngFor="let subject of dataService.subjects.value" [value]="subject.name">
-                  {{subject.name}}
-               </mat-option>
-            </mat-select>
-         </mat-form-field>
-         <mat-form-field appearance="outline" class="mx-2">
-            <mat-label>Teacher</mat-label>
-            <mat-select required [(ngModel)]="temp.teacher">
-               <mat-option *ngFor="let teacher of dataService.teachers.value" [value]="teacher.name">
-                  {{teacher.name}}
-               </mat-option>
-            </mat-select>
-         </mat-form-field>
-         <mat-form-field appearance="outline" class="mx-2">
-            <mat-label>Room</mat-label>
-            <mat-select required [(ngModel)]="temp.name">
-               <mat-option *ngFor="let room of dataService.rooms.value" [value]="room.name">
-                  {{room.name}}
-               </mat-option>
-            </mat-select>
-         </mat-form-field>
-         <mat-form-field appearance="outline" class="mx-2">
-            <mat-label>Hour(s)</mat-label>
-            <mat-select required [(ngModel)]="temp.name">
-               <mat-option *ngFor="let v of validHourDuration()" [value]="v">
-                  {{v}}
-               </mat-option>
-            </mat-select>
-         </mat-form-field><span>&nbsp;:&nbsp;</span>
-         <mat-form-field appearance="outline" class="mx-2">
-            <mat-label>Minutes</mat-label>
-            <mat-select required [(ngModel)]="temp.name">
-               <mat-option *ngFor="let room of dataService.rooms.value" [value]="room.name">
-                  {{room.name}}
-               </mat-option>
-            </mat-select>
-         </mat-form-field>
+   <form>
+      <div mat-dialog-content style="overflow-y:auto">
+
+         <div class="d-flex header">
+            <div>
+               <div>Subject</div>
+            </div>
+            <div>
+               <div>Teacher</div>
+            </div>
+            <div>
+               <div>Room</div>
+            </div>
+            <div>
+               <div>Week&nbsp;Duration</div>
+            </div>
+         </div>
+
+         <div *ngFor="let s of staticLecs;let i=index;">
+            <div *ngIf="i>=staticLecs.length-1 && isAddNew(s)" class="d-flex position-relative text-center"
+               style="margin:10px 0;height: 10px;">
+               <span class="position-absolute opacity-75" style="top:-10px;transform: translateX(-50%);margin-left:50%;font-size:0.9rem;">New</span>
+               <div class="w-100">
+                  <mat-divider class="m-auto" style="background-color:var(--primary-color);height:2px;width:75%;">
+                  </mat-divider>
+               </div>
+               <div class="w-100">
+                  <mat-divider class="m-auto" style="background-color:var(--primary-color);height:2px;width:75%;">
+                  </mat-divider>
+               </div>
+            </div>
+            <div class="d-flex container">
+               <mat-form-field appearance="outline" class="mx-2">
+                  <mat-label>Subject</mat-label>
+                  <mat-select [disabled]="isSolved(s)" required [(ngModel)]="s.name" [name]="'subject'+i">
+                     <mat-option *ngFor="let subject of dataService.subjects.value" [value]="subject.name">
+                        {{subject.name}}
+                     </mat-option>
+                  </mat-select>
+               </mat-form-field>
+
+               <mat-form-field appearance="outline" class="mx-2">
+                  <mat-label>Teacher</mat-label>
+                  <mat-select [disabled]="isSolved(s)" required [(ngModel)]="s.teacher" [name]="'teacher'+i">
+                     <mat-option *ngFor="let teacher of dataService.teachers.value" [value]="teacher.name">
+                        {{teacher.name}}
+                     </mat-option>
+                  </mat-select>
+               </mat-form-field>
+
+               <mat-form-field appearance="outline" class="mx-2">
+                  <mat-label>Room</mat-label>
+                  <mat-select [disabled]="isSolved(s)" required [(ngModel)]="s.room" [name]="'room'+i">
+                     <mat-option *ngFor="let room of dataService.rooms.value" [value]="room.name.trim()">
+                        {{room.name}}
+                     </mat-option>
+                  </mat-select>
+               </mat-form-field>
+
+               <mat-form-field appearance="outline" class="mx-2">
+                  <mat-label>Hour(s)</mat-label>
+                  <mat-select [disabled]="isSolved(s)" required [(ngModel)]="s.weekDuration"
+                     [name]="'weekDuration'+i">
+                     <mat-option *ngFor="let v of arr(1, .5,totalAvailableHours)" [value]="v"  [disabled]="!validHourDuration().includes(v)">
+                        {{v}}
+                     </mat-option>
+                  </mat-select>
+               </mat-form-field>
+            </div>
+         </div>
+         <!-- <div> -->
+            <button *ngIf="!isAddNew(staticLecs[staticLecs.length-1])" style="margin-left:50%;transform: translateX(-50%);width:340px;margin-bottom:25px;" color="primary" mat-stroked-button (click)="staticLecs.push({ name: '', teacher: '', room: '', weekDuration: 0 });">Add&nbsp;New</button>
+         <!-- </div> -->
       </div>
-   </div>
-   <div mat-dialog-actions class="d-flex justify-content-center">
-      <button mat-stroked-button (click)="dialogRef.close()" color="warn" class="w-25">Cancel</button>
-      <button mat-stroked-button (click)="generate()" color="primary" class="w-25">Save</button>
-   </div>
+      <div mat-dialog-actions class="d-flex justify-content-center">
+         <button mat-stroked-button (click)="dialogRef.close()" color="warn" class="w-25">Cancel</button>
+         <button mat-stroked-button (click)="generate()" color="primary" class="w-25">Generate</button>
+      </div>
+   </form>
 </div>

@@ -5,6 +5,8 @@
 table{
   background-color: var(--card-color) !important;
   color: var(--secondary-text-color);
+  transition: background-color var(--transBackgroundColor) ease-in-out , 
+            color var(--transColor) ease-in-out 200ms !important;
 }
 
 tr td:first-child,

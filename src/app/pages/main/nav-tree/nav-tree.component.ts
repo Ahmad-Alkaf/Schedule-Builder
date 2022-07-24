@@ -63,25 +63,29 @@ export class NavTreeComponent implements OnInit {
   }
 
   removeNode(node: FlatNode) {
+    
     let nodeIndex = this.treeData.indexOf(node);
     let [tmp, index, attr] = this.getMappedNodeInDataService(node);
     let parentNode = this.getParentNode(node) as FlatNode;
     this.treeData.splice(nodeIndex, 1);
     this.dataSource = new ArrayDataSource<FlatNode>(this.treeData);
-    let toDelete = setTimeout(() => {
-      this.dataService[attr].next(this.dataService[attr].value.splice(index, 1));
+    console.log('remove node', node);
+    const toDelete = setTimeout(() => {
+      this.dataService[attr].next(this.dataService[attr].value.filter(v=>v.name != tmp.name));
       parentNode = this.treeData.filter(v => v.name == parentNode.name)[0];
       parentNode.isExpanded = true;
       this.treeControl.expand(parentNode);
       this.dataService.saveState();
+      // clearTimeout(toDelete);
+      console.log('delete node', node);
     }, 4000);
 
-    this.snackbar.open(`${parentNode.name} '${node.name}' Removed!`, 'Undo', { duration: 3999 }).onAction().subscribe({
+    this.snackbar.open(`${parentNode.name} '${node.name}' Removed!`, 'Undo', { duration: 3600 }).onAction().subscribe({
       next: () => {
         this.treeData.splice(nodeIndex, 0, { name: tmp.name, level: 1, expandable: false })
         this.dataSource = new ArrayDataSource(this.treeData);
         clearTimeout(toDelete);
-      }
+      },error:()=>{console.log('snackbar error called!')}
     })
   }
 
@@ -103,7 +107,10 @@ export class NavTreeComponent implements OnInit {
 
   saveNewNode(node: FlatNode, value: string) {
     value = value.trim();
-
+    if (!value) {
+      this.snackbar.open('Invalid value!',undefined,{duration:2000});
+      return;
+    }
     // let n: FlatNode = { ...this.treeData[this.treeData.indexOf(node)], name: value };
     console.log({ tree: this.treeData })
     let mappedAttr: 'teachers' | 'subjects' | 'rooms' | undefined;
@@ -118,7 +125,7 @@ export class NavTreeComponent implements OnInit {
         if (mappedAttr == undefined || parentNode == undefined)
           throw new Error('parent in tree is null!' + mappedAttr);
     if (this.dataService[mappedAttr].value.some((v)=>v.name == value)) {//check uniqueness
-      this.snackbar.open(`There Exists ${parentNode?.name||'Entity'} With Same Name '${value}'!`, undefined, { duration: 3999 });
+      this.snackbar.open(`There Exists ${parentNode?.name||'Entity'} With Same Name '${value}'!`, undefined, { duration: 2000 });
       return;
     }
 

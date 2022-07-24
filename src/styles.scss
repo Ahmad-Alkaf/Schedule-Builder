@@ -1,12 +1,16 @@
-
 @import "./themes/classes.scss";
 
-@import url(./assets/bootstrap.css);
+// @import url(./assets/bootstrap.css);
 @import url("./assets/icon.css");
 @import url("./assets/google.font.style.css");
 
 html {
   height: 100vh !important;
+}
+
+:root {
+  --transBackgroundColor: 200ms;
+  --transColor: 600ms;
 }
 
 body {
@@ -17,13 +21,24 @@ body {
   height: 100%;
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  // transition: background-color var(--transBackgroundColor) ease-in-out , 
+  //           color var(--transColor) ease-in-out !important;
+}
+
+* {
+  transition: background-color var(--transBackgroundColor) ease-in-out,
+    color var(--transColor) ease-in-out,
+    border-right-color var(--transBackgroundColor) ease-in-out, 
+    border-left-color var(--transBackgroundColor) ease-in-out, 
+    border-top-color var(--transBackgroundColor) ease-in-out, 
+    border-bottom-color var(--transBackgroundColor) ease-in-out, 
+    border-color var(--transBackgroundColor) ease-in-out !important;
 }
 
 .aligned-with-icon {
   position: relative;
   top: -3px;
   margin-left: 8px;
-  /* optional */
 }
 
 html,
@@ -57,11 +72,15 @@ body {
 }
 
 .cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1),
+    background-color var(--transBackgroundColor) ease-in-out,
+    color var(--transColor) ease-in-out !important;
 }
 
 .cdk-drop-list-dragging :not(.cdk-drag-placeholder) {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1),
+    background-color var(--transBackgroundColor) ease-in-out,
+    color var(--transColor) ease-in-out !important;
 }
 
 .td {
@@ -73,13 +92,15 @@ body {
   margin: 0px !important;
   // border: 1px solid var(--disabled-color);
 }
-.lecture{
+
+.lecture {
   border: 2px solid var(--disabled-color) !important;
-  
+
 }
-.tdForPrint{
-  border:none;
-  border-bottom:2px solid var(--disabled-color) !important;
+
+.tdForPrint {
+  border: none;
+  border-bottom: 2px solid var(--disabled-color) !important;
 }
 
 .td:focus {
@@ -113,6 +134,8 @@ body {
 .collRoom app-td div div.roomDiv {
   animation: flash 1200ms infinite;
   color: var(--warn-color);
+  transition: background-color var(--transBackgroundColor) ease-in-out,
+    color var(--transColor) ease-in-out !important;
 }
 
 @keyframes flash {
@@ -125,7 +148,7 @@ body {
   }
 
   50% {
-    color: white;
+    color: var(--card-color);
   }
 
   60% {

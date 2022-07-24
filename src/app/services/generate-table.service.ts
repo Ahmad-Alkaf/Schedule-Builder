@@ -1,5 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
+import { DataService } from './data.service';
 import { Final, SolveLec, StaticLec, WEEK_DAYS } from './static';
+import { Table } from './tableBinder';
 
 const final = new Final();
 @Injectable({
@@ -23,31 +25,33 @@ export class GenerateTableService implements OnInit{
 
 
 
-  generateSchedule = (staticLecs: StaticLec[], lectures: SolveLec[]):any => {
+  generateSchedule = (staticLecs: StaticLec[], solveLecs: SolveLec[],otherTables:Table[]):any => {
     // return new Promise(async (resolve, reject) => {
-      // const solve = (staticLecs: StaticLec[], lectures: SolveLec[]) => {
-        for (let s of staticLecs)
-          if (this.needTouch(s, lectures)) {
+      // const solve = (staticLecs: StaticLec[], solveLecs: SolveLec[]) => {
+        for (let lecture of staticLecs)
+          if (this.needTouch(lecture, solveLecs)) {
             for (let day of WEEK_DAYS)//'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
               for (let st of final.START_TIMES)//8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12
                 for (let lecHour of final.LECTURE_HOURS) //1 | 1.5 | 2 | 2.5 | 3
                 {
-                  var n: SolveLec = { id: Math.random().toString(36).substring(2), lecture: s, duration: lecHour, day, startTime: st };
-                  if (this.isPossible(lectures, n)) {
-                    lectures.push(n);
-                    this.generateSchedule(staticLecs, lectures);
-                    lectures.pop();
+                  var solvedLec: SolveLec = { id: Math.random().toString(36).substring(2), lecture, duration: lecHour, day, startTime: st };
+                  if (this.isPossible(solveLecs, solvedLec)) {
+                    solveLecs.push(solvedLec);
+                    this.generateSchedule(staticLecs, solveLecs,otherTables);
+                    solveLecs.pop();
                   }
                 }
             return;
+          } else {
+            
           }
-        console.log(lectures)
-        // throw lectures;
+        console.log(solveLecs)
+        // throw solveLecs;
       // }
 
 
       //       try { //!BAD practice make another way for catch the solution
-      //          solve(staticLecs, lectures);
+      //          solve(staticLecs, solveLecs);
       // reject('Could Not Generate A Table')
       //       } catch (lecs) {
 
