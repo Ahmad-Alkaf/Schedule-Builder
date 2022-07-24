@@ -41,13 +41,11 @@ export class ThemeComponent implements OnInit {
   }
 
   savePreference() {
-    console.error('save', { isDark: this.isDark, theme: this.selectedTheme.value })
     localStorage.setItem('isDark', JSON.stringify(this.isDark));
     localStorage.setItem('theme', this.selectedTheme.value);
   }
   invokePreference(): void {
     this.isDark = JSON.parse(localStorage.getItem('isDark') || 'false');
     this.selectedTheme.next(localStorage.getItem('theme') || this.themes[0]);
-    console.error({ isDark: this.isDark, theme: this.selectedTheme.value })
   }
 }

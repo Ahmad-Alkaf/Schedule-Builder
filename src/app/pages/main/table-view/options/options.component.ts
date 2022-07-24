@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { EditTableComponent } from '@dialog/edit-table/edit-table.component';
+import { GenLecturesComponent } from '@dialog/gen-lectures/gen-lectures.component';
 import { Prompt, PromptComponent } from '@dialog/prompt/prompt.component';
 import { DataService } from '@service/data.service';
 import { Table } from '@service/tableBinder';
@@ -51,6 +52,12 @@ export class OptionsComponent {
         this.dataService.saveState();
       }
     })
+  }
+  
+  addLecturesInValidPos() {
+    this.dialog.open(GenLecturesComponent, {
+      data: this.table
+    });
   }
 
   pdf = () => {

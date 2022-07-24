@@ -32,6 +32,7 @@ import { OptionsComponent } from './pages/main/table-view/options/options.compon
 import { EditTableComponent } from './dialog/edit-table/edit-table.component';
 import { PromptComponent } from './dialog/prompt/prompt.component';
 import { ThemeComponent } from './pages/header/theme/theme.component';
+import { GenLecturesComponent } from './dialog/gen-lectures/gen-lectures.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +54,8 @@ import { ThemeComponent } from './pages/header/theme/theme.component';
     OptionsComponent,
     EditTableComponent,
     PromptComponent,
-    ThemeComponent
+    ThemeComponent,
+    GenLecturesComponent
   ],
   imports: [
     BrowserModule,

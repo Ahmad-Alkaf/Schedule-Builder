@@ -4,6 +4,7 @@ import { ArrayDataSource } from '@angular/cdk/collections';
 import { DataService } from '@service/data.service';
 import { ApiService } from '@service/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Room, Subject, Teacher } from '@service/static';
 
 /** Flat to-do item node with expandable and level information */
 interface FlatNode {
@@ -39,32 +40,46 @@ export class NavTreeComponent implements OnInit {
   }
 
 
+  getMappedNodeInDataService(node: FlatNode): [obj: Teacher | Subject | Room, index: number, attr: 'teachers' | 'subjects' | 'rooms'] {
+    let parent_ = this.getParentNode(node);
+    let parent: FlatNode;
+    if (parent_ == null) throw new Error('parent node: ' + node + ' of removed tree leave is null:' + parent_)
+    else parent = parent_;
 
+    let tmp: (Teacher | Subject | Room) | undefined = undefined;
+    let index: number;
+    let attr: 'teachers' | 'subjects' | 'rooms';
+    switch (parent.name) {
+      case 'Teacher': tmp = this.dataService.teachers.value.filter(v => v.name == node.name)[0]; index = this.dataService.teachers.value.indexOf(tmp); attr = 'teachers'; break;
+      case 'Subject': tmp = this.dataService.subjects.value.filter(v => v.name == node.name)[0]; index = this.dataService.subjects.value.indexOf(tmp); attr = 'subjects'; break;
+      case 'Room': tmp = this.dataService.rooms.value.filter(v => v.name == node.name)[0]; index = this.dataService.rooms.value.indexOf(tmp); attr = 'rooms'; break;
+      default: throw new Error('default in switch called is must not!');
+    }
+
+    console.log({ tmp, parent })
+    if (index < 0)
+      throw new Error('indexOf is -1 but it should exist in the array!!!');
+    return [tmp, index, attr];
+  }
 
   removeNode(node: FlatNode) {
     let nodeIndex = this.treeData.indexOf(node);
-    let parent_ = this.getParentNode(node);
-    let parent: FlatNode;
-    if (parent_ == null) return console.error('parent node: ' + node + ' of removed tree leave is null:' + parent_)
-    else parent = parent_;
-    
+    let [tmp, index, attr] = this.getMappedNodeInDataService(node);
+    let parentNode = this.getParentNode(node) as FlatNode;
     this.treeData.splice(nodeIndex, 1);
     this.dataSource = new ArrayDataSource<FlatNode>(this.treeData);
-
     let toDelete = setTimeout(() => {
-      switch (parent.name) {
-        case 'Teacher': this.dataService.teachers.splice(this.dataService.teachers.indexOf(node), 1); break;
-        case 'Subject': this.dataService.subjects.splice(this.dataService.subjects.indexOf(node), 1); break;
-        case 'Room': this.dataService.rooms.splice(this.dataService.rooms.indexOf(node), 1); break;
-        default: console.error('default in switch called is must not!');
-      }
+      this.dataService[attr].next(this.dataService[attr].value.splice(index, 1));
+      parentNode = this.treeData.filter(v => v.name == parentNode.name)[0];
+      parentNode.isExpanded = true;
+      this.treeControl.expand(parentNode);
       this.dataService.saveState();
-    }, 4100);
-    
-    this.snackbar.open(`${parent.name} '${node.name}' Removed!`, 'Undo', { duration: 4000 }).onAction().subscribe({
+    }, 4000);
+
+    this.snackbar.open(`${parentNode.name} '${node.name}' Removed!`, 'Undo', { duration: 3999 }).onAction().subscribe({
       next: () => {
-        this.treeData.splice(nodeIndex, 0, node);
-        this.dataSource = new ArrayDataSource<FlatNode>(this.treeData);
+        this.treeData.splice(nodeIndex, 0, { name: tmp.name, level: 1, expandable: false })
+        this.dataSource = new ArrayDataSource(this.treeData);
         clearTimeout(toDelete);
       }
     })
@@ -87,21 +102,45 @@ export class NavTreeComponent implements OnInit {
   }
 
   saveNewNode(node: FlatNode, value: string) {
-    let n: FlatNode = { ...this.treeData[this.treeData.indexOf(node)], name: value };
+    value = value.trim();
 
-    this.treeData[this.treeData.indexOf(node)] = n;
-    this.dataSource = new ArrayDataSource(this.treeData);
-    let parent = this.getParentNode(n);
-    if (parent == null)
-      return console.error('parent in tree is null!' + parent);
-    switch (parent.name) {
-      case 'Teacher': this.dataService.teachers.push({ name: value }); break;
-      case 'Subject': this.dataService.subjects.push({ name: value }); break;
-      case 'Room': this.dataService.rooms.push({ name: value }); break;
-      default: console.error('default in switch called is must not!');
+    // let n: FlatNode = { ...this.treeData[this.treeData.indexOf(node)], name: value };
+    console.log({ tree: this.treeData })
+    let mappedAttr: 'teachers' | 'subjects' | 'rooms' | undefined;
+    let parentNode: FlatNode | undefined = undefined;
+    for (let t of this.treeData)//find parent
+      if (t.level == 0) {
+        parentNode = t;
+        mappedAttr = t.name.toLowerCase() + 's' as 'teachers' | 'subjects' | 'rooms';
+      }
+      else if (t.name == ' ')
+        break;
+        if (mappedAttr == undefined || parentNode == undefined)
+          throw new Error('parent in tree is null!' + mappedAttr);
+    if (this.dataService[mappedAttr].value.some((v)=>v.name == value)) {//check uniqueness
+      this.snackbar.open(`There Exists ${parentNode?.name||'Entity'} With Same Name '${value}'!`, undefined, { duration: 3999 });
+      return;
     }
+
+
+    this.dataService[mappedAttr].next([...this.dataService[mappedAttr].value, { name: value }]);
+    let n = this.getParentNode(this.treeData.filter(v => v.name == value)[0]) || { name: '', level: 1, expandable: false };
+    n.isExpanded = true;
+    this.treeControl.expand(n);
     this.dataService.saveState();
   }
+  
+  // isUniqueValue(attr: 'teachers'|'subjects'|'rooms', value: string):boolean {
+  //   for (let i = 0; i < this.treeData.length; i++)
+  //     if (this.treeData[i] == parentNode) {//check nodes that are in same level or children of parentNode
+  //       for (i = i + 1; this.treeData[i].level > 0 && i < this.treeData.length; i++) {
+  //         if (this.treeData[i].name == value)
+  //           return false;
+  //       }
+  //       return true;
+  //     }
+  //     return true;
+  // }
 
   removeInput(node: FlatNode) {
     for (let i = this.treeData.indexOf(node) + 1; i < this.treeData.length; i++)
@@ -110,22 +149,22 @@ export class NavTreeComponent implements OnInit {
       else if (this.treeData[i].name === ' ') {
         this.treeData.splice(i, 1);
         i--;
-        // break;
       }
     this.dataSource = new ArrayDataSource<FlatNode>(this.treeData);
   }
 
   ngOnInit(): void {
-    Promise.all([this.api.pullTeachers(), this.api.pullSubjects(), this.api.pullRooms()])
-      .then(([teachers, subjects, rooms]) => {
-        this.dataService.teachers = teachers;
-        this.dataService.subjects = subjects;
-        this.dataService.rooms = rooms;
-        console.log({ teachers, subjects, rooms });
+    let next = {
+      next: () => {
         this.treeData = this.createFlatNode();
         this.dataSource = new ArrayDataSource(this.treeData);
 
-      }).catch(e => console.error('nav-tree', e));
+      }
+    }
+    this.dataService.teachers.subscribe(next);
+    this.dataService.subjects.subscribe(next);
+    this.dataService.rooms.subscribe(next);
+
   }
 
   hasNoContent = (_: number, node: FlatNode): boolean => {
@@ -168,9 +207,9 @@ export class NavTreeComponent implements OnInit {
 
 
   createFlatNode(): FlatNode[] {
-    let teachers = this.dataService.teachers;
-    let subjects = this.dataService.subjects;
-    let rooms = this.dataService.rooms;
+    let teachers = this.dataService.teachers.value;
+    let subjects = this.dataService.subjects.value;
+    let rooms = this.dataService.rooms.value;
     let tree: FlatNode[] = [];
 
     tree.push({

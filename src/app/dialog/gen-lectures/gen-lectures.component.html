@@ -1,0 +1,59 @@
+<div style="width:800px;">
+   <h1 mat-dialog-title style="color:var(--primary-color);">Generate Lectures</h1>
+   <div mat-dialog-content>
+      <div class="d-flex ">
+         <mat-form-field *ngFor="let staticLec of staticLecs" appearance="outline">
+            <mat-label>Select Subject</mat-label>
+            <mat-select required [(ngModel)]="staticLec.name">
+               <mat-option *ngFor="let subject of dataService.subjects.value" [value]="subject.name.toString()">
+                  {{subject.name}}
+               </mat-option>
+            </mat-select>
+         </mat-form-field>
+         <mat-form-field appearance="outline">
+            <mat-label>Subject</mat-label>
+            <mat-select required [(ngModel)]="temp.name">
+               <mat-option *ngFor="let subject of dataService.subjects.value" [value]="subject.name">
+                  {{subject.name}}
+               </mat-option>
+            </mat-select>
+         </mat-form-field>
+         <mat-form-field appearance="outline" class="mx-2">
+            <mat-label>Teacher</mat-label>
+            <mat-select required [(ngModel)]="temp.teacher">
+               <mat-option *ngFor="let teacher of dataService.teachers.value" [value]="teacher.name">
+                  {{teacher.name}}
+               </mat-option>
+            </mat-select>
+         </mat-form-field>
+         <mat-form-field appearance="outline" class="mx-2">
+            <mat-label>Room</mat-label>
+            <mat-select required [(ngModel)]="temp.name">
+               <mat-option *ngFor="let room of dataService.rooms.value" [value]="room.name">
+                  {{room.name}}
+               </mat-option>
+            </mat-select>
+         </mat-form-field>
+         <mat-form-field appearance="outline" class="mx-2">
+            <mat-label>Hour(s)</mat-label>
+            <mat-select required [(ngModel)]="temp.name">
+               <mat-option *ngFor="let v of validHourDuration()" [value]="v">
+                  {{v}}
+               </mat-option>
+            </mat-select>
+         </mat-form-field><span>&nbsp;:&nbsp;</span>
+         <mat-form-field appearance="outline" class="mx-2">
+            <mat-label>Minutes</mat-label>
+            <mat-select required [(ngModel)]="temp.name">
+               <mat-option *ngFor="let room of dataService.rooms.value" [value]="room.name">
+                  {{room.name}}
+               </mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </div>
+   <div mat-dialog-actions class="d-flex justify-content-center">
+      <button mat-stroked-button (click)="dialogRef.close()" color="warn" class="w-25">Cancel</button>
+      <button mat-stroked-button (click)="generate()" color="primary" class="w-25">Save</button>
+   </div>
+</div>

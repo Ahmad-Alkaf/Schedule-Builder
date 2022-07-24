@@ -7,17 +7,18 @@ import { ApiService } from './api.service';
 import { SoundService } from './sound.service';
 import * as $ from 'JQuery';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
   //!undo and redo are not consistent because dataService is not updated when they change table values
-  public teachers: Teacher[] = [];
+  public teachers: BehaviorSubject<Teacher[]> = new BehaviorSubject<Teacher[]>([]);
 
-  subjects: Subject[] = [];
+  public subjects: BehaviorSubject<Subject[]> = new BehaviorSubject<Subject[]>([]);
 
-  rooms: Room[] = [];
+  public rooms: BehaviorSubject<Room[]> = new BehaviorSubject<Room[]>([]);
 
   public tables: Table[] = [];
 
@@ -27,18 +28,20 @@ export class DataService {
 
 
   constructor(private sound: SoundService, private api: ApiService, private snackbar: MatSnackBar, private dialog: MatDialog) {
-    Promise.all([this.api.pullTables(), this.api.pullContainer()]).then(([tablesData, container]) => {
+    Promise.all([this.api.pullTables(), this.api.pullContainer(),this.api.pullTeachers(), this.api.pullSubjects(), this.api.pullRooms()]).then(([tablesData, container,teachers, subjects, rooms]) => {
       console.log({ tablesData, container });
       this.newLecContainer = container;
       for (let i = 0; i < tablesData.length; i++) {
         this.tables.push(new Table(i, tablesData[i].name));
         this.tables[i].lectures = tablesData[i].lectures;
       }
-      this.tabActiveIndex = 1;
+      this.teachers.next(teachers);
+      this.subjects.next(subjects);
+      this.rooms.next(rooms);
+      this.tabActiveIndex = -1;
       this.saveState();
       setTimeout(() => this.tabActiveIndex = 0);
     }).catch(e => console.error('dataService', e));
-
   }
   //VVVV dataService Functions VVVV
   /**
@@ -47,9 +50,9 @@ export class DataService {
   public saveState = () => {
     //!fucking bug that won't let me save tables as other data
     this.flow.data[this.flow.curIndex + 1] = JSON.parse(JSON.stringify({
-      teachers: this.teachers,
-      lessons: this.subjects,
-      rooms: this.rooms,
+      teachers: this.teachers.value,
+      lessons: this.subjects.value,
+      rooms: this.rooms.value,
       tableLectures: this.tables.map(v => v.lectures),
       newLecContainer: this.newLecContainer,
       // tabActiveIndex: this.tabActiveIndex,
@@ -59,7 +62,7 @@ export class DataService {
     console.log('pushed index', this.flow.curIndex);
     this.checkCollision();
     if (this.tmp == true)
-      this.api.SaveAll(this.tables, this.newLecContainer, this.teachers, this.rooms, this.subjects)
+      this.api.SaveAll(this.tables, this.newLecContainer, this.teachers.value, this.rooms.value, this.subjects.value)
         .then(() => console.log('SAVED'))
         .catch(() => console.error("CATCH IN SAVING"));
     else this.tmp = true;
@@ -68,16 +71,16 @@ export class DataService {
   public undo = () => {
     if (this.flow.data[this.flow.curIndex - 1]) {
       const { teachers, lessons, rooms, tableLectures, newLecContainer } = JSON.parse(JSON.stringify(this.flow.data[--this.flow.curIndex]));
-      this.teachers = teachers;
-      this.subjects = lessons;
-      this.rooms = rooms;
+      this.teachers.next(teachers);
+      this.subjects.next(lessons);
+      this.rooms.next(rooms);
       this.newLecContainer = newLecContainer;
       for (let i = 0; i < tableLectures.length; i++) {
         if (this.tables[i])
           this.tables[i].lectures = tableLectures[i];
       }
       this.checkCollision();
-      this.api.SaveAll(this.tables, this.newLecContainer, this.teachers, this.rooms, this.subjects)
+      this.api.SaveAll(this.tables, this.newLecContainer, this.teachers.value, this.rooms.value, this.subjects.value)
         .then(() => console.log('SAVED'))
         .catch(() => console.error("CATCH IN SAVING"));
       console.log('retain index', this.flow.curIndex);
@@ -88,9 +91,9 @@ export class DataService {
   public redo = () => {
     if (this.flow.data[this.flow.curIndex + 1]) {
       const { teachers, lessons, rooms, tableLectures, newLecContainer } = JSON.parse(JSON.stringify(this.flow.data[++this.flow.curIndex]));
-      this.teachers = teachers;
-      this.subjects = lessons;
-      this.rooms = rooms;
+      this.teachers.next(teachers);
+      this.subjects.next(lessons);
+      this.rooms.next(rooms);
       this.newLecContainer = newLecContainer;
       // this.tabActiveIndex = tabActiveIndex;
       for (let i = 0; i < tableLectures.length; i++)
@@ -98,7 +101,7 @@ export class DataService {
           this.tables[i].lectures = tableLectures[i];
       // else throw new Error(`wow you made it that far ok then come here handle me`);
       this.checkCollision();
-      this.api.SaveAll(this.tables, this.newLecContainer, this.teachers, this.rooms, this.subjects)
+      this.api.SaveAll(this.tables, this.newLecContainer, this.teachers.value, this.rooms.value, this.subjects.value)
         .then(() => console.log('SAVED'))
         .catch(() => console.error("CATCH IN SAVING"));
       console.log('retain index', this.flow.curIndex);

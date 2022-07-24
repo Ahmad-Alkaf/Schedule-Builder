@@ -1,7 +1,7 @@
 
 @import "./themes/classes.scss";
 
-@import url("./assets/bootstrap.css");
+@import url(./assets/bootstrap.css);
 @import url("./assets/icon.css");
 @import url("./assets/google.font.style.css");
 
@@ -83,7 +83,7 @@ body {
 }
 
 .td:focus {
-  outline: 1.8px dotted #555 !important;
+  outline: 1.8px dotted var(--secondary-text-color) !important;
   border: none;
 }
 

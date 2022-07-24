@@ -18,9 +18,9 @@ export class MainComponent {
     this.loading = true;
     this.api.SaveAll(this.dataService.tables,
       this.dataService.newLecContainer,
-      this.dataService.teachers,
-      this.dataService.rooms,
-      this.dataService.subjects)
+      this.dataService.teachers.value,
+      this.dataService.rooms.value,
+      this.dataService.subjects.value)
       .then(() => this.snackbar.open('Saved', undefined, { duration: 800 }))
     .catch(()=>this.snackbar.open("Error while saving. Please try again later",undefined,{duration:1500}))
     .finally(()=>this.loading=false)
