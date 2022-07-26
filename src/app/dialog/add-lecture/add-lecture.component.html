@@ -14,7 +14,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Lecture Duration</mat-label>
     <mat-select formControlName="duration" required>
-      <mat-option *ngFor="let h of final.LECTURE_HOURS" [value]="h">
+      <mat-option *ngFor="let h of final.LECTURE_DURATIONS" [value]="h">
         {{h}}
       </mat-option>
     </mat-select>

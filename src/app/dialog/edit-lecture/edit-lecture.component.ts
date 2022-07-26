@@ -29,13 +29,13 @@ export class EditLectureComponent implements OnInit {
 
   validLectureHours(): number[] {
     if (this.data.day == 'Friday' || this.data.startTime == -1)
-      return this.final.LECTURE_HOURS;
-    const hours = this.final.LECTURE_HOURS;
+      return this.final.LECTURE_DURATIONS;
+    const hours = this.final.LECTURE_DURATIONS;
     const row: Row = this.dataService.getActiveTable().rows.filter(v => v.day == this.data.day)[0];
     const index: number = this.dataService.getIndex(row.day, this.data.startTime);
     let validHours: number[] = hours.filter(v => v <= this.data.duration);
     let dur = this.data.duration;
-    for (let i = index + 1; i < row.tds.length && dur < this.final.MAX_LECTURE_HOUR; i++) {
+    for (let i = index + 1; i < row.tds.length && dur < this.final.MAX_LECTURE_DURATION; i++) {
       let td = row.tds[i];
       if (td)
         break;

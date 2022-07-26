@@ -18,10 +18,10 @@
             </div>
          </div>
 
-         <div *ngFor="let s of staticLecs;let i=index;">
-            <div *ngIf="i>=staticLecs.length-1 && isAddNew(s)" class="d-flex position-relative text-center"
+         <div *ngFor="let s of usersStaticLecs();let i=index;">
+            <div *ngIf="s== staticLecs[staticLecs.length-1] && isAddNew(s) && i !=0" class="d-flex position-relative text-center"
                style="margin:10px 0;height: 10px;">
-               <span class="position-absolute opacity-75" style="top:-10px;transform: translateX(-50%);margin-left:50%;font-size:0.9rem;">New</span>
+               <span class="position-absolute opacity-75" style="top:-10px;transform: translateX(-50%);margin-left:50%;font-size:0.9rem;">Unregistered</span>
                <div class="w-100">
                   <mat-divider class="m-auto" style="background-color:var(--primary-color);height:2px;width:75%;">
                   </mat-divider>
@@ -34,7 +34,7 @@
             <div class="d-flex container">
                <mat-form-field appearance="outline" class="mx-2">
                   <mat-label>Subject</mat-label>
-                  <mat-select [disabled]="isSolved(s)" required [(ngModel)]="s.name" [name]="'subject'+i">
+                  <mat-select required [(ngModel)]="s.name" [name]="'subject'+i">
                      <mat-option *ngFor="let subject of dataService.subjects.value" [value]="subject.name">
                         {{subject.name}}
                      </mat-option>
@@ -43,7 +43,7 @@
 
                <mat-form-field appearance="outline" class="mx-2">
                   <mat-label>Teacher</mat-label>
-                  <mat-select [disabled]="isSolved(s)" required [(ngModel)]="s.teacher" [name]="'teacher'+i">
+                  <mat-select required [(ngModel)]="s.teacher" [name]="'teacher'+i">
                      <mat-option *ngFor="let teacher of dataService.teachers.value" [value]="teacher.name">
                         {{teacher.name}}
                      </mat-option>
@@ -52,7 +52,7 @@
 
                <mat-form-field appearance="outline" class="mx-2">
                   <mat-label>Room</mat-label>
-                  <mat-select [disabled]="isSolved(s)" required [(ngModel)]="s.room" [name]="'room'+i">
+                  <mat-select required [(ngModel)]="s.room" [name]="'room'+i">
                      <mat-option *ngFor="let room of dataService.rooms.value" [value]="room.name.trim()">
                         {{room.name}}
                      </mat-option>
@@ -60,10 +60,10 @@
                </mat-form-field>
 
                <mat-form-field appearance="outline" class="mx-2">
-                  <mat-label>Hour(s)</mat-label>
-                  <mat-select [disabled]="isSolved(s)" required [(ngModel)]="s.weekDuration"
-                     [name]="'weekDuration'+i">
-                     <mat-option *ngFor="let v of arr(1, .5,totalAvailableHours)" [value]="v"  [disabled]="!validHourDuration().includes(v)">
+                  <mat-label>Hours</mat-label>
+                  <mat-select required [(ngModel)]="s.weekDuration" [name]="'weekDuration'+i">
+                     <mat-option *ngFor="let v of arr(1,totalAvailableHours)" [value]="v"
+                        [hidden]="!arr(1,maxHourDuration(s)).includes(v)">
                         {{v}}
                      </mat-option>
                   </mat-select>
@@ -71,12 +71,15 @@
             </div>
          </div>
          <!-- <div> -->
-            <button *ngIf="!isAddNew(staticLecs[staticLecs.length-1])" style="margin-left:50%;transform: translateX(-50%);width:340px;margin-bottom:25px;" color="primary" mat-stroked-button (click)="staticLecs.push({ name: '', teacher: '', room: '', weekDuration: 0 });">Add&nbsp;New</button>
+         <button *ngIf="!isAddNew(staticLecs[staticLecs.length-1])"
+            style="margin-left:50%;transform: translateX(-50%);width:340px;margin-bottom:25px;" color="primary"
+            mat-stroked-button
+            (click)="staticLecs.push({ name: '', teacher: '', room: '', weekDuration: 0,isUser:true });">Add&nbsp;New</button>
          <!-- </div> -->
       </div>
       <div mat-dialog-actions class="d-flex justify-content-center">
          <button mat-stroked-button (click)="dialogRef.close()" color="warn" class="w-25">Cancel</button>
-         <button mat-stroked-button (click)="generate()" color="primary" class="w-25">Generate</button>
+         <button mat-stroked-button [disabled]="disableGenerateButton()||loading" (click)="generate()" color="primary" class="w-25">Generate</button>
       </div>
    </form>
 </div>

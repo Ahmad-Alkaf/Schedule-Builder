@@ -18,7 +18,7 @@ export interface StaticLec {
 
 type Collision = 'Teacher' | 'Room';
 export interface SolveLec {
-   id: string;
+   id?: string;
    lecture: StaticLec;
    day: WeekDays;
    duration: number;
@@ -46,12 +46,13 @@ export interface Row {
 }
 export class Final {
    constructor() { }
-   readonly LECTURE_HOURS: number[] = [1, 1.5, 2, 2.5, 3];
+   readonly LECTURE_DURATIONS: number[] = [1, 1.5, 2, 2.5, 3];
    readonly START_TIME: number = 8;
    readonly START_TIMES: number[] = [8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5]//todo by start_time and end_time implement this
-   readonly MAX_LECTURE_HOUR: number = this.LECTURE_HOURS.reduce((a: number, b: number) => a > b ? a : b);
    readonly STEP_TIME: number = 0.5;
-  
+   readonly MAX_LECTURE_DURATION: number = this.LECTURE_DURATIONS.reduce((a: number, b: number) => a > b ? a : b);
+   readonly MIN_LECTURE_DURATION: number = this.LECTURE_DURATIONS.reduce((a: number, b: number) => a < b ? a : b);
+   readonly LAST_START_TIME: number = this.START_TIMES[this.START_TIMES.length - 1];
 }
 
 type EventName = 'tableLecturesChanged' | 'treeTeachersSubjectsRooms';
