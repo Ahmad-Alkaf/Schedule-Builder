@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
 import { GenerateTableService } from './generate-table.service';
-import { Final, SolveLec, StaticLec } from '@service/static'
+import { Final, SolveLec, StaticLec, WEEK_DAYS } from '@service/static'
+import { Table } from './tableBinder';
 describe('GenerateTableService', () => {
   let s: GenerateTableService;
   let staticLecs: StaticLec[]
@@ -37,15 +38,20 @@ describe('GenerateTableService', () => {
     expect(s.needTouch(staticLecs[1], solveLecs)).toBeFalse();
     expect(s.needTouch(staticLecs[2], solveLecs)).toBeTrue();
   });
-  
+
   it('totalHours', () => {
     expect(s.getTotalHours(solveLecs, staticLecs[1])).toBe(0);
     solveLecs.push({ lecture: staticLecs[1], day: 'Monday', startTime: 9, duration: 3 });
     expect(s.getTotalHours(solveLecs, staticLecs[1])).toBe(3);
-    solveLecs.push({ lecture: staticLecs[1], day: 'Tuesday', startTime: 8, duration: 2 });
-    expect(s.getTotalHours(solveLecs, staticLecs[1])).toBe(5);
-    solveLecs.push({ lecture: staticLecs[1], day: 'Tuesday', startTime: 11, duration: 2 });
+    solveLecs.push({ lecture: staticLecs[1], day: 'Tuesday', startTime: 8, duration: 2.5 });
+    expect(s.getTotalHours(solveLecs, staticLecs[1])).toBe(5.5);
+    solveLecs.push({ lecture: staticLecs[1], day: 'Tuesday', startTime: 10.5, duration: 1.5 });
     expect(s.getTotalHours(solveLecs, staticLecs[1])).toBe(7);
+    expect(s.getTotalHours(solveLecs, staticLecs[0])).toBe(2);
+    solveLecs.push({ lecture: staticLecs[0], day: 'Wednesday', startTime: 10.5, duration: 1.5 });
+    expect(s.getTotalHours(solveLecs, staticLecs[0])).toBe(3.5);
+
+
   });
 
   it('isPossible', () => {
@@ -79,5 +85,33 @@ describe('GenerateTableService', () => {
 
   });
 
+  it('generateLectures', async () => {
+    staticLecs = [
+      // { name: 'Server-Side', teacher: 'Hassan', weekDuration: 6, room: '302' },
+      // { name: 'PM', teacher: 'Hamza', weekDuration: 2.5, room: '401' },
+      { name: 'PM', teacher: 'Hamza', weekDuration: 6.5, room: '401' },
+      // { name: 'HCI', teacher: 'Ahmed', weekDuration: 6, room: '402' },
+      // { name: 'Database', teacher: 'Mohammed', weekDuration: 6, room: 'Lab 3' },
+      // { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' },
+    ];
+    solveLecs = [
+      { lecture: staticLecs[0], day: 'Saturday', startTime: 8, duration: 2 }
+    ]
+    let tables = [new Table(1, 'T1')];
+    let res = s.generateSchedule(staticLecs, solveLecs, tables) as SolveLec[];
+    expect(res).toBeTruthy();
+
+    expect(s.getTotalHours(res, staticLecs[0])).toBe(6.5);//join two lectures
+    staticLecs = [{ name: 'English', teacher: 'Abduallah', weekDuration: final.MAX_LECTURE_DURATION + final.STEP_TIME, room: '301' }];
+
+    res = s.generateSchedule(staticLecs, [], tables) as SolveLec[];
+    console.log(res);
+    for (let day of WEEK_DAYS)
+      expect(res.filter(v=>v.day == day && s.equalLecInfoSTR(v.lecture,staticLecs[0])).reduce((acc, v) => v.duration + acc, 0)).withContext('in '+day).toBeLessThanOrEqual(final.MAX_LECTURE_DURATION);//join two lectures
+
+  // }).finally(()=>console.log('finally'))
+  // res = await s.generateSchedule(staticLecs, solveLecs, [new Table(1, 'T1')]);
+  // expect(res).toBeTruthy();
+})
 
 });

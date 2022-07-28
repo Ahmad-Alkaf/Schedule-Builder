@@ -62,15 +62,15 @@ export class GenLecturesComponent implements OnInit {
     }
     console.log('staticLecs', this.staticLecs);
     this.loading = true
-    this.G.generateSchedule(this.staticLecs, this.solveLecs, this.dataService.tables).then(solvedLecs => {
-      this.loading = false;
-      console.log('solvedLecs', solvedLecs)
-      if (solvedLecs != undefined) {
-        this.table.lectures = [...solvedLecs]
-        this.dialogRef.close();
-      }
-      else this.snackbar.open('Could Not Generate Lectures 😞', undefined, { duration: 2000 })
-    }).catch(console.error);
+    let solvedLecs = this.G.generateSchedule(this.staticLecs, this.solveLecs, this.dataService.tables.filter(v=>v == this.table))
+    this.loading = false;
+    console.log('G solution', solvedLecs)
+    if (solvedLecs != undefined) {
+      this.table.lectures = [...solvedLecs]
+      this.dialogRef.close();
+      this.dataService.saveState()
+    }
+    else this.snackbar.open('Could Not Generate Lectures 😞', undefined, { duration: 2000 })
   }
 
   isSolved(st: ProStaticLec): boolean {

@@ -30,34 +30,36 @@ export class GenerateTableService implements OnInit {
    * @param otherTables tables to avoid collision. NOTE: do not pass the table solveLecs will generated for. 
    * @returns 
    */
-  public generateSchedule = (staticLecs: StaticLec[], solveLecs: SolveLec[], otherTables: Table[]): Promise<SolveLec[]|undefined> => {
-    return new Promise(async (resolve, reject) => {
-      // const solve = (staticLecs: StaticLec[], solveLecs: SolveLec[]) => {
-      for (let staticLec of staticLecs)
-        if (this.needTouch(staticLec, solveLecs)) {
-          for (let day of WEEK_DAYS)//'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
-            for (let startTime of final.START_TIMES)//8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12
-              for (let duration of final.LECTURE_DURATIONS) //1 | 1.5 | 2 | 2.5 | 3
-              {
-                var solvedLec: SolveLec = { lecture: staticLec, duration, day, startTime };
-                // console.log(...solveLecs)
-                if (this.isPossible(solveLecs, solvedLec)) {
-                  let last = solveLecs[solveLecs.length - 1];
-                  if (this.equalLecInfoSTR(last.lecture, solvedLec.lecture) && last.startTime + last.duration == solvedLec.startTime)
-                    last.duration += solvedLec.duration;
-                  else
-                    solveLecs.push(solvedLec);
-                  let x = await this.generateSchedule(staticLecs, solveLecs, otherTables);
-                  if (x)
-                    return resolve(solveLecs);
-                  solveLecs.splice(solveLecs.indexOf(solvedLec), 1);
-                }
+  public generateSchedule = (staticLecs: StaticLec[], solveLecs: SolveLec[], otherTables: Table[]): SolveLec[] | undefined => {
+    // return new Promise(async (resolve, reject) => {
+    for (let staticLec of staticLecs)
+      if (this.needTouch(staticLec, solveLecs)) {
+        for (let day of WEEK_DAYS)//'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
+          for (let startTime of final.START_TIMES)//8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12
+            for (let duration of final.LECTURE_DURATIONS) //1 | 1.5 | 2 | 2.5 | 3
+            {
+              var solvedLec: SolveLec = { lecture: staticLec, duration, day, startTime };
+              // console.log(...solveLecs)
+              // console.log('progress',{...solvedLec,lecture:solvedLec.lecture.name})
+              if (this.isPossible(solveLecs, solvedLec)) {
+                let last = solveLecs[solveLecs.length - 1];
+                if (last && this.equalLecInfoSTR(last.lecture, solvedLec.lecture) && last.startTime + last.duration == solvedLec.startTime)
+                  last.duration += solvedLec.duration;
+                else
+                  solveLecs.push(solvedLec);
+                let x = /*await*/ this.generateSchedule(staticLecs, solveLecs, otherTables);
+                if (x)
+                  return /*resolve*/(solveLecs);
+                // console.log('progress',JSON.stringify(solveLecs));
+                solveLecs.splice(solveLecs.indexOf(solvedLec), 1);
               }
-          return;
-        }
-      console.log('solution:', solveLecs);
-      return resolve(solveLecs);
-    })
+              // else console.log('FAIL')
+            }
+        return;
+      }
+    // console.log('solution:', solveLecs);
+    return /*resolve*/(solveLecs);
+    // })
   }
 
 
@@ -68,9 +70,13 @@ export class GenerateTableService implements OnInit {
    */
   public isPossible = (solveLecs: SolveLec[], n: SolveLec): boolean => {
 
+    //TEST WEEK_DURATION1
+    // console.log('WEEK_DURATION1')
     if (this.getTotalHours([...solveLecs, n], n.lecture) > n.lecture.weekDuration)//solveLecs total dur in week is exceeds the staticLec weekDuration
       return false;
 
+    //TEST TWO_DURATIONS2
+    // console.log('TWO_DURATIONS2')
     for (let lec of solveLecs)  //if at the same day and n.startTime between another lecture period(another.startTime to another.duration)
       if (lec.day == n.day) {
         if (lec.startTime <= n.startTime &&
@@ -79,8 +85,18 @@ export class GenerateTableService implements OnInit {
         else if (n.startTime <= lec.startTime &&
           n.startTime + n.duration > lec.startTime)
           return false;
+
       }
 
+    //TEST DAY_DURATION4
+    //prevent lec total dur in single day to exceeds MAX_LECTURE_DURATION
+    if (solveLecs.filter(v => v.day == n.day && this.equalLecInfoSTR(v.lecture, n.lecture)).reduce((acc, v) => v.duration + acc, 0)
+      + n.duration > final.MAX_LECTURE_DURATION)
+      return false;
+
+
+    //TEST WALL3
+    // console.log('WALL3')
     if (final.START_TIME > n.startTime)//prevent lec before available duration __|
       return false;
     if (final.LAST_START_TIME - final.STEP_TIME < n.startTime)//prevent lec after available duration |__
@@ -88,12 +104,8 @@ export class GenerateTableService implements OnInit {
     if (n.startTime + n.duration > final.LAST_START_TIME + final.STEP_TIME)//prevent lec dur after available duration __|_
       return false;
 
-    for (let lec of solveLecs)//prevent lec total dur in single day to exceeds MAX_LECTURE_DURATION
-      if (lec.day == n.day && this.equalLecInfoSTR(lec.lecture, n.lecture)) {
-        if (lec.duration + n.duration > final.MAX_LECTURE_DURATION)
-          return false;
-      }
 
+    // console.log('PASS')
     // !if two lectures in same room with the same time return false
     // !if collision to another lecture in ANOTHER TABLE
     return true;
@@ -131,19 +143,19 @@ export class GenerateTableService implements OnInit {
   /**
    * if all solveLecs doesn't apply the desire of staticLec then solveLecs have to be changed. ex: weekDuration for staticLec B is 6 hours but total B of solveLecs are 5 hours then staticLec needTouch on solveLecs
    * @param sLec 
-   * @param lectures 
+   * @param solveLecs 
    * @returns 
    */
-  public needTouch = (sLec: StaticLec, lectures: SolveLec[]): Boolean => {
-
-    if (this.getTotalHours(lectures, sLec) < sLec.weekDuration)
+  public needTouch = (sLec: StaticLec, solveLecs: SolveLec[]): Boolean => {
+    // console.log('needTouch')
+    if (this.getTotalHours(solveLecs, sLec) < sLec.weekDuration)
       return true;
     else return false;
   }
 
-  public getTotalHours = (lectures: SolveLec[], staticLec: StaticLec): number => {
+  public getTotalHours = (solveLecs: SolveLec[], staticLec: StaticLec): number => {
     var totalDur: number = 0;
-    for (let lec of lectures) {
+    for (let lec of solveLecs) {
       if (this.equalLecInfoSTR(lec.lecture, staticLec)) {
         totalDur += Number(lec.duration);
       }
