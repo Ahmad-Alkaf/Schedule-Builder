@@ -44,6 +44,16 @@ export interface Row {
    day: WeekDays;
    tds: (SolveLec | null)[];
 }
+
+export interface ConfigGen{
+   OrderBy: {
+      /**
+       * Array of 
+       */
+      WeekDays: WeekDays[];
+   }
+   
+}
 export class Final {
    constructor() { }
    readonly LECTURE_DURATIONS: number[] = [1, 1.5, 2, 2.5, 3];

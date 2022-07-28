@@ -18,7 +18,7 @@
             </div>
          </div>
 
-         <div *ngFor="let s of usersStaticLecs();let i=index;">
+         <div *ngFor="let s of usersStaticLecs();let i=index;" >
             <div *ngIf="s== staticLecs[staticLecs.length-1] && isAddNew(s) && i !=0" class="d-flex position-relative text-center"
                style="margin:10px 0;height: 10px;">
                <span class="position-absolute opacity-75" style="top:-10px;transform: translateX(-50%);margin-left:50%;font-size:0.9rem;">Unregistered</span>
@@ -34,7 +34,7 @@
             <div class="d-flex container">
                <mat-form-field appearance="outline" class="mx-2">
                   <mat-label>Subject</mat-label>
-                  <mat-select required [(ngModel)]="s.name" [name]="'subject'+i">
+                  <mat-select [disabled]="!s.isUser" required [(ngModel)]="s.name" [name]="'subject'+i">
                      <mat-option *ngFor="let subject of dataService.subjects.value" [value]="subject.name">
                         {{subject.name}}
                      </mat-option>
@@ -43,7 +43,7 @@
 
                <mat-form-field appearance="outline" class="mx-2">
                   <mat-label>Teacher</mat-label>
-                  <mat-select required [(ngModel)]="s.teacher" [name]="'teacher'+i">
+                  <mat-select [disabled]="!s.isUser" required [(ngModel)]="s.teacher" [name]="'teacher'+i">
                      <mat-option *ngFor="let teacher of dataService.teachers.value" [value]="teacher.name">
                         {{teacher.name}}
                      </mat-option>
@@ -52,7 +52,7 @@
 
                <mat-form-field appearance="outline" class="mx-2">
                   <mat-label>Room</mat-label>
-                  <mat-select required [(ngModel)]="s.room" [name]="'room'+i">
+                  <mat-select [disabled]="!s.isUser" required [(ngModel)]="s.room" [name]="'room'+i">
                      <mat-option *ngFor="let room of dataService.rooms.value" [value]="room.name.trim()">
                         {{room.name}}
                      </mat-option>
@@ -62,7 +62,7 @@
                <mat-form-field appearance="outline" class="mx-2">
                   <mat-label>Hours</mat-label>
                   <mat-select required [(ngModel)]="s.weekDuration" [name]="'weekDuration'+i">
-                     <mat-option *ngFor="let v of arr(1,totalAvailableHours)" [value]="v"
+                     <mat-option *ngFor="let v of arr(1,totalAvailableHours)" [value]="v" [disabled]="disableHour(s,v)"
                         [hidden]="!arr(1,maxHourDuration(s)).includes(v)">
                         {{v}}
                      </mat-option>

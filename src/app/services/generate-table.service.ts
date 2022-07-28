@@ -30,8 +30,8 @@ export class GenerateTableService implements OnInit {
    * @param otherTables tables to avoid collision. NOTE: do not pass the table solveLecs will generated for. 
    * @returns 
    */
-  public generateSchedule = (staticLecs: StaticLec[], solveLecs: SolveLec[], otherTables: Table[]): SolveLec[] | undefined => {
-    // return new Promise(async (resolve, reject) => {
+  public generateSchedule = (staticLecs: StaticLec[], solveLecs: SolveLec[], otherTables: Table[]/*,config:ConfigGen*/): SolveLec[] | undefined => {
+    
     for (let staticLec of staticLecs)
       if (this.needTouch(staticLec, solveLecs)) {
         for (let day of WEEK_DAYS)//'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
@@ -39,9 +39,7 @@ export class GenerateTableService implements OnInit {
             for (let duration of final.LECTURE_DURATIONS) //1 | 1.5 | 2 | 2.5 | 3
             {
               var solvedLec: SolveLec = { lecture: staticLec, duration, day, startTime };
-              // console.log(...solveLecs)
-              // console.log('progress',{...solvedLec,lecture:solvedLec.lecture.name})
-              if (this.isPossible(solveLecs, solvedLec)) {
+              if (this.isPossible(solveLecs, solvedLec, otherTables)) {
                 let last = solveLecs[solveLecs.length - 1];
                 if (last && this.equalLecInfoSTR(last.lecture, solvedLec.lecture) && last.startTime + last.duration == solvedLec.startTime)
                   last.duration += solvedLec.duration;
@@ -68,7 +66,7 @@ export class GenerateTableService implements OnInit {
    * @param n is solveLec with ordered random attr
    * @returns whether n is possible to join solveLecs as valid valid
    */
-  public isPossible = (solveLecs: SolveLec[], n: SolveLec): boolean => {
+  public isPossible = (solveLecs: SolveLec[], n: SolveLec, tables: Table[]): boolean => {
 
     //TEST WEEK_DURATION1
     // console.log('WEEK_DURATION1')
@@ -84,15 +82,9 @@ export class GenerateTableService implements OnInit {
           return false;
         else if (n.startTime <= lec.startTime &&
           n.startTime + n.duration > lec.startTime)
-          return false;
+          return false; 
 
       }
-
-    //TEST DAY_DURATION4
-    //prevent lec total dur in single day to exceeds MAX_LECTURE_DURATION
-    if (solveLecs.filter(v => v.day == n.day && this.equalLecInfoSTR(v.lecture, n.lecture)).reduce((acc, v) => v.duration + acc, 0)
-      + n.duration > final.MAX_LECTURE_DURATION)
-      return false;
 
 
     //TEST WALL3
@@ -104,11 +96,30 @@ export class GenerateTableService implements OnInit {
     if (n.startTime + n.duration > final.LAST_START_TIME + final.STEP_TIME)//prevent lec dur after available duration __|_
       return false;
 
+    //TEST DAY_DURATION4
+    //prevent lec total dur in single day to exceeds MAX_LECTURE_DURATION
+    if (solveLecs.filter(v => v.day == n.day && this.equalLecInfoSTR(v.lecture, n.lecture)).reduce((acc, v) => v.duration + acc, 0)
+      + n.duration > final.MAX_LECTURE_DURATION)
+      return false;
 
-    // console.log('PASS')
-    // !if two lectures in same room with the same time return false
-    // !if collision to another lecture in ANOTHER TABLE
-    return true;
+    //TEST TABLE_COLLISION5
+    for (let table of tables)
+      for (let lec of table.lectures)
+        if (lec.day == n.day) {
+          if (n.startTime >= lec.startTime) {
+            if (lec.startTime + lec.duration > n.startTime
+            && (lec.lecture.room == n.lecture.room||lec.lecture.teacher == n.lecture.teacher)) {
+              return false;
+            }
+          }
+          else if (lec.startTime >= n.startTime)
+            if (n.startTime + n.duration > lec.startTime
+            && (lec.lecture.room == n.lecture.room||lec.lecture.teacher == n.lecture.teacher)) {
+              return false;
+            }
+        }
+
+      return true;
   }
 
 

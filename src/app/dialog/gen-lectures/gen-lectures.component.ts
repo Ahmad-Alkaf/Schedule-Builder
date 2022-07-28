@@ -19,7 +19,7 @@ interface ProStaticLec extends StaticLec {
 export class GenLecturesComponent implements OnInit {
   public table: Table;
   constructor(public dialogRef: MatDialogRef<NavTreeComponent>, @Inject(MAT_DIALOG_DATA) data: Table
-    , public dataService: DataService, private final: Final, private G: GenerateTableService,
+    , public dataService: DataService, public final: Final, private G: GenerateTableService,
     private snackbar: MatSnackBar) {
     this.table = data;
   }
@@ -56,13 +56,12 @@ export class GenLecturesComponent implements OnInit {
       this.snackbar.open('You Should Specify at Least One Lecture!', undefined, { duration: 2000 })
       return;
     }
-
     if (this.isAddNew(this.staticLecs[this.staticLecs.length - 1])) {
       this.staticLecs.pop();
     }
     console.log('staticLecs', this.staticLecs);
     this.loading = true
-    let solvedLecs = this.G.generateSchedule(this.staticLecs, this.solveLecs, this.dataService.tables.filter(v=>v == this.table))
+    let solvedLecs = this.G.generateSchedule(this.staticLecs, this.solveLecs, this.dataService.tables)
     this.loading = false;
     console.log('G solution', solvedLecs)
     if (solvedLecs != undefined) {
@@ -123,6 +122,22 @@ export class GenLecturesComponent implements OnInit {
   usersStaticLecs(): ProStaticLec[] {
     return this.staticLecs.filter(v => v.isUser);
   }
+  
+  /**
+   * 
+   * @param staticLec 
+   * @param value 
+   * @returns if there is same lecture(STR(Subject,Teacher,Room)) in the table then disable invalid hours
+   */
+  disableHour(s: ProStaticLec, value: number): boolean{
+    for (let stat of this.staticLecs)
+      if (stat != s && stat.name == s.name && stat.teacher == s.teacher && stat.room == s.room)
+        if (stat.weekDuration > value)
+          return true;
+    return false;
+        
+  }
+  
   loading = false;
   disableGenerateButton() {
     return this.isAddNew(this.staticLecs[this.staticLecs.length - 1]) && this.staticLecs.filter(v => v.isUser == true).length <= 1;
