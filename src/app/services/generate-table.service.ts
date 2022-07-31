@@ -32,24 +32,35 @@ export class GenerateTableService implements OnInit {
    */
   public generateSchedule = (staticLecs: StaticLec[], solveLecs: SolveLec[], otherTables: Table[]/*,config:ConfigGen*/): SolveLec[] | null => {
     let lectureDurations = final.LECTURE_DURATIONS.reverse();
-    for (let staticLec of staticLecs)
-      if (this.needTouch(staticLec, solveLecs)) {
-        for (let day of WEEK_DAYS)//'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
-          for (let startTime of final.START_TIMES)//8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12
-            for (let duration of lectureDurations) //1 | 1.5 | 2 | 2.5 | 3
-            {
-              var newLec: SolveLec = { lecture: staticLec, duration, day, startTime };
-              if (this.isPossible(solveLecs, newLec, otherTables)) {
-                this.pushOrExtendDuration(solveLecs, newLec);//solveLecs.push()
-                let x = this.generateSchedule(staticLecs, solveLecs, otherTables);
-                if (x === null)
-                  solveLecs.splice(solveLecs.indexOf(newLec), 1);
-                else return solveLecs;
+    //TODO convert this function to iterative function. SOURCE: https://www.codeproject.com/Articles/418776/How-to-replace-recursive-functions-using-stack-and
+    //TODO use webWorker to prevent blocking the main thread.
+    // let stack: { staticLecs: StaticLec[], solveLecs: SolveLec[], otherTables: Table[] }[] = [];
+    // stack.push({ staticLecs: staticLecsMain, solveLecs: solveLecsMain, otherTables: otherTablesMain });
+    // while (stack.length) {
+    //   let { staticLecs, solveLecs, otherTables } = stack.pop() as { staticLecs: StaticLec[], solveLecs: SolveLec[], otherTables: Table[] };//because while(stack.length)
+      for (let staticLec of staticLecs)
+        if (this.needTouch(staticLec, solveLecs)) {
+          for (let day of WEEK_DAYS)//'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
+            for (let startTime of final.START_TIMES)//8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12
+              for (let duration of lectureDurations) //1 | 1.5 | 2 | 2.5 | 3
+              {
+                var newLec: SolveLec = { lecture: staticLec, duration, day, startTime };
+                if (this.isPossible(solveLecs, newLec, otherTables)) {
+                  this.pushOrExtendDuration(solveLecs, newLec);//solveLecs.push()
+                  let x = this.generateSchedule(staticLecs, solveLecs, otherTables);
+                  // stack.push(JSON.parse(JSON.stringify({ staticLecs, solveLecs, otherTables })));
+                  if (x === null)
+                    solveLecs.splice(solveLecs.indexOf(newLec), 1);
+                  else return solveLecs;
+                }
               }
-            }
-        return null;
-      }
-    return solveLecs;
+          return null;
+          // break;
+        }
+      return solveLecs;
+    // }
+    // console.log({ stack })
+    // return stack[0].solveLecs;
   }
 
   private pushOrExtendDuration(solveLecs: SolveLec[], newLec: SolveLec) {
@@ -95,7 +106,7 @@ export class GenerateTableService implements OnInit {
 
 
     //TEST TABLE_COLLISION5
-    if (this.testTableCollision(n,tables) == false)
+    if (this.testTableCollision(n, tables) == false)
       return false;
 
     return true;
@@ -180,7 +191,7 @@ export class GenerateTableService implements OnInit {
 
 
   /**
-   * if all solveLecs doesn't apply the desire of staticLec then solveLecs have to be changed. ex: weekDuration for staticLec B is 6 hours but total B of solveLecs are 5 hours then staticLec needTouch on solveLecs
+   * if the total duration of all solveLecs met their staticLec week duration, then return false. Other wise return true because solveLec have to be changed. ex: weekDuration for staticLec B is 6 hours but total B of solveLecs are 5 hours then staticLec needTouch on solveLecs
    * @param sLec 
    * @param solveLecs 
    * @returns 
