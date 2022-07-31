@@ -54,7 +54,7 @@ export class ControlLectureService {
     public deleteFocus() {
       if (!this.focused || 'index' in this.focused)
         this.sound.play('notification')
-      else this.delete(this.focused)
+      else { this.delete(this.focused); this.focused = undefined; }
     }
     public delete(lecture: SolveLec): void {
       let table = this.ds.getTableOf(lecture);

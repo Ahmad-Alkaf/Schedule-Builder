@@ -117,6 +117,11 @@ describe('GenerateTableService', () => {
         expect(r.day == l.day && (l.startTime <= r.startTime &&
           l.startTime + l.duration > r.startTime || r.startTime <= l.startTime &&
           r.startTime + r.duration > l.startTime)).withContext(`Collision Occur between lecA:${JSON.stringify(l)} and lecB:${JSON.stringify(r)}`).toBeFalse()
+          
+    staticLecs = [{ name: 'PM', teacher: 'Hamza', weekDuration: 18, room: '302' }]
+    res = s.generateSchedule(staticLecs, [], []) as SolveLec[];
+    expect(res).withContext(`empty solveLecs and one staticLec but with heigh week duration`).toBeTruthy();
+    expect(s.getTotalHours(res,staticLecs[0])).toBe(18);
   })
 
 });

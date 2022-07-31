@@ -22,7 +22,7 @@ export class OptionsComponent implements OnInit {
 
   delete() {
     const prompt: Prompt = {
-      title: { text: 'Delete Table?', 'text-color': 'danger' },
+      title: { text: 'Delete Table?', color: 'var(--warn-color)' },
       content: 'Are you sure you want to delete \'' + this.table.name + '\' table Permanently with its contained lectures!',
       actions: {
         yes: { text: 'Delete', color: 'warn' },

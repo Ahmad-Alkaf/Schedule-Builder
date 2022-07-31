@@ -7,15 +7,15 @@ import { NavTreeComponent } from '@page/main/nav-tree/nav-tree.component';
    * @returns AfterClose result will be your (yes or no) text attribute. Ex: if you pass yes:{text:"Save",...}, then you should insure afterClose.subscribe((res)=>{if(res==="Save")...}).
  */
 export interface Prompt {
-  title: { text: string, 'text-color'?: 'danger'|'warning'|'success' },
-  content: string,
+  title: { text: string; color?: string; };
+  content: string;
   /**
    * Won't be any Actions if actions is undefined.
    * @pram yes e.g,(Yes, Ok, Save, Done, Delete...etc).
    * @pram no, e.g,(No, Cancel, Ignore, Back...etc).
    */
   actions?: {
-    yes: { text: string, color: string }, no: { text: string, color: string }
+    yes: { text: string, color: 'primary'|'accent'|'warn' }, no: { text: string, color: 'primary'|'accent'|'warn' }
   }
 }
 @Component({

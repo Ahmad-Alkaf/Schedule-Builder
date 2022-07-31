@@ -1,7 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Prompt, PromptComponent } from '@dialog/prompt/prompt.component';
 import { NavTreeComponent } from '@page/main/nav-tree/nav-tree.component';
 import { DataService } from '@service/data.service';
 import { GenerateTableService } from '@service/generate-table.service';
@@ -18,9 +19,10 @@ interface ProStaticLec extends StaticLec {
 })
 export class GenLecturesComponent implements OnInit {
   public table: Table;
+  // @Output() loading: EventEmitter = new EventEmitter();
   constructor(public dialogRef: MatDialogRef<NavTreeComponent>, @Inject(MAT_DIALOG_DATA) data: Table
     , public dataService: DataService, public final: Final, private G: GenerateTableService,
-    private snackbar: MatSnackBar) {
+    private snackbar: MatSnackBar, private dialog:MatDialog) {
     this.table = data;
   }
   public staticLecs: ProStaticLec[] = [];
@@ -51,25 +53,38 @@ export class GenLecturesComponent implements OnInit {
   }
 
 
-  generate() {
+  async generateIntro() {
     if (this.staticLecs.length <= 1 && this.isAddNew(this.staticLecs[this.staticLecs.length - 1])) {
       this.snackbar.open('You Should Specify at Least One Lecture!', undefined, { duration: 2000 })
       return;
     }
+    // this.dialogRef.close();
     if (this.isAddNew(this.staticLecs[this.staticLecs.length - 1])) {
       this.staticLecs.pop();
     }
     console.log('staticLecs', this.staticLecs);
     this.loading = true
-    let solvedLecs = this.G.generateSchedule(this.staticLecs, this.solveLecs, this.dataService.tables)
-    this.loading = false;
-    console.log('G solution', solvedLecs)
-    if (solvedLecs != undefined) {
-      this.table.lectures = [...solvedLecs]
-      this.dialogRef.close();
-      this.dataService.saveState()
-    }
-    else this.snackbar.open('Could Not Generate Lectures 😞', undefined, { duration: 2000 })
+    // setTimeout(() => {
+    let solvedLecs = await this.generate();
+      this.loading = false;
+      console.log('G solution', solvedLecs)
+      if (solvedLecs != undefined) {
+        this.table.lectures = [...solvedLecs]
+        this.dialogRef.close();
+        this.dataService.saveState()
+      }
+      else this.snackbar.open('Can\'t Generate The Lectures 😞. Please check the question mark', undefined, { duration: 2000 })
+    // },0)
+    
+  }
+  
+  private generate():Promise<SolveLec[]|null> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        
+        resolve(this.G.generateSchedule(this.staticLecs, this.solveLecs, this.dataService.tables))
+      },1000)
+    })
   }
 
   isSolved(st: ProStaticLec): boolean {
@@ -137,7 +152,23 @@ export class GenLecturesComponent implements OnInit {
     return false;
         
   }
-  
+  howMessage = `Generate lectures base on determine week duration. So, the sum of all 
+  generated lectures will be the week duration. If there are lectures on 
+  the table, then generated lectures will be appended. And existing lectures 
+  will be constant i.e(won't be change). If you generate lectures
+  that exists on the table i.e(Same subject, teacher, and room) then week 
+  duration will add up. Note: You can't generate lecture with duration smaller 
+  than minimum lecture duration. So, week duration should be longer for generated lecture`;
+  FAQ() {
+    let data: Prompt = {
+      title: { text: 'How to Generate Lectures ?', color: 'var(--primary-color)' },
+      content:this.howMessage
+    }
+    this.dialog.open(PromptComponent, {
+      width: '500px',
+      data
+    });
+  }
   loading = false;
   disableGenerateButton() {
     return this.isAddNew(this.staticLecs[this.staticLecs.length - 1]) && this.staticLecs.filter(v => v.isUser == true).length <= 1;

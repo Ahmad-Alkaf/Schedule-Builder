@@ -1,5 +1,8 @@
-<div>
-   <h1 mat-dialog-title style="color:var(--primary-color);">Generate Lectures</h1>
+<div class=" position-relative">
+   <h1 mat-dialog-title style="color:var(--primary-color);">Generate Lectures in Valid Position</h1>
+   <div class="position-absolute top-0" (click)="FAQ()" [matTooltip]="howMessage" style="right:0;cursor: pointer;">
+      <mat-icon color="primary">question_mark</mat-icon>
+   </div>
    <form>
       <div mat-dialog-content style="overflow-y:auto">
 
@@ -18,10 +21,11 @@
             </div>
          </div>
 
-         <div *ngFor="let s of usersStaticLecs();let i=index;" >
-            <div *ngIf="s== staticLecs[staticLecs.length-1] && isAddNew(s) && i !=0" class="d-flex position-relative text-center"
-               style="margin:10px 0;height: 10px;">
-               <span class="position-absolute opacity-75" style="top:-10px;transform: translateX(-50%);margin-left:50%;font-size:0.9rem;">Unregistered</span>
+         <div *ngFor="let s of usersStaticLecs();let i=index;">
+            <div *ngIf="s== staticLecs[staticLecs.length-1] && isAddNew(s) && i !=0"
+               class="d-flex position-relative text-center" style="margin:10px 0;height: 10px;">
+               <span class="position-absolute opacity-75"
+                  style="top:-10px;transform: translateX(-50%);margin-left:50%;font-size:0.9rem;">Unregistered</span>
                <div class="w-100">
                   <mat-divider class="m-auto" style="background-color:var(--primary-color);height:2px;width:75%;">
                   </mat-divider>
@@ -76,10 +80,16 @@
             mat-stroked-button
             (click)="staticLecs.push({ name: '', teacher: '', room: '', weekDuration: 0,isUser:true });">Add&nbsp;New</button>
          <!-- </div> -->
+
       </div>
       <div mat-dialog-actions class="d-flex justify-content-center">
          <button mat-stroked-button (click)="dialogRef.close()" color="warn" class="w-25">Cancel</button>
-         <button mat-stroked-button [disabled]="disableGenerateButton()||loading" (click)="generate()" color="primary" class="w-25">Generate</button>
+         <button mat-stroked-button [disabled]="disableGenerateButton()||loading" (click)="generateIntro()"
+         color="primary" class="w-25">Generate</button>
+         <mat-spinner class="mx-2" diameter="30" *ngIf="loading" mode="indeterminate" color="primary">
+         </mat-spinner>
       </div>
    </form>
+   <div>
+   </div>
 </div>

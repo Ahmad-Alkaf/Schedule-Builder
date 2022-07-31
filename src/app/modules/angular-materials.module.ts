@@ -14,9 +14,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
+// import {MatProgressBarModule} from '@angular/material/progress-bar'; 
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkTreeModule } from '@angular/cdk/tree';
-
+import {MatTooltipModule} from '@angular/material/tooltip'; 
 const MatArr: any = [
   MatButtonModule,
   MatTreeModule,
@@ -34,7 +36,10 @@ const MatArr: any = [
   MatSnackBarModule,
   CdkTreeModule,
   MatRadioModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  // MatProgressBarModule,
+  MatTooltipModule,
+  MatProgressSpinnerModule,
 ]
 
 @NgModule({
