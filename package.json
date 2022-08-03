@@ -9,7 +9,8 @@
     "start-electron": "ng build --base-href ./ && electron-forge start",
     "build-electron": "ng build --base-href ./ && electron-forge make",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "serve":"ng serve"
   },
   "private": true,
   "dependencies": {
@@ -31,13 +32,13 @@
     "express-body": "^1.0.6",
     "http-server": "^14.1.0",
     "jquery": "^3.6.0",
-    "nodemon": "^2.0.15",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~13.3.3",
+    "nodemon": "^2.0.15",
     "@angular/cli": "~13.3.3",
     "@angular/compiler-cli": "~13.3.0",
     "@types/jasmine": "~3.10.0",
