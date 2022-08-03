@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '@service/api.service';
 
@@ -17,9 +17,9 @@ export class LoginComponent implements OnInit {
 
   }
   loading = false;
-  form = new FormGroup({
-    username: new FormControl(null, [Validators.required,Validators.minLength(6),Validators.maxLength(32)]),
-    password: new FormControl(null, [Validators.required,Validators.minLength(4),Validators.maxLength(32)]),
+  form = new UntypedFormGroup({
+    username: new UntypedFormControl(null, [Validators.required,Validators.minLength(6),Validators.maxLength(32)]),
+    password: new UntypedFormControl(null, [Validators.required,Validators.minLength(4),Validators.maxLength(32)]),
   });
   errorMessage = '';
   async login() {

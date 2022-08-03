@@ -119,6 +119,5 @@
     "@schematics/angular:component": {
       "style": "scss"
     }
-  },
-  "defaultProject": "schedule_maker"
+  }
 }
