@@ -218,8 +218,7 @@ export class DataService {
           $(arr[i]).parent().removeClass('collide');
 
       for (let i = 0; i < this.tables.length; i++)
-        if (arr[i])
-          if (arr[i].innerText == this.tables[i].name) {
+          if (arr[i] && arr[i].innerText == this.tables[i].name) {
             let tab = $(arr[i]).parent();
             if (this.tables[i].isCollide)
               tab.addClass('collide');

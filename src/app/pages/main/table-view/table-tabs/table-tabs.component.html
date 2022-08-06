@@ -9,10 +9,10 @@
 
 
    <mat-tab disabled>
-      <ng-template mat-tab-label>
-         <button mat-icon-button (click)="openAddTable()">
-            <mat-icon color="primary">add</mat-icon>
+      <div mat-tab-label>
+         <button mat-icon-button>
+            <mat-icon style="cursor:pointer" (click)="openAddTable()" color="primary">add</mat-icon>
          </button>
-      </ng-template>
+      </div>
    </mat-tab>
 </mat-tab-group>

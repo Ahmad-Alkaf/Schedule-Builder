@@ -1,7 +1,7 @@
 
 @import "../assets/functions.scss";
 @import "~@angular/material/theming";
-
+@include mat-core();
 
 .dark-theme-purple {
   @import "./purple";
@@ -25,6 +25,7 @@
   @include angular-material-theme($purple-theme);
   @include generate-theme-vars($purple-theme);
 }
+
 
 .light-theme-indigo {
   @import "./indigo";
@@ -89,6 +90,7 @@
   @include angular-material-theme($blue-theme);
   @include generate-theme-vars($blue-theme);
 }
+
 .dark-theme-brown {
   @import "./brown";
   $brown-theme: mat-dark-theme($brown-theme-primary,

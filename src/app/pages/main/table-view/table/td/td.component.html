@@ -11,13 +11,13 @@
       <div class="roomDiv" *ngIf="td.lecture.room">
          {{td.lecture.room}}
       </div>
-      <div *ngIf="!dataService.newLecContainer.includes(td); else duration">
+      <div *ngIf="!dataService.newLecContainer.includes(td)">
          {{time(td.startTime)}} - {{((td.startTime + td.duration)>=13?time(td.startTime + td.duration-12):time(td.startTime +
          td.duration))}}
       </div>
-      <ng-template #duration>
+      <div *ngIf="dataService.newLecContainer.includes(td)">
          {{td.duration}} Hour{{td.duration>=2?'s':''}}
-      </ng-template>
+      </div>
    </div>
    <div class="options">
       <button color="primary" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Lecture Options">

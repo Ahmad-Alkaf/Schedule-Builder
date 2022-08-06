@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavTreeComponent } from '@main/nav-tree/nav-tree.component';
 import { MainComponent } from '@main/main.component';
-import { TableComponent } from '@main/table-view/table/table.component' 
+import { TableComponent } from '@main/table-view/table/table.component'
 import { TdComponent } from '@main/table-view/table/td/td.component';
 import { SoundService } from '@service/sound.service';
 import { AddLectureComponent } from '@dialog/add-lecture/add-lecture.component';
@@ -26,13 +26,20 @@ import { ControlLectureService } from '@service/control-lecture.service';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
-import { ErrorComponent } from '@dialog/error-msg/error.component'; 
+import { ErrorComponent } from '@dialog/error-msg/error.component';
 import { AngularMaterialsModule } from './modules/angular-materials.module';
 import { OptionsComponent } from './pages/main/table-view/options/options.component';
 import { EditTableComponent } from './dialog/edit-table/edit-table.component';
 import { PromptComponent } from './dialog/prompt/prompt.component';
 import { ThemeComponent } from './pages/header/theme/theme.component';
 import { GenLecturesComponent } from './dialog/gen-lectures/gen-lectures.component';
+import { AppRoutingModule } from './modules/app-routing.module';
+
+
+
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,19 +66,12 @@ import { GenLecturesComponent } from './dialog/gen-lectures/gen-lectures.compone
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
     AngularMaterialsModule,
-    RouterModule.forRoot([{
-      path: '',
-      component: MainComponent,
-
-    },
-    { path: 'login', component: LoginComponent },{
-      path:'register',component:RegisterComponent
-    }]),
+    AppRoutingModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
   ],
   providers: [SoundService, DataService, KeyboardService, Final, ApiService, ControlLectureService],
   bootstrap: [AppComponent]

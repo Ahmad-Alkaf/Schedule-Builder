@@ -9,8 +9,8 @@
        </mat-radio-group> -->
       <app-theme></app-theme>
 
-      <div *ngIf="api.token == '';else logout;"><button mat-button (click)="registerHandle()">Register</button><button
+      <div *ngIf="api.token == '';"><button mat-button (click)="registerHandle()">Register</button><button
             (click)="loginHandle()" mat-button>Login</button></div>
-      <ng-template #logout><button (click)="logoutHandle()" mat-button>Logout</button></ng-template>
+      <div *ngIf="api.token != ''" #logout><button (click)="logoutHandle()" mat-button>Logout</button></div>
    </div>
 </mat-toolbar>

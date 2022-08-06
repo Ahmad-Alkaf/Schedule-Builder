@@ -155,3 +155,30 @@ body {
     color: var(--warn-color);
   }
 }
+
+// .mat-focus-indicator::before {
+//   border: none !important;    
+// }
+
+// ::ng-deep .mat-button-focus-overlay {
+//   border: none !important;
+// }
+
+// ::ng-deep .mat-icon {
+//   border: none !important;
+// }
+
+// button.mat-icon:focus{
+//   outline: none !important;
+// }
+
+// .mat-icon-button ::ng-deep .mat-icon {
+//   display: none;
+// }
+
+// .mat-icon:active{
+//   outline: none !important;
+//   border: none !important;
+//   -webkit-box-shadow: none !important;
+//   box-shadow: none !important;
+// }
