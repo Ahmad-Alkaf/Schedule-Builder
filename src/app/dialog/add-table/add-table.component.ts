@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { NavTreeComponent } from '@main/nav-tree/nav-tree.component';
 
@@ -9,7 +9,7 @@ import { NavTreeComponent } from '@main/nav-tree/nav-tree.component';
   styleUrls: ['./add-table.component.scss']
 })
 export class AddTableComponent  {
-  tableControl = new FormControl('', Validators.maxLength(15));
+  tableControl = new UntypedFormControl('', Validators.maxLength(15));
   
   constructor(public dialogRef: MatDialogRef<NavTreeComponent>) { }
 
