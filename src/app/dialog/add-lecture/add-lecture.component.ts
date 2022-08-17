@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@service/data.service';
 import { NavTreeComponent } from '@main/nav-tree/nav-tree.component';
@@ -15,11 +15,11 @@ export class AddLectureComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<NavTreeComponent>,
     public dataService: DataService, public tableService: GenerateTableService, public final: Final) { }
 
-  public form = new UntypedFormGroup({
-    teacher: new UntypedFormControl(null),
-    name: new UntypedFormControl(null, Validators.required),
-    room: new UntypedFormControl(null),
-    duration: new UntypedFormControl(null, Validators.required)
+  public form = new FormGroup({
+    teacher: new FormControl(null),
+    name: new FormControl(null, Validators.required),
+    room: new FormControl(null),
+    duration: new FormControl(null, Validators.required)
   })
   ngOnInit(): void {
 
