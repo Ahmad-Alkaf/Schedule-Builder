@@ -76,14 +76,15 @@
          </div>
          <!-- <div> -->
          <button *ngIf="!isAddNew(staticLecs[staticLecs.length-1])"
+            [disabled]="loading"
             style="margin-left:50%;transform: translateX(-50%);width:340px;margin-bottom:25px;" color="primary"
             mat-stroked-button
-            (click)="staticLecs.push({ name: '', teacher: '', room: '', weekDuration: 0,isUser:true });">Add&nbsp;New</button>
+            (click)="staticLecs.push({ name: '', teacher: '', room: '', weekDuration: 0,isUser:true });">Add&nbsp;More</button>
          <!-- </div> -->
 
       </div>
       <div mat-dialog-actions class="d-flex justify-content-center">
-         <button mat-stroked-button (click)="dialogRef.close()" color="warn" class="w-25">Cancel</button>
+         <button mat-stroked-button (click)="dialogRef.close();" color="warn" class="w-25">Cancel</button>
          <button mat-stroked-button [disabled]="disableGenerateButton()||loading" (click)="generateIntro()"
          color="primary" class="w-25">Generate</button>
          <mat-spinner class="mx-2" diameter="30" *ngIf="loading" mode="indeterminate" color="primary">

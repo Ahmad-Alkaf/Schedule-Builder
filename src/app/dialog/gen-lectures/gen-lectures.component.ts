@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Prompt, PromptComponent } from '@dialog/prompt/prompt.component';
 import { NavTreeComponent } from '@page/main/nav-tree/nav-tree.component';
 import { DataService } from '@service/data.service';
@@ -19,7 +18,6 @@ interface ProStaticLec extends StaticLec {
 })
 export class GenLecturesComponent implements OnInit {
   public table: Table;
-  // @Output() loading: EventEmitter = new EventEmitter();
   constructor(public dialogRef: MatDialogRef<NavTreeComponent>, @Inject(MAT_DIALOG_DATA) data: Table
     , public dataService: DataService, public final: Final, private G: GenerateTableService,
     private snackbar: MatSnackBar, private dialog:MatDialog) {
@@ -29,6 +27,8 @@ export class GenLecturesComponent implements OnInit {
   private solveLecs: SolveLec[] = [];
 
   ngOnInit(): void {
+    this.dialogRef.beforeClosed().subscribe({ next: () => this.G.terminate() });
+    
     this.solveLecs = [...this.table.lectures]
     // JSON.parse(JSON.stringify(
     // ));
@@ -65,26 +65,25 @@ export class GenLecturesComponent implements OnInit {
     console.log('staticLecs', this.staticLecs);
     this.loading = true
     // setTimeout(() => {
-    let solvedLecs = await this.generate();
+    try {
+      let solvedLecs = await this.generate();
       this.loading = false;
       console.log('G solution', solvedLecs)
-      if (solvedLecs != undefined) {
+      if (solvedLecs != null) {
         this.table.lectures = [...solvedLecs]
         this.dialogRef.close();
         this.dataService.saveState()
       }
-      else this.snackbar.open('Can\'t Generate The Lectures 😞. Please check the question mark', undefined, { duration: 2000 })
+      else this.snackbar.open('Couldn\'t Generate The Lectures😞 Maybe it\'s impossible', undefined, { duration: 2000 })
+    } catch (msg:any) {
+      this.snackbar.open(msg ?? "Something went wrong!", undefined, { duration: 2500 });
+    }
     // },0)
     
   }
   
   private generate():Promise<SolveLec[]|null> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        
-        resolve(this.G.generateSchedule(this.staticLecs, this.solveLecs, this.dataService.tables))
-      },1000)
-    })
+       return this.G.generateLectures(this.staticLecs, this.solveLecs, this.dataService.tables)
   }
 
   isSolved(st: ProStaticLec): boolean {
