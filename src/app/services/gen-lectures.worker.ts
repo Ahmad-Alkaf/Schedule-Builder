@@ -1,6 +1,5 @@
-/// <reference lib="webworker" />
+//// <reference lib="webworker" />
 
-import { WeekDay } from "@angular/common";
 import { SolveLec, StaticLec, Final, WEEK_DAYS } from "./static";
 import { Table } from "./tableBinder";
 var final = new Final();
