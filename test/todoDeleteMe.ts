@@ -16,7 +16,7 @@ let emptyBoard: Pos[][] = [[0, 0, 0, 0, 0, 0, 0, 0, 0],
 [0, 0, 0, 0, 0, 0, 0, 0, 0],
 [0, 0, 0, 0, 0, 0, 0, 0, 0],
 [0, 0, 0, 0, 0, 0, 0, 0, 0],
-[0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 9],
 ];
 
 console.time('time')
@@ -37,18 +37,24 @@ function solveLoop(board: Pos[][]): Pos[][] | null {
    snapshots.push(curSnap);
 
    //fifth rule
-   while (snapshots.length !== 0) {
+   recursive: while (snapshots.length !== 0) {
       curSnap = snapshots.pop() as Snapshot;//snapshots won't be empty if it entered the while loop
-      printBoard(curSnap.board);
+      // printBoard(curSnap.board);
+      // console.log('\n'+curSnap.board[0].toString()+'\n'+curSnap.board[1].toString()+'  '+curSnap.stage);
+      // console.log('i=',curSnap.i)
+      // console.log('j=',curSnap.j)
+      // console.log('num=',curSnap.num)
+      // console.log('snapshots=', snapshots.length);
       // console.log(curSnap)
+      
       //sixth rule
       switch (curSnap.stage) {
          case 'before'://code before recursive function call its self
-            let CONTINUE = false;
-            for (; curSnap.i < 9; curSnap.i++) {//i is index
-               for (curSnap.j = 0; curSnap.j < 9; curSnap.j++) {//i is index
+            // let CONTINUE = false;
+            for (; curSnap.i < 9; curSnap.i++,curSnap.j = 0) {//i is index
+               for (; curSnap.j < 9; curSnap.j++,curSnap.num = 1) {//i is index
                   if (needTouch(curSnap.board, curSnap.board[curSnap.i][curSnap.j])) {
-                     for (curSnap.num = 1; curSnap.num < 9; curSnap.num++) {//num is value
+                     for (; curSnap.num <= 9; curSnap.num++) {//num is value
                         if (isPossible(curSnap.board,curSnap.i,curSnap.j, curSnap.num as Pos)) {
                            curSnap.board[curSnap.i][curSnap.j] = curSnap.num as Pos;
                            //solve() recursive call
@@ -56,35 +62,37 @@ function solveLoop(board: Pos[][]): Pos[][] | null {
                            snapshots.push(curSnap);
                            let newSnap: Snapshot = { stage: 'before', board:curSnap.board, num: 1, i: 0,j:0 }
                            snapshots.push(newSnap);
-                           CONTINUE = true;
+                           // CONTINUE = true;
+                           continue recursive;
                            //
                         }
-                        if (CONTINUE) break;
+                        // if (CONTINUE) break;
                      }
-                     if (CONTINUE) break;
+                     // if (CONTINUE) break;
                      retValue = null;//return null;
-                     CONTINUE = true;
+                     // CONTINUE = true;
+                     continue recursive;
+                     // break;
                   }
-                  if (CONTINUE) break;
+                  // if (CONTINUE) break;
                }
-               if (CONTINUE) break;
+               // if (CONTINUE) break;
             }
-            if (CONTINUE) continue;
+            // if (CONTINUE) continue start;
             retValue = curSnap.board;//return board;
             continue;
 
-            break;
          case 'after'://code after recursive function call its self
 
             if (retValue == null) {
 
                curSnap.board[curSnap.i][curSnap.j] = 0;
                curSnap.stage = 'before';
-               // curSnap.num++;
+               curSnap.num++;
                snapshots.push(curSnap);
             }
             else {
-               // retValue = curSnap.arr;//return arr; //!logically it should be return x; i.e only continue;
+               retValue = curSnap.board;//return arr; //!logically it should be return x; i.e only continue;
                continue;
             }
 
@@ -163,7 +171,7 @@ function needTouch(arr: Pos[][], pos: Pos): boolean {
 
 
 function printBoard(board: Pos[][] | null): void {
-   process.stdout.write('\033c');
+   console.log('\x1Bc');//clear console (cls)
    if (board == null)
       console.log('NULL')
    else {
