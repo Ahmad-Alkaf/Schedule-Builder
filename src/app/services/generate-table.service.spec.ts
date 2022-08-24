@@ -91,7 +91,7 @@ describe('GenerateTableService', () => {
     staticLecs = [
       // { name: 'Server-Side', teacher: 'Hassan', weekDuration: 6, room: '302' },
       // { name: 'PM', teacher: 'Hamza', weekDuration: 2.5, room: '401' },
-      { name: 'PM', teacher: 'Hamza', weekDuration: 6.5, room: '401' },
+      { name: 'PM', teacher: 'Hamza', weekDuration: 25.5, room: '401' },
       // { name: 'HCI', teacher: 'Ahmed', weekDuration: 6, room: '402' },
       // { name: 'Database', teacher: 'Mohammed', weekDuration: 6, room: 'Lab 3' },
       // { name: 'Organization', teacher: 'Mohsen', weekDuration: 3, room: 'Lab 4' },
@@ -102,7 +102,7 @@ describe('GenerateTableService', () => {
     let tables = [new Table(1, 'T1')];
     let res: SolveLec[] = s.generateSchedule(staticLecs, solveLecs, []) as SolveLec[];
     expect(res).toBeTruthy();
-
+    console.log(res);
     expect(s.getTotalHours(res, staticLecs[0])).withContext(`total hours for lecture`).toBe(6.5);
     staticLecs = [{ name: 'English', teacher: 'Abduallah', weekDuration: final.MAX_LECTURE_DURATION + final.STEP_TIME, room: '301' }];
 

@@ -21,7 +21,6 @@ onmessage = ({ data }) => {
 }
 
 interface Snapshot {
-  solveLecs: SolveLec[];
   newLec?: SolveLec;
   i: {
     staticLec: number,
@@ -32,80 +31,57 @@ interface Snapshot {
   stage: 'before' | 'after';
 }
 
-export function generateSchedule(staticLecs: readonly StaticLec[], solveLecsParam: SolveLec[], otherTables: Table[]): SolveLec[] | null {
+export function generateSchedule(staticLecs: readonly StaticLec[], solveLecs: SolveLec[], otherTables: Table[]): SolveLec[] | null {
   let durations = final.LECTURE_DURATIONS.reverse();
   let startTimes = final.START_TIMES;
   let weekDays = WEEK_DAYS;
-  
-  let retValue: SolveLec[] | null = null;
+
   let snapshots: Snapshot[] = [];
-  let curSnap: Snapshot = { stage: 'before', solveLecs: solveLecsParam, i: { staticLec: 0, day: 0, startTime: 0, duration: 0 } };
+  let curSnap: Snapshot = { stage: 'before', i: { staticLec: 0, day: 0, startTime: 0, duration: 0 } };
   snapshots.push(curSnap);
 
-  while (snapshots.length !== 0) {
+  recursive: while (snapshots.length !== 0) {
     curSnap = snapshots.pop() as Snapshot;//snapshots won't be empty if it entered the while loop
 
     switch (curSnap.stage) {
       case 'before':
 
-        let CONTINUE = false;
-        for (; curSnap.i.staticLec < staticLecs.length;curSnap.i.staticLec++) {
-          if (needTouch(staticLecs[curSnap.i.staticLec], curSnap.solveLecs)) {
-            for (; curSnap.i.day < weekDays.length;curSnap.i.day++) {//'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
-              for (; curSnap.i.startTime < startTimes.length; curSnap.i.startTime++) {//8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12
-                for (; curSnap.i.duration < durations.length;curSnap.i.duration++) { //1 | 1.5 | 2 | 2.5 | 3
+        for (; curSnap.i.staticLec < staticLecs.length; curSnap.i.staticLec++, curSnap.i.day = 0)
+          if (needTouch(staticLecs[curSnap.i.staticLec], solveLecs)) {
+            for (; curSnap.i.day < weekDays.length; curSnap.i.day++, curSnap.i.startTime = 0) //'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
+              for (; curSnap.i.startTime < startTimes.length; curSnap.i.startTime++, curSnap.i.duration = 0) //8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12
+                for (; curSnap.i.duration < durations.length; curSnap.i.duration++) {  //1 | 1.5 | 2 | 2.5 | 3
 
-                  var newLec: SolveLec = { lecture: staticLecs[curSnap.i.staticLec], duration:durations[curSnap.i.duration], day:weekDays[curSnap.i.day], startTime:startTimes[curSnap.i.startTime] };
-                  if (isPossible(curSnap.solveLecs, newLec, otherTables)) {
+                  var newLec: SolveLec = { lecture: staticLecs[curSnap.i.staticLec], duration: durations[curSnap.i.duration], day: weekDays[curSnap.i.day], startTime: startTimes[curSnap.i.startTime] };
+                  if (isPossible(solveLecs, newLec, otherTables)) {
                     // pushOrExtendDuration(curSnap.solveLecs, newLec);//!solveLecs.push() how to backtrack if it extend the duration!!!!
-                    curSnap.solveLecs.push(newLec);
+                    solveLecs.push(newLec);
                     //solve() recursive call
-                    curSnap.newLec = newLec;
                     curSnap.stage = 'after';
+                    curSnap.newLec = newLec;
                     snapshots.push(curSnap);
-                    let newSnap: Snapshot = { stage: 'before', solveLecs: curSnap.solveLecs, i: { staticLec: 0, day: 0, startTime: 0, duration: 0 } }
+                    let newSnap: Snapshot = { stage: 'before', i: { staticLec: 0, day: 0, startTime: 0, duration: 0 } }
                     snapshots.push(newSnap);
-                    CONTINUE = true;
+                    continue recursive;
                     //
                   }
-                  if (CONTINUE) break;
                 }
-                if (CONTINUE) break;
-              }
-              if (CONTINUE) break;
-            }
-            if (CONTINUE) break;
-            retValue = null;//return null;
-            CONTINUE = true;
+            continue recursive;
           }
-          if (CONTINUE) break;
-        }
-        if (CONTINUE) continue;
-        retValue = curSnap.solveLecs;
-        continue;
-        break;
+        return solveLecs;
+
       case 'after':
 
-        if (retValue == null) {
-          if (curSnap.newLec) {
-            curSnap.solveLecs.splice(curSnap.solveLecs.indexOf(curSnap.newLec), 1);
-            curSnap.stage = 'before';
-            curSnap.i.duration++;
-            snapshots.push(curSnap);
-          }
-          else throw new Error('newLec is undefined! =' + curSnap.newLec)
-        }
-        else {
-          retValue = curSnap.solveLecs;//return solveLecs;//!logically it should be return x; i.e only continue;
-          continue;
-        }
+          console.assert(curSnap.newLec !== undefined, 'newLec should not be undefined but got=' + curSnap.newLec)
+          solveLecs.splice(solveLecs.indexOf(curSnap.newLec as SolveLec), 1);
+          curSnap.stage = 'before';
+          curSnap.i.duration++;
+          snapshots.push(curSnap);
 
-        break;
     }
   }
-  return retValue;
+  return null;
 }
-
 
 /**
    * 

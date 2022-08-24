@@ -20,7 +20,7 @@ export class GenLecturesComponent implements OnInit {
   public table: Table;
   constructor(public dialogRef: MatDialogRef<NavTreeComponent>, @Inject(MAT_DIALOG_DATA) data: Table
     , public dataService: DataService, public final: Final, private G: GenerateTableService,
-    private snackbar: MatSnackBar, private dialog:MatDialog) {
+    private snackbar: MatSnackBar, private dialog: MatDialog) {
     this.table = data;
   }
   public staticLecs: ProStaticLec[] = [];
@@ -28,7 +28,7 @@ export class GenLecturesComponent implements OnInit {
 
   ngOnInit(): void {
     this.dialogRef.beforeClosed().subscribe({ next: () => this.G.terminate() });
-    
+
     this.solveLecs = [...this.table.lectures]
     // JSON.parse(JSON.stringify(
     // ));
@@ -75,15 +75,15 @@ export class GenLecturesComponent implements OnInit {
         this.dataService.saveState()
       }
       else this.snackbar.open('Couldn\'t Generate The Lectures😞 Maybe it\'s impossible', undefined, { duration: 2000 })
-    } catch (msg:any) {
+    } catch (msg: any) {
       this.snackbar.open(msg ?? "Something went wrong!", undefined, { duration: 2500 });
     }
     // },0)
-    
+
   }
-  
-  private generate():Promise<SolveLec[]|null> {
-       return this.G.generateLectures(this.staticLecs, this.solveLecs, this.dataService.tables)
+
+  private generate(): Promise<SolveLec[] | null> {
+    return this.G.generateLectures(this.staticLecs, this.solveLecs, this.dataService.tables)
   }
 
   isSolved(st: ProStaticLec): boolean {
@@ -136,20 +136,20 @@ export class GenLecturesComponent implements OnInit {
   usersStaticLecs(): ProStaticLec[] {
     return this.staticLecs.filter(v => v.isUser);
   }
-  
+
   /**
    * 
    * @param staticLec 
    * @param value 
    * @returns if there is same lecture(STR(Subject,Teacher,Room)) in the table then disable invalid hours
    */
-  disableHour(s: ProStaticLec, value: number): boolean{
+  disableHour(s: ProStaticLec, value: number): boolean {
     for (let stat of this.staticLecs)
       if (stat != s && stat.name == s.name && stat.teacher == s.teacher && stat.room == s.room)
         if (stat.weekDuration > value)
           return true;
     return false;
-        
+
   }
   howMessage = `Generate lectures base on determine week duration. So, the sum of all 
   generated lectures will be the week duration. If there are lectures on 
@@ -161,7 +161,7 @@ export class GenLecturesComponent implements OnInit {
   FAQ() {
     let data: Prompt = {
       title: { text: 'How to Generate Lectures ?', color: 'var(--primary-color)' },
-      content:this.howMessage
+      content: this.howMessage
     }
     this.dialog.open(PromptComponent, {
       width: '500px',
