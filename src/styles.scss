@@ -4,8 +4,9 @@
 @import url("./assets/icon.css");
 @import url("./assets/google.font.style.css");
 
-html {
+body,html {
   height: 100vh !important;
+  overflow:hidden;
 }
 
 :root {
@@ -88,7 +89,7 @@ body {
   height: 65px !important;
   text-align: center;
   vertical-align: middle;
-  padding: 0vh !important;
+  padding: 0 !important;
   margin: 0px !important;
   // border: 1px solid var(--disabled-color);
 }

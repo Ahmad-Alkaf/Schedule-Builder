@@ -27,11 +27,12 @@ export class GenLecturesComponent implements OnInit {
   private solveLecs: SolveLec[] = [];
 
   ngOnInit(): void {
+    //to terminate lectures generator when dialog closed if it processing
     this.dialogRef.beforeClosed().subscribe({ next: () => this.G.terminate() });
 
-    this.solveLecs = [...this.table.lectures]
-    // JSON.parse(JSON.stringify(
-    // ));
+    this.solveLecs = [...this.table.lectures];//solveLecs predefined lectures on the table
+    
+    //get existing schedule's lectures into staticLectures
     for (let { lecture: l, duration } of this.solveLecs) {
       let exist = false;
       for (let st of this.staticLecs)
@@ -45,45 +46,40 @@ export class GenLecturesComponent implements OnInit {
         this.staticLecs.push({ ...l, weekDuration: duration, isUser: false });
       }
     }
-    console.log('static lecs', this.staticLecs)
+    console.log('existing static lecs', this.staticLecs)
 
-
-    // this.dropdownChanged();
+    //html will show dropdowns list to "addNew" staticLecs. Actually it is empty staticLecs
     this.staticLecs.push({ name: '', teacher: '', room: '', weekDuration: 0, isUser: true });
   }
 
-
+  
+  //will called when click (Generate) button
   async generateIntro() {
     if (this.staticLecs.length <= 1 && this.isAddNew(this.staticLecs[this.staticLecs.length - 1])) {
       this.snackbar.open('You Should Specify at Least One Lecture!', undefined, { duration: 2000 })
       return;
     }
-    // this.dialogRef.close();
+    // get rid of empty staticLec that added to make user "addNew" staticLec
     if (this.isAddNew(this.staticLecs[this.staticLecs.length - 1])) {
       this.staticLecs.pop();
     }
     console.log('staticLecs', this.staticLecs);
     this.loading = true
-    // setTimeout(() => {
     try {
-      let solvedLecs = await this.generate();
+      let solvedLecs = await this.G.generateLectures(this.staticLecs, this.solveLecs, this.dataService.tables);
       this.loading = false;
-      console.log('G solution', solvedLecs)
+      console.log('Generated lectures=', solvedLecs)
       if (solvedLecs != null) {
         this.table.lectures = [...solvedLecs]
+        this.snackbar.open('Successfully Generated!',undefined,{duration:3000})
         this.dialogRef.close();
         this.dataService.saveState()
       }
-      else this.snackbar.open('Couldn\'t Generate The Lectures😞 Maybe it\'s impossible', undefined, { duration: 2000 })
+      else this.snackbar.open('Impossible to Generate the Lectures😞', undefined, { duration: 2000 })
     } catch (msg: any) {
       this.snackbar.open(msg ?? "Something went wrong!", undefined, { duration: 2500 });
     }
-    // },0)
 
-  }
-
-  private generate(): Promise<SolveLec[] | null> {
-    return this.G.generateLectures(this.staticLecs, this.solveLecs, this.dataService.tables)
   }
 
   isSolved(st: ProStaticLec): boolean {
@@ -112,8 +108,13 @@ export class GenLecturesComponent implements OnInit {
     let totalOccupied = this.staticLecs.reduce((acc, v, i) => acc + v.weekDuration, 0);
     totalOccupied -= st.weekDuration;
     let availableDur = this.totalAvailableHours - totalOccupied;
-
-    return availableDur;
+    let maxHoursWeekCouldLecture = this.final.MAX_LECTURE_DURATION * WEEK_DAYS.length;
+    
+    return (maxHoursWeekCouldLecture < availableDur ? maxHoursWeekCouldLecture : availableDur) - this.weekDuration(st);
+  ;
+    // console.log(availableDur);
+    // return availableDur
+    
   }
 
 
@@ -140,17 +141,28 @@ export class GenLecturesComponent implements OnInit {
   /**
    * 
    * @param staticLec 
-   * @param value 
+   * @param dur 
    * @returns if there is same lecture(STR(Subject,Teacher,Room)) in the table then disable invalid hours
    */
-  disableHour(s: ProStaticLec, value: number): boolean {
+  disableHour(s: ProStaticLec, dur: number): boolean {
     for (let stat of this.staticLecs)
       if (stat != s && stat.name == s.name && stat.teacher == s.teacher && stat.room == s.room)
-        if (stat.weekDuration > value)
+        if (stat.weekDuration >= dur)
           return true;
     return false;
 
   }
+  /**
+   * 
+   * @param s addNew lecture not reference
+   * @returns the weekDuration of STR equal staticLec in staticLecs list OR 0 if not found
+   */
+  weekDuration(s: ProStaticLec) {
+    let x =this.staticLecs.filter((v) => v.name == s.name && v.room == s.room && v.teacher == s.teacher);
+    return x[0]?.weekDuration ?? 0;
+  }
+  
+  
   howMessage = `Generate lectures base on determine week duration. So, the sum of all 
   generated lectures will be the week duration. If there are lectures on 
   the table, then generated lectures will be appended. And existing lectures 

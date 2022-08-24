@@ -42,7 +42,7 @@ export function generateSchedule(staticLecs: readonly StaticLec[], solveLecs: So
 
   recursive: while (snapshots.length !== 0) {
     curSnap = snapshots.pop() as Snapshot;//snapshots won't be empty if it entered the while loop
-
+    console.log('snapshots=', snapshots.length);
     switch (curSnap.stage) {
       case 'before':
 
