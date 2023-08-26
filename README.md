@@ -20,7 +20,7 @@ We often need to change a lecture place from time to time, (teachers or students
 
 <div align="center">
   <img src="/Schedule%20Maker/conflict%20lectures%20warning.png" />
-  <p>Example: Collision detected interface, between Level 4 and Level 1 schedules in Teacher and room. (i.e., teacher and room are busy on Wednesday between 9 - 12 O'Clock</p>
+  <p>Example: Collision detected interface, between Level 4 and Level 1 schedules in Teacher and Room. (i.e., the teacher and room are busy on Wednesday between 9 - 12 O'Clock). The app can detect collisions between two or more schedules and in a Teacher, Room, or both.</p>
 </div>
 
 This project is made as a project for [Human-Computer Interaction (HCI)](https://en.wikipedia.org/wiki/Human%E2%80%93computer_interaction) subject at [Al-Ahgaff University](http://ahgaff.edu).
