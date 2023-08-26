@@ -33,12 +33,7 @@ More images...
 
 <div align="center">
   <img src="/Schedule%20Maker/adding%20subject....png" />
-  <p>Adding subject</p>
-</div>
-
-<div align="center">
-  <img src="/Schedule%20Maker/adding%20subject....png" />
-  <p>Adding subject. Same process for room and teacher</p>
+  <p>Adding a subject. Same process for room and teacher</p>
 </div>
 
 <div align="center">
