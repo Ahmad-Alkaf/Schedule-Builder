@@ -24,8 +24,6 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { AddTableComponent } from '@dialog/add-table/add-table.component';
 import { ControlLectureService } from '@service/control-lecture.service';
 import { HttpClientModule } from '@angular/common/http';
-import { LoginComponent } from './pages/login/login.component';
-import { RegisterComponent } from './pages/register/register.component';
 import { ErrorComponent } from '@dialog/error-msg/error.component';
 import { AngularMaterialsModule } from './modules/angular-materials.module';
 import { OptionsComponent } from './pages/main/table-view/options/options.component';
@@ -55,8 +53,6 @@ import { AppRoutingModule } from './modules/app-routing.module';
     HeaderComponent,
     AutofocusDirective,
     AddTableComponent,
-    LoginComponent,
-    RegisterComponent,
     ErrorComponent,
     OptionsComponent,
     EditTableComponent,

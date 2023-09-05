@@ -1,10 +1,18 @@
-<div class="row px-3 " style="height:100%;width:100vw;">
-   <div id="leftSlider" class="col-3 overflow-auto">
-      <app-nav-tree></app-nav-tree>
-      <mat-divider class="my-4"></mat-divider>
-      <app-created-lecture></app-created-lecture>
-   </div>
+<div class="row px-3 d-none d-xl-flex" style="height:100%;width:100vw;">
+  <div id="leftSlider" class="col-3 overflow-auto">
+    <app-nav-tree></app-nav-tree>
+    <mat-divider class="my-4"></mat-divider>
+    <app-created-lecture></app-created-lecture>
+  </div>
 
-   <app-table-tabs class="col-9"></app-table-tabs>
-   
+  <app-table-tabs class="col-9"></app-table-tabs>
+</div>
+<div class="d-block d-xl-none m-4 m-md-5">
+  <h1>Oops! Your screen size is too small to use this application properly.</h1>
+  <p>Please try one of the following options:</p>
+  <ul>
+    <li>Resize your browser window to make it larger</li>
+    <li>Zoom out to see more of the website</li>
+    <li>If you are using a mobile device, switch to the desktop view in your browser settings</li>
+  </ul>
 </div>

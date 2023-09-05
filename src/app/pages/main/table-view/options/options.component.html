@@ -1,28 +1,39 @@
-<div class="d-flex">
-   <button mat-flat-button [matMenuTriggerFor]="tableOptions" color="primary" aria-label="Table Options">
-      <mat-icon >settings</mat-icon>&nbsp;<span>Options</span>
-   </button>
-   <mat-menu #tableOptions="matMenu">
-         <button mat-menu-item (click)="changeName()">
-            <mat-icon color="primary">edit</mat-icon>&nbsp;
-            <span>Change Table Name</span>
-         </button>
+<mat-menu #tableOptions="matMenu">
+  <button mat-menu-item (click)="changeName()">
+    <mat-icon color="primary">edit</mat-icon>&nbsp;
+    <span>Change Table Name</span>
+  </button>
 
-         <button mat-menu-item (click)="delete()">
-            <mat-icon color="warn">delete</mat-icon>&nbsp;<span>Delete Table</span>
-         </button>
-         <mat-divider class="m-1"></mat-divider>
-         <button mat-menu-item (click)="addLecturesInValidPos()">
-            <mat-icon color="primary">table</mat-icon>
-            <span>Generate Lectures</span>
-         </button>
-   </mat-menu>
+  <button mat-menu-item (click)="delete()">
+    <mat-icon color="warn">delete</mat-icon>&nbsp;<span>Delete Table</span>
+  </button>
+  <mat-divider class="m-1"></mat-divider>
+  <button mat-menu-item (click)="addLecturesInValidPos()">
+    <mat-icon color="primary">table</mat-icon>
+    <span>Generate Lectures</span>
+  </button>
+</mat-menu>
+<div class="d-flex justify-content-between">
+  <div class="ms-auto">
+    <button class="me-auto align-self-start" mat-flat-button [matMenuTriggerFor]="tableOptions" color="primary"
+      aria-label="Table Options">
+      <mat-icon>settings</mat-icon>&nbsp;<span>Options</span>
+    </button>
+  </div>
 
+  <p style="font-size: 0.85em;" class="mt-1 mx-3 opacity-75 fst-italic">
+    <code>Ctrl+C</code>&nbsp;Copy&nbsp;the&nbsp;selected&nbsp;lecture.
+    <code>Ctrl+X</code>&nbsp;Cut&nbsp;the&nbsp;selected&nbsp;lecture.
+    <code>Ctrl+M</code>&nbsp;Edit&nbsp;the&nbsp;selected&nbsp;lecture.
+    <code>Ctrl+V</code>&nbsp;Paste&nbsp;a&nbsp;lecture&nbsp;to&nbsp;the&nbsp;selected&nbsp;cell.
+    <code>delete</code>&nbsp;Delete&nbsp;the&nbsp;selected&nbsp;lecture.
+    <code>Ctrl+Z</code>&nbsp;Undo&nbsp;last&nbsp;change. <code>Ctrl+Y</code>&nbsp;Redo.
+  </p>
 
-   <div style="margin-left:auto;">
-      <button mat-flat-button color="primary" (click)="pdf()">
-         <mat-icon>print</mat-icon>&nbsp;<span>PDF</span>
-      </button>
-   </div>
+  <div class="ms-auto">
+    <button mat-flat-button color="primary" (click)="pdf()">
+      <mat-icon>print</mat-icon>&nbsp;<span>PDF</span>
+    </button>
+  </div>
 
 </div>

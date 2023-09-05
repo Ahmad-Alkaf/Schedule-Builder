@@ -12,9 +12,9 @@
          </tr>
       </thead>
       <tbody cdkDropListGroup>
-         <tr *ngFor="let r of table.rows;let i=index" [id]="('row'+table.index+i)" cdkDropListOrientation="horizontal" cdkDropList 
-            [cdkDropListData]="r.tds" 
-            (cdkDropListDropped)="drop($event)" 
+         <tr *ngFor="let r of table.rows;let i=index" [id]="('row'+table.index+i)" cdkDropListOrientation="horizontal" cdkDropList
+            [cdkDropListData]="r.tds"
+            (cdkDropListDropped)="drop($event)"
             cdkDropListConnectedTo="createdLectures"
             [cdkDropListEnterPredicate]="predicateRow">
             <td cdkDragDisabled><b>{{r.day}}</b></td>

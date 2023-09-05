@@ -1,25 +1,22 @@
 <div *ngIf="td != null">
    <button mat-menu-item (click)="edit()">
       <mat-icon color="primary">edit</mat-icon>
-      <span>Edit</span>
+      <span>Edit<small class="opacity-75 ms-5 float-end">Ctrl + m</small></span>
+
    </button>
    <button mat-menu-item (click)="delete()">
       <mat-icon color="warn">delete</mat-icon>
-      <span>Delete</span>
+      <span>Delete<small class="opacity-75 ms-5 float-end">delete</small></span>
    </button>
    <mat-divider class="m-1"></mat-divider>
 </div>
 <div><!--Note color='gray' is gray because gray there is no such color so default is gray. you can insure this by change gray to 'walaa' the result is same-->
    <button mat-menu-item [disabled]="td == null" (click)="cut()">
       <mat-icon [color]="td == null?'gray':'primary'">content_cut</mat-icon>
-      <span>Cut</span>
+      <span>Cut<small class="opacity-75 ms-5 float-end">Ctrl + x</small></span>
    </button>
    <button mat-menu-item [disabled]="td == null" (click)="copy()">
       <mat-icon [color]="td == null?'gray':'primary'">content_copy</mat-icon>
-      <span>Copy</span>
+      <span>Copy<small class="opacity-75 ms-5 float-end">Ctrl + c</small></span>
    </button>
-   <!-- <button mat-menu-item  [disabled]="!(td == null && isPasteAvailable())" (click)="paste()">
-      <mat-icon [color]="!(td == null && isPasteAvailable())?'gray':'primary'">content_paste</mat-icon>
-      <span>Paste</span>
-   </button> -->
 </div>

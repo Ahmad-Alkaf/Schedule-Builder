@@ -1,16 +1,8 @@
 <mat-toolbar color="primary" class="theme-bg-primary">
-   <button routerLink="/" mat-icon-button>
-      <mat-icon>view_module</mat-icon>&nbsp;<span>Schedule Maker</span>
-   </button>
-   <div class=" d-flex" style="margin-left:auto;">
-      <!-- <mat-radio-group (change)="changeTheme($event)" aria-label="Select a theme">
-         <mat-radio-button selected value="indigo">Dark blue (Light)</mat-radio-button>
-         <mat-radio-button value="purple">Purple (Dark)</mat-radio-button>
-       </mat-radio-group> -->
-      <app-theme></app-theme>
-
-      <div *ngIf="api.token == '';"><button mat-button (click)="registerHandle()">Register</button><button
-            (click)="loginHandle()" mat-button>Login</button></div>
-      <div *ngIf="api.token != ''" #logout><button (click)="logoutHandle()" mat-button>Logout</button></div>
-   </div>
+  <button routerLink="/" mat-icon-button>
+    <mat-icon>view_module</mat-icon>&nbsp;<span>Schedule Builder</span>
+  </button>
+  <div class="d-flex" style="margin-left:auto;">
+    <app-theme></app-theme>
+  </div>
 </mat-toolbar>

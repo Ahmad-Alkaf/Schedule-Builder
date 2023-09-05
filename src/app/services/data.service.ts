@@ -4,7 +4,7 @@ import { Subject, Room, Row, SolveLec, Teacher, WeekDays } from '@service/static
 import { Table } from '@service/tableBinder';
 import { ApiService } from './api.service';
 import { SoundService } from './sound.service';
-import * as $ from 'JQuery';
+import * as $ from 'jquery';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 @Injectable({
@@ -110,8 +110,8 @@ export class DataService {
 
 
   /**
-   * 
-   * @param lecture 
+   *
+   * @param lecture
    * @returns Table object that contains @param lecture
    */
   public getTableOf(lecture: SolveLec): Table | 'container' {

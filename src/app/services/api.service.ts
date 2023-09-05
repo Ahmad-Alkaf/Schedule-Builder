@@ -107,7 +107,7 @@ export class ApiService {
 
   private pushRooms(rooms: Room[]): Promise<''> {
     return new Promise(async (resolve, reject) => {
-      localStorage.setItem('rooms', JSON.stringify('rooms'))
+      localStorage.setItem('rooms', JSON.stringify(rooms))
       return resolve('');
     });
   }
@@ -120,44 +120,10 @@ export class ApiService {
   }
 
 
-  public token: string = '';
-  private getToken(): Promise<string> {
-    return new Promise(async (resolve, reject) => {
-      return 'local';
-    })
-  }
-
-  public isValidToken(token: string): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      return true;
-    })
-  }
-
-  /**
-   *
-   * @param user
-   * @returns promise will resolve with token or reject with user friendly error message. Exception will halt this function and open error dialog i.e won't resolve nor reject
-   */
-  public login(user: { username: string, password: string }): Promise<string> {
-    return new Promise((resolve, reject) => {
-      return 'noLogin'
-    })
-  }
 
 
-  public register(newUser: any) {
-    return new Promise((resolve, reject) => {
-      // this.http.post('/api/user', newUser).subscribe({
-      //   next: (res: any) => {
-      //     if (res && res.success != false) {
-      //       localStorage.setItem('token', res.token.token);
-      //       localStorage.setItem('user', JSON.stringify({ username: res.added.username, password: res.added.password }));
-      //       return resolve(res.token.token);
-      //     } else if (res && res.message)
-      //       return reject(res.message)
-      //     else this.dialog.open(ErrorComponent, { data: { ...res, newUser, source: 'register last else' } })
-      //   }, error: (e) => this.dialog.open(ErrorComponent, { data: { ...e, source: 'register error of http' } })
-      // })
-    })
-  }
+
+
+
+
 }
