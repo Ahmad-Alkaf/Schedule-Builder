@@ -6,7 +6,7 @@
 
 Design and edit schedules without worrying about collisions between rooms or teachers. Also, you can build a schedule from scratch by generating lectures automatically you just have to provide the essential information such as how many hours in a week a subject needs to be lectured. However, you can add a subject in a pre-built schedule so that the lectures generator can place your lectures in collision-free places.
 
-[Check out the application online](https)
+[Take a look at the application, which is currently live at this link.](https://schedule-builder.alkaf.org)
 
 <div align="center">
   <img src="/Schedule%20Maker/Level%204%20table.png" />
