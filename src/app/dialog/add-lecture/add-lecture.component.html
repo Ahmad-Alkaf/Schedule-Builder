@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Create New Lecture</h1>
 <form [formGroup]="form" class="row my-4 justify-content-around">
-  
+
   <mat-form-field appearance="outline">
     <mat-label>Select Subject</mat-label>
     <mat-select formControlName="name" required>
@@ -8,9 +8,9 @@
         {{lesson.name}}
       </mat-option>
     </mat-select>
-    <mat-error *ngIf="form.controls['name'].invalid">Please choose a lesson</mat-error>
+    <mat-error *ngIf="form.controls['name'].invalid">Please choose a subject</mat-error>
   </mat-form-field>
-  
+
   <mat-form-field appearance="outline">
     <mat-label>Lecture Duration</mat-label>
     <mat-select formControlName="duration" required>
@@ -20,7 +20,7 @@
     </mat-select>
     <mat-error *ngIf="form.controls['duration'].invalid">Please choose lecture duration</mat-error>
   </mat-form-field>
-  
+
   <mat-form-field appearance="outline">
     <mat-label>Select Teacher</mat-label>
     <mat-select formControlName="teacher">

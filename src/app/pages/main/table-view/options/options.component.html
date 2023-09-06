@@ -1,11 +1,11 @@
 <mat-menu #tableOptions="matMenu">
   <button mat-menu-item (click)="changeName()">
     <mat-icon color="primary">edit</mat-icon>&nbsp;
-    <span>Change Table Name</span>
+    <span>Change Schedule Name</span>
   </button>
 
   <button mat-menu-item (click)="delete()">
-    <mat-icon color="warn">delete</mat-icon>&nbsp;<span>Delete Table</span>
+    <mat-icon color="warn">delete</mat-icon>&nbsp;<span>Delete Schedule</span>
   </button>
   <mat-divider class="m-1"></mat-divider>
   <button mat-menu-item (click)="addLecturesInValidPos()">
@@ -16,7 +16,7 @@
 <div class="d-flex justify-content-between">
   <div class="ms-auto">
     <button class="me-auto align-self-start" mat-flat-button [matMenuTriggerFor]="tableOptions" color="primary"
-      aria-label="Table Options">
+      aria-label="Schedule Options">
       <mat-icon>settings</mat-icon>&nbsp;<span>Options</span>
     </button>
   </div>

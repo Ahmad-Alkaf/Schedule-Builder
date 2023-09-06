@@ -6,6 +6,8 @@
 
 Design and edit schedules without worrying about collisions between rooms or teachers. Also, you can build a schedule from scratch by generating lectures automatically you just have to provide the essential information such as how many hours in a week a subject needs to be lectured. However, you can add a subject in a pre-built schedule so that the lectures generator can place your lectures in collision-free places.
 
+[Check out the application online](https)
+
 <div align="center">
   <img src="/Schedule%20Maker/Level%204%20table.png" />
     <p>App interface showing Level 4 schedule with left side tools</p>

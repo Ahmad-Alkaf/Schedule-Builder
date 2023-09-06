@@ -1,18 +1,26 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>Schedule Builder</title>
   <base href="./">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="/assets/schedule-maker-icon.png">
-  <!-- <script src="./assets/jquery-3.6.0.js"></script> -->
-  <!-- <script src="./assets/html2canvas.js"></script>
-  <script src="./assets/jspdf.js"></script> -->
+  <link rel="icon" type="image/x-icon" href="./assets/schedule-maker-icon.png">
 </head>
 
-<body class="mat-app-background mat-typography" >
-  <app-root></app-root>
+<script>
+  // Get the <base> element by tag name
+  var base = document.getElementsByTagName("base")[0];
+
+  // Set the href value to the current URL
+  base.href = window.location.href;
+</script>
+
+<body class="mat-app-background mat-typography">
+  <app-root>
+    <h2 style="margin:1.5em;">Loading...</h2>
+  </app-root>
 
 </body>
 

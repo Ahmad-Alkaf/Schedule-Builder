@@ -1,9 +1,9 @@
-<h1 mat-dialog-title>New Table</h1>
+<h1 mat-dialog-title>New Schedule</h1>
 <div mat-dialog-content>
    <mat-form-field appearance="outline">
-      <mat-label>Table Name</mat-label>
+      <mat-label>Schedule Name</mat-label>
       <input cdkFocusInitial appAutofocus matInput [formControl]="tableControl" required>
-      <mat-error *ngIf="tableControl.hasError('maxlength') ">Error: table name is too long</mat-error>
+      <mat-error *ngIf="tableControl.hasError('maxlength') ">Error: schedule name is too long</mat-error>
    </mat-form-field>
 </div>
 <div mat-dialog-actions>

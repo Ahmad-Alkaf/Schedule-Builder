@@ -12,7 +12,6 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class DataService {
 
-  //!undo and redo are not consistent because dataService is not updated when they change table values
   public teachers: BehaviorSubject<Teacher[]> = new BehaviorSubject<Teacher[]>([]);
 
   public subjects: BehaviorSubject<Subject[]> = new BehaviorSubject<Subject[]>([]);
@@ -26,7 +25,7 @@ export class DataService {
   private flow: { curIndex: number, data: ({ teachers: Teacher[], lessons: Subject[], rooms: Room[], tables: Table[], newLecContainer: SolveLec[] })[] } = { curIndex: -1, data: [] }
 
 
-  constructor(private sound: SoundService, private api: ApiService, private snackbar: MatSnackBar, private dialog: MatDialog) {
+  constructor(private sound: SoundService, private api: ApiService,) {
     Promise.all([this.api.pullTables(), this.api.pullContainer(),this.api.pullTeachers(), this.api.pullSubjects(), this.api.pullRooms()]).then(([tablesData, container,teachers, subjects, rooms]) => {
       console.log({ tablesData, container });
       this.newLecContainer = container;
@@ -81,7 +80,7 @@ export class DataService {
       this.checkCollision();
       this.api.SaveAll(this.tables, this.newLecContainer, this.teachers.value, this.rooms.value, this.subjects.value)
         .then(() => console.log('SAVED'))
-        .catch(() => console.error("CATCH IN SAVING"));
+        .catch(() => console.error("CATCH WHILE SAVING"));
       console.log('retain index', this.flow.curIndex);
     }
     else this.sound.play('notification');
@@ -120,7 +119,7 @@ export class DataService {
         return table;
     if (this.newLecContainer.includes(lecture))
       return 'container';
-    throw new Error(`lecture is a copy that doesn't contained in any table either the container!`)
+    throw new Error(`lecture is a copy that doesn't contained in any schedule either the container!`)
   }
 
   /**

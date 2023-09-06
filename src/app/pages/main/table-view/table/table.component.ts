@@ -18,7 +18,7 @@ export class TableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     // this.dataService.saveState()
   }
 
@@ -31,15 +31,11 @@ export class TableComponent implements OnInit {
 
 
   drop = (event: CdkDragDrop<(SolveLec | null)[]>) => {
-    // console.log('drop in table');
     let preTds: (SolveLec | null)[] = event.previousContainer.data;
     let tds: (SolveLec | null)[] = event.container.data;
     let tdIndex: number = event.currentIndex;
     let tdPreIndex: number = event.previousIndex;
     var td: SolveLec;
-
-    // console.log('tds', ...tds)
-    // console.log('preTds', ...preTds)
 
     if (this.dataService.newLecContainer == preTds) {//from container to table
       let td = preTds[tdPreIndex];
@@ -51,12 +47,12 @@ export class TableComponent implements OnInit {
           this.table.lectures = [...this.table.lectures,td];
           this.dataService.saveState();
         } else {
-          console.log('invalid container to table'); //todo error sound
+          console.log('invalid container to schedule');
           this.sound.play('error');
         }
 
       } else throw new Error('unexpected value of td=' + td)
-      
+
     } else
       if (this.isValidMovement(tds, preTds, tdIndex, tdPreIndex)) {
         let moving = this.moveTd(tds, preTds, tdIndex, tdPreIndex);
@@ -72,7 +68,7 @@ export class TableComponent implements OnInit {
         this.dataService.saveState()
       } else this.sound.play('error')
   }
-  
+
   validContainerToTable=(preTds: (SolveLec | null)[], tds: (SolveLec | null)[], tdIndex: number, tdPreIndex: number, td: SolveLec):boolean =>{
     for (let i = tdIndex; i < tdIndex + td.duration * 2; i++)
       if (tds.length <= i || (tds[i] != null && tds[i] != td))
@@ -147,8 +143,8 @@ export class TableComponent implements OnInit {
 
   /**
    * Notice: lec should includes in tds. i.e don't use me inside predicate functions
-   * @param tds 
-   * @param lec 
+   * @param tds
+   * @param lec
    * @returns index that count lecture by double its duration
    */
   getIndex = (tds: (SolveLec | null)[], lec: SolveLec): number => {
@@ -174,9 +170,9 @@ export class TableComponent implements OnInit {
         }
       }
   }
-  
-  
- 
+
+
+
 }
 
 

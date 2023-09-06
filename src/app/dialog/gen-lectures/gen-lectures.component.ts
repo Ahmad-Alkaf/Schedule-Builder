@@ -31,7 +31,7 @@ export class GenLecturesComponent implements OnInit {
     this.dialogRef.beforeClosed().subscribe({ next: () => this.G.terminate() });
 
     this.solveLecs = [...this.table.lectures];//solveLecs predefined lectures on the table
-    
+
     //get existing schedule's lectures into staticLectures
     for (let { lecture: l, duration } of this.solveLecs) {
       let exist = false;
@@ -52,7 +52,7 @@ export class GenLecturesComponent implements OnInit {
     this.staticLecs.push({ name: '', teacher: '', room: '', weekDuration: 0, isUser: true });
   }
 
-  
+
   //will called when click (Generate) button
   async generateIntro() {
     if (this.staticLecs.length <= 1 && this.isAddNew(this.staticLecs[this.staticLecs.length - 1])) {
@@ -109,12 +109,12 @@ export class GenLecturesComponent implements OnInit {
     totalOccupied -= st.weekDuration;
     let availableDur = this.totalAvailableHours - totalOccupied;
     let maxHoursWeekCouldLecture = this.final.MAX_LECTURE_DURATION * WEEK_DAYS.length;
-    
+
     return (maxHoursWeekCouldLecture < availableDur ? maxHoursWeekCouldLecture : availableDur) - this.weekDuration(st);
   ;
     // console.log(availableDur);
     // return availableDur
-    
+
   }
 
 
@@ -139,9 +139,9 @@ export class GenLecturesComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param staticLec 
-   * @param dur 
+   *
+   * @param staticLec
+   * @param dur
    * @returns if there is same lecture(STR(Subject,Teacher,Room)) in the table then disable invalid hours
    */
   disableHour(s: ProStaticLec, dur: number): boolean {
@@ -153,7 +153,7 @@ export class GenLecturesComponent implements OnInit {
 
   }
   /**
-   * 
+   *
    * @param s addNew lecture not reference
    * @returns the weekDuration of STR equal staticLec in staticLecs list OR 0 if not found
    */
@@ -161,14 +161,14 @@ export class GenLecturesComponent implements OnInit {
     let x =this.staticLecs.filter((v) => v.name == s.name && v.room == s.room && v.teacher == s.teacher);
     return x[0]?.weekDuration ?? 0;
   }
-  
-  
-  howMessage = `Generate lectures base on determine week duration. So, the sum of all 
-  generated lectures will be the week duration. If there are lectures on 
-  the table, then generated lectures will be appended. And existing lectures 
+
+
+  howMessage = `Generate lectures base on determine week duration. So, the sum of all
+  generated lectures will be the week duration. If there are lectures on
+  the schedule, then generated lectures will be appended. And existing lectures
   will be constant i.e(won't be change). If you generate lectures
-  that exists on the table i.e(Same subject, teacher, and room) then week 
-  duration will add up. Note: You can't generate lecture with duration smaller 
+  that exists on the schedule i.e(Same subject, teacher, and room) then week
+  duration will add up. Note: You can't generate lecture with duration smaller
   than minimum lecture duration. So, week duration should be longer for generated lecture`;
   FAQ() {
     let data: Prompt = {

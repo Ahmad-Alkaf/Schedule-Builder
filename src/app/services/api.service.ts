@@ -16,17 +16,11 @@ interface TableData {
 })
 export class ApiService {
 
-  constructor(private http: HttpClient, private router: Router, private dialog: MatDialog, private snackbar: MatSnackBar) { }
-  private tables: TableData[] = [];
-  private container: SolveLec[] = [];
-  private teachers: Teacher[] = [];
-  private subjects: Subject[] = [];
-  private rooms: Room[] = [];
+
   /**
-   * don't await it will take long time
+   * don't await SaveAll() it will take long time
    */
   public async SaveAll(tables: Table[], container: SolveLec[], teachers: Teacher[], rooms: Room[], subjects: Subject[]) {
-    // console.log('pushAll',{tables,container,teachers,rooms,subjects})
     let tableData: TableData[] = [];
     for (let t of tables) {
       tableData.push({ name: t.name, index: t.index, lectures: [...t.lectures] });

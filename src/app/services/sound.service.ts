@@ -4,8 +4,8 @@ export type AvailableAudio = 'notification' | 'error';
   providedIn: 'root'
 })
 export class SoundService implements OnInit {
-  private readonly notification = new Audio('../assets/sound/Windows Background.wav');
-  private readonly error = new Audio('../assets/sound/Windows Critical Stop.wav');
+  private readonly notification = new Audio('../assets/sound/Windows-Background.wav');
+  private readonly error = new Audio('../assets/sound/Windows-Critical-Stop.wav');
   constructor() { }
   ngOnInit(): void {
     this.notification.load();

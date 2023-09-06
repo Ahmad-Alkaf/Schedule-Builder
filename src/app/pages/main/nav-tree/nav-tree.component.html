@@ -7,8 +7,8 @@
     <button mat-icon-button (click)="removeNode(node)"><mat-icon color="warn">remove</mat-icon></button>
     {{node.name}}
   </cdk-tree-node>
-  
-  
+
+
   <cdk-tree-node *cdkTreeNodeDef="let node; when: hasNoContent" [style.display]="hasNoContent(0,node) ? 'flex' : 'none'" matTreeNodePadding>
     <div class="w-100">
     <!-- <button mat-icon-button disabled></button> -->
@@ -19,7 +19,7 @@
     <button mat-button color="primary" (click)="saveNewNode(node, itemValue.value)">Save</button>
   </div>
   </cdk-tree-node>
-  
+
   <!-- This is the tree node template for expandable nodes -->
   <cdk-tree-node *cdkTreeNodeDef="let node; when: hasChild" cdkTreeNodePadding
     [style.display]="shouldRender(node) ? 'flex' : 'none'" class="tree-node">
@@ -30,6 +30,6 @@
       </mat-icon>
     </button>
     {{node.name}}
-    <button mat-icon-button color="primary" (click)="handleAdd(node)"><mat-icon>add</mat-icon> </button>
+    <button [matTooltip]="'Add '+node.name" mat-icon-button color="primary" (click)="handleAdd(node)"><mat-icon>add</mat-icon> </button>
   </cdk-tree-node>
 </cdk-tree>
